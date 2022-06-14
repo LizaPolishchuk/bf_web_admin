@@ -74,7 +74,7 @@ abstract class AppTheme {
       style: ButtonStyle(
         elevation: MaterialStateProperty.all(0),
         textStyle: MaterialStateProperty.all(AppTextStyle.buttonText),
-        foregroundColor: MaterialStateProperty.all(AppColors.hintText),
+        foregroundColor: MaterialStateProperty.all(AppColors.hintColor),
         backgroundColor: MaterialStateProperty.all(AppColors.darkBackground),
         minimumSize: MaterialStateProperty.all(const Size(228, 50)),
         shape: MaterialStateProperty.all(

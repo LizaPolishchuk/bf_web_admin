@@ -10,4 +10,10 @@ class AppIcons {
   static const String icServices = 'assets/icons/ic_services.svg';
   static const String icSettings = 'assets/icons/ic_settings.svg';
   static const String icSupport = 'assets/icons/ic_support.svg';
+  static const String icGoogle = 'assets/icons/ic_google.svg';
+  static const String icEye = 'assets/icons/ic_eye.svg';
+  static const String icEyeClosed = 'assets/icons/ic_eye_closed.svg';
+
+  ///Images
+  static const String loginBackground = 'assets/images/login_background.png';
 }

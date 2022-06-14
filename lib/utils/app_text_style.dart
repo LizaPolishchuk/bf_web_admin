@@ -6,4 +6,14 @@ class AppTextStyle {
       color: AppColors.lightBackground,
       fontSize: 16,
       fontWeight: FontWeight.w500);
+
+  static const TextStyle bodyText = TextStyle(
+      color: AppColors.textColor,
+      fontSize: 16,
+      fontWeight: FontWeight.w400);
+
+  static const TextStyle hintText = TextStyle(
+      color: AppColors.hintColor,
+      fontSize: 14,
+      fontWeight: FontWeight.w400);
 }
