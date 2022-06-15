@@ -6,7 +6,7 @@ import 'package:salons_adminka/event_bus_events/user_success_logged_in_event.dar
 import 'package:salons_adminka/navigation/routes.dart';
 import 'package:salons_adminka/prezentation/auth_page/auth_bloc.dart';
 import 'package:salons_adminka/prezentation/auth_page/auth_page.dart';
-import 'package:salons_adminka/prezentation/main_container.dart';
+import 'package:salons_adminka/prezentation/home_container.dart';
 import 'package:salons_adminka/utils/app_theme.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart' as di;
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
@@ -106,7 +106,7 @@ class _InitialPageState extends State<InitialPage> {
 
     eventBus.on<UserSuccessLoggedInEvent>().listen((event) {
       setState(() {
-        _initialPage = const MainContainer();
+        _initialPage = const HomeContainer();
       });
     });
     eventBus.on<UserLoggedOutEvent>().listen((event) {
@@ -115,7 +115,7 @@ class _InitialPageState extends State<InitialPage> {
       });
     });
 
-    _initialPage = token != null ? const MainContainer() : const AuthPage();
+    _initialPage = token != null ? const HomeContainer() : const AuthPage();
 
     if (token != null && salon == null) {
       token = null;

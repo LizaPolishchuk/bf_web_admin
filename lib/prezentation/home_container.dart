@@ -9,14 +9,14 @@ import '../utils/app_colors.dart';
 import '../utils/app_images.dart';
 import '../utils/app_text_style.dart';
 
-class MainContainer extends StatefulWidget {
-  const MainContainer({Key? key}) : super(key: key);
+class HomeContainer extends StatefulWidget {
+  const HomeContainer({Key? key}) : super(key: key);
 
   @override
-  State<MainContainer> createState() => _MainContainerState();
+  State<HomeContainer> createState() => _HomeContainerState();
 }
 
-class _MainContainerState extends State<MainContainer> {
+class _HomeContainerState extends State<HomeContainer> {
   final List<Widget> _pages = [ServicesPage(), ClientsPage()];
   int _currentIndex = 0;
 

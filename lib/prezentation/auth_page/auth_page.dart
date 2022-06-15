@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:salons_adminka/injection_container_web.dart';
@@ -135,43 +136,50 @@ class _AuthPageState extends State<AuthPage> {
   Widget _buildContent() {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 150, vertical: 50),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const Text(
-            "Вход",
-            style: TextStyle(
-                color: AppColors.textColor,
-                fontSize: 36,
-                fontWeight: FontWeight.w700),
-          ),
-          const SizedBox(height: 24),
-          InkWell(
-            onTap: () {
-              _authBloc.loginViaGoogle();
-            },
-            child: Row(
+      child: CustomScrollView(
+        slivers: [
+          SliverFillRemaining(
+            hasScrollBody: false,
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SvgPicture.asset(AppIcons.icGoogle),
-                const SizedBox(width: 12),
                 const Text(
-                  "Войти с помощью Google",
-                  style: AppTextStyle.bodyText,
+                  "Вход",
+                  style: TextStyle(
+                      color: AppColors.textColor,
+                      fontSize: 36,
+                      fontWeight: FontWeight.w700),
                 ),
+                const SizedBox(height: 24),
+                InkWell(
+                  onTap: () {
+                    _authBloc.loginViaGoogle();
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(AppIcons.icGoogle),
+                      const SizedBox(width: 12),
+                      const Text(
+                        "Войти с помощью Google",
+                        style: AppTextStyle.bodyText,
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 24),
+                  child: _registrationMode
+                      ? _buildRegistrationInput()
+                      : _buildLoginInput(),
+                ),
+                _buildLoginButton(),
+                const SizedBox(height: 24),
+                if (!_registrationMode) _buildForgotPassword(),
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 24),
-            child: _registrationMode
-                ? _buildRegistrationInput()
-                : _buildLoginInput(),
-          ),
-          _buildLoginButton(),
-          const SizedBox(height: 24),
-          if (!_registrationMode) _buildForgotPassword(),
         ],
       ),
     );
@@ -325,7 +333,7 @@ class _AuthPageState extends State<AuthPage> {
               suffixIconConstraints:
                   const BoxConstraints(maxHeight: 24, maxWidth: 30),
               suffixIcon: isPassword
-                  ? GestureDetector(
+                  ? InkWell(
                       onTap: () {
                         setState(() {
                           if (controller == _passwordController) {
