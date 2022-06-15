@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:salons_adminka/prezentation/auth_page/auth_bloc.dart';
 import 'package:salons_adminka/prezentation/clients_page/clients_page.dart';
 import 'package:salons_adminka/prezentation/services_page/services_page.dart';
+import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 import '../utils/app_colors.dart';
 import '../utils/app_images.dart';
@@ -95,7 +97,9 @@ class _MainContainerState extends State<MainContainer> {
                 _buildDrawerItem(6, "Проофиль", AppIcons.icProfile),
                 _buildDrawerItem(7, "Поддержка", AppIcons.icSupport),
                 _buildDrawerItem(8, "Настройки", AppIcons.icSettings),
-                _buildDrawerItem(9, "Выйти", AppIcons.icLogout),
+                _buildDrawerItem(9, "Выйти", AppIcons.icLogout, onClick: () {
+                  getIt<AuthBloc>().logout();
+                }),
               ],
             ),
           ),
@@ -104,9 +108,13 @@ class _MainContainerState extends State<MainContainer> {
     );
   }
 
-  Widget _buildDrawerItem(int index, String title, String icon) {
+  Widget _buildDrawerItem(int index, String title, String icon,
+      {VoidCallback? onClick}) {
     return InkWell(
       onTap: () {
+        if (onClick != null) {
+          onClick();
+        }
         setState(() {
           _currentIndex = index;
         });

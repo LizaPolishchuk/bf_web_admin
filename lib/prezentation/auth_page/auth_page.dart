@@ -1,8 +1,8 @@
-import 'dart:ui';
-
-import 'package:flutter/cupertino.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:salons_adminka/injection_container_web.dart';
+import 'package:salons_adminka/prezentation/auth_page/auth_bloc.dart';
 import 'package:salons_adminka/utils/app_images.dart';
 import 'package:salons_adminka/utils/app_text_style.dart';
 
@@ -33,12 +33,31 @@ class _AuthPageState extends State<AuthPage> {
   bool _registrationMode = false;
 
   String? _errorText;
-
   final List<TextEditingController> _controllersList = [];
+
+  late AuthBloc _authBloc;
+  final List<StreamSubscription> _subscriptions = [];
 
   @override
   void initState() {
     super.initState();
+
+    _authBloc = getItWeb<AuthBloc>();
+    _subscriptions.addAll([
+      _authBloc.errorMessage.listen((event) {
+        String error = event;
+        if (event == "user_not_found") {
+          error =
+              "Такого юзера не существует, пожалуйста, проверьте введенные данные";
+        } else if (event == "wrong_password") {
+          error = "Не верный пароль";
+        }
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(error),
+        ));
+      }),
+    ]);
 
     _controllersList.addAll([
       _emailController,
@@ -130,7 +149,7 @@ class _AuthPageState extends State<AuthPage> {
           const SizedBox(height: 24),
           InkWell(
             onTap: () {
-              print("on tap");
+              _authBloc.loginViaGoogle();
             },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -238,11 +257,12 @@ class _AuthPageState extends State<AuthPage> {
                 _nameFormKey.currentState?.validate() == true &&
                 _passwordFormKey.currentState?.validate() == true &&
                 _repeatPasswordFormKey.currentState?.validate() == true) {
-              print("Success Register");
+              _authBloc.register(
+                  _emailController.text, _passwordController.text);
             }
           } else if (_emailFormKey.currentState?.validate() == true &&
               _passwordFormKey.currentState?.validate() == true) {
-            print("Success login");
+            _authBloc.login(_emailController.text, _passwordController.text);
           }
         });
   }
@@ -338,6 +358,9 @@ class _AuthPageState extends State<AuthPage> {
   void dispose() {
     for (var element in _controllersList) {
       element.dispose();
+    }
+    for (var element in _subscriptions) {
+      element.cancel();
     }
     super.dispose();
   }
