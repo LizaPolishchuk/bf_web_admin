@@ -1,9 +1,10 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
+import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:salons_adminka/event_bus_events/user_success_logged_in_event.dart';
-import 'package:salons_adminka/navigation/routes.dart';
+import 'package:salons_adminka/navigation/initial_location.dart';
 import 'package:salons_adminka/prezentation/auth_page/auth_bloc.dart';
 import 'package:salons_adminka/prezentation/auth_page/auth_page.dart';
 import 'package:salons_adminka/prezentation/home_container.dart';
@@ -20,14 +21,13 @@ void main() async {
 
   await Firebase.initializeApp(
     options: const FirebaseOptions(
-      apiKey: "AIzaSyD1iuXsP1pCry9jNdG0l-5Meyu7dJUp3CI",
-      appId: "1:883762712602:web:5629380a6e16d74d8641a3",
-      messagingSenderId: "883762712602",
-      projectId: "salons-5012c",
-      authDomain: "salons-5012c.firebaseapp.com",
-      storageBucket: "salons-5012c.appspot.com",
-      measurementId: "G-HQ1FC3TVZX"
-    ),
+        apiKey: "AIzaSyD1iuXsP1pCry9jNdG0l-5Meyu7dJUp3CI",
+        appId: "1:883762712602:web:5629380a6e16d74d8641a3",
+        messagingSenderId: "883762712602",
+        projectId: "salons-5012c",
+        authDomain: "salons-5012c.firebaseapp.com",
+        storageBucket: "salons-5012c.appspot.com",
+        measurementId: "G-HQ1FC3TVZX"),
   );
 
   await di.init();
@@ -61,23 +61,34 @@ class MyApp extends StatelessWidget {
       light: AppTheme.light,
       dark: AppTheme.dark,
       initial: AdaptiveThemeMode.light,
-      builder: (light, dark) => MaterialApp(
-        theme: light,
-        darkTheme: dark,
-        debugShowCheckedModeBanner: false,
-        title: 'Salons Admin Panel UI',
-        initialRoute: Routes.main,
-        onGenerateRoute: onGenerateRoute,
-        localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-        ],
-        supportedLocales: const [
-          Locale('en', 'US'),
-          Locale('ru', 'RU'),
-        ],
-        home: const InitialPage(),
-      ),
+      builder: (light, dark) {
+        print("MaterialApp builder");
+
+        return MaterialApp.router(
+          key: GlobalKey(),
+          routeInformationParser: BeamerParser(),
+          routerDelegate: BeamerDelegate(
+            transitionDelegate: const NoAnimationTransitionDelegate(),
+            locationBuilder: (routeInformation, _) =>
+                HomeContainerLocation(routeInformation),
+          ),
+          theme: light,
+          darkTheme: dark,
+          debugShowCheckedModeBanner: false,
+          title: 'Salons Admin Panel UI',
+          // initialRoute: Routes.home,
+          // onGenerateRoute: onGenerateRoute,
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
+          supportedLocales: const [
+            Locale('en', 'US'),
+            Locale('ru', 'RU'),
+          ],
+          // home: const InitialPage(),
+        );
+      },
     );
   }
 }
@@ -115,7 +126,8 @@ class _InitialPageState extends State<InitialPage> {
       });
     });
 
-    _initialPage = token != null ? const HomeContainer() : const AuthPage();
+    // _initialPage = token != null ? const HomeContainer() : const AuthPage();
+    _initialPage = HomeContainer();
 
     if (token != null && salon == null) {
       token = null;

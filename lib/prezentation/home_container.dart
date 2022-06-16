@@ -1,8 +1,8 @@
+import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:salons_adminka/navigation/routes.dart';
 import 'package:salons_adminka/prezentation/auth_page/auth_bloc.dart';
-import 'package:salons_adminka/prezentation/clients_page/clients_page.dart';
-import 'package:salons_adminka/prezentation/services_page/services_page.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 import '../utils/app_colors.dart';
@@ -17,16 +17,33 @@ class HomeContainer extends StatefulWidget {
 }
 
 class _HomeContainerState extends State<HomeContainer> {
-  final List<Widget> _pages = [ServicesPage(), ClientsPage()];
   int _currentIndex = 0;
+  final _beamerKey = GlobalKey<BeamerState>();
+
+  @override
+  void initState() {
+    super.initState();
+    print("Home container initState");
+  }
 
   @override
   Widget build(BuildContext context) {
+    print("print HomeContainer ${_beamerKey.currentState}, $_currentIndex");
+
     return Scaffold(
       body: Row(
         children: [
           _buildDrawer(),
-          _pages[_currentIndex],
+          Expanded(
+            child: Beamer(
+              key: _beamerKey,
+              routerDelegate: routeDelegate,
+              backButtonDispatcher: BeamerBackButtonDispatcher(
+                delegate: routeDelegate,
+              ),
+            ),
+          )
+          // _pages[_currentIndex],
         ],
       ),
     );
@@ -87,17 +104,28 @@ class _HomeContainerState extends State<HomeContainer> {
                   ),
                 ),
                 const SizedBox(height: 54),
-                _buildDrawerItem(0, "Главная", AppIcons.icHome),
-                _buildDrawerItem(1, "Услуги", AppIcons.icServices),
-                _buildDrawerItem(2, "Мастера", AppIcons.icMasters),
-                _buildDrawerItem(3, "Клиенты", AppIcons.icClients),
-                _buildDrawerItem(4, "Акции/Бонусные карты", AppIcons.icPromos),
-                _buildDrawerItem(5, "Отзывы", AppIcons.icFeedbacks),
+                _buildDrawerItem(0, "Главная", AppIcons.icHome, () {
+                  _beamerKey.currentState?.context
+                      .beamToReplacementNamed(Routes.home);
+                }),
+                _buildDrawerItem(1, "Услуги", AppIcons.icServices, () {
+                  _beamerKey.currentState?.context.beamToNamed(Routes.services);
+                }),
+                _buildDrawerItem(2, "Мастера", AppIcons.icMasters, null),
+                _buildDrawerItem(3, "Клиенты", AppIcons.icClients, null),
+                _buildDrawerItem(
+                    4, "Акции/Бонусные карты", AppIcons.icPromos, null),
+                _buildDrawerItem(5, "Отзывы", AppIcons.icFeedbacks, null),
                 const Spacer(),
-                _buildDrawerItem(6, "Проофиль", AppIcons.icProfile),
-                _buildDrawerItem(7, "Поддержка", AppIcons.icSupport),
-                _buildDrawerItem(8, "Настройки", AppIcons.icSettings),
-                _buildDrawerItem(9, "Выйти", AppIcons.icLogout, onClick: () {
+                _buildDrawerItem(6, "Проофиль", AppIcons.icProfile, () {
+                  _beamerKey.currentState?.context
+                      .beamToNamed(Routes.salonDetails);
+                  // _navigatorKey.currentState?.pushNamed(Routes.salonDetails);
+                  // Navigator.of(context).pushNamed(Routes.salonDetails);
+                }),
+                _buildDrawerItem(7, "Поддержка", AppIcons.icSupport, null),
+                _buildDrawerItem(8, "Настройки", AppIcons.icSettings, null),
+                _buildDrawerItem(9, "Выйти", AppIcons.icLogout, () {
                   getIt<AuthBloc>().logout();
                 }),
               ],
@@ -108,16 +136,16 @@ class _HomeContainerState extends State<HomeContainer> {
     );
   }
 
-  Widget _buildDrawerItem(int index, String title, String icon,
-      {VoidCallback? onClick}) {
+  Widget _buildDrawerItem(
+      int index, String title, String icon, VoidCallback? onClick) {
     return InkWell(
       onTap: () {
         if (onClick != null) {
           onClick();
         }
-        setState(() {
-          _currentIndex = index;
-        });
+        // setState(() {
+        //   _currentIndex = index;
+        // });
       },
       //todo add hover effect
       onHover: (value) {
