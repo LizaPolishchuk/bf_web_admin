@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
 import 'package:salons_adminka/navigation/routes.dart';
 import 'package:salons_adminka/prezentation/auth_page/auth_bloc.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
@@ -8,17 +9,13 @@ import '../utils/app_colors.dart';
 import '../utils/app_images.dart';
 import '../utils/app_text_style.dart';
 
-class HomeContainer extends StatefulWidget {
-  const HomeContainer({Key? key}) : super(key: key);
+class HomeContainer extends StatelessWidget {
+  final Widget child;
+  final int selectedMenuIndex;
 
-  @override
-  State<HomeContainer> createState() => _HomeContainerState();
-}
-
-class _HomeContainerState extends State<HomeContainer> {
-  int _currentIndex = 0;
-
-  final _navigatorKey = GlobalKey<NavigatorState>();
+  const HomeContainer(
+      {Key? key, required this.child, this.selectedMenuIndex = -1})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,20 +24,7 @@ class _HomeContainerState extends State<HomeContainer> {
         children: [
           _buildDrawer(),
           Expanded(
-            child: WillPopScope(
-              onWillPop: () async {
-                print("WillPopScope navigator");
-                if (_navigatorKey.currentState?.canPop() == true) {
-                  _navigatorKey.currentState?.pop();
-                }
-                return false;
-              },
-              child: Navigator(
-                key: _navigatorKey,
-                onGenerateRoute: onGenerateRoute,
-                initialRoute: Routes.home,
-              ),
-            ),
+            child: child,
           )
           // _pages[_currentIndex],
         ],
@@ -103,23 +87,26 @@ class _HomeContainerState extends State<HomeContainer> {
                   ),
                 ),
                 const SizedBox(height: 54),
-                _buildDrawerItem(0, "Главная", AppIcons.icHome, () {
-                  _navigatorKey.currentState?.pushReplacementNamed(Routes.home);
-                }),
-                _buildDrawerItem(1, "Услуги", AppIcons.icServices, null),
-                _buildDrawerItem(2, "Мастера", AppIcons.icMasters, null),
-                _buildDrawerItem(3, "Клиенты", AppIcons.icClients, null),
-                _buildDrawerItem(
-                    4, "Акции/Бонусные карты", AppIcons.icPromos, null),
-                _buildDrawerItem(5, "Отзывы", AppIcons.icFeedbacks, null),
+                _buildDrawerItem(0, "Главная", AppIcons.icHome,
+                    routeToGo: Routes.initial),
+                _buildDrawerItem(1, "Услуги", AppIcons.icServices,
+                    routeToGo: Routes.services),
+                _buildDrawerItem(2, "Мастера", AppIcons.icMasters,
+                    routeToGo: Routes.masters),
+                _buildDrawerItem(3, "Клиенты", AppIcons.icClients,
+                    routeToGo: Routes.clients),
+                _buildDrawerItem(4, "Акции/Бонусные карты", AppIcons.icPromos,
+                    routeToGo: Routes.promos),
+                _buildDrawerItem(5, "Отзывы", AppIcons.icFeedbacks,
+                    routeToGo: Routes.feedbacks),
                 const Spacer(),
-                _buildDrawerItem(6, "Проофиль", AppIcons.icProfile, () {
-                  print("clicked profile: ${_navigatorKey.currentState}");
-                  _navigatorKey.currentState?.pushNamed(Routes.salonDetails);
-                }),
-                _buildDrawerItem(7, "Поддержка", AppIcons.icSupport, null),
-                _buildDrawerItem(8, "Настройки", AppIcons.icSettings, null),
-                _buildDrawerItem(9, "Выйти", AppIcons.icLogout, () {
+                _buildDrawerItem(6, "Проофиль", AppIcons.icProfile,
+                    routeToGo: Routes.profile),
+                _buildDrawerItem(7, "Поддержка", AppIcons.icSupport,
+                    routeToGo: Routes.support),
+                _buildDrawerItem(8, "Настройки", AppIcons.icSettings,
+                    routeToGo: Routes.settings),
+                _buildDrawerItem(9, "Выйти", AppIcons.icLogout, onClick: () {
                   getIt<AuthBloc>().logout();
                 }),
               ],
@@ -130,24 +117,24 @@ class _HomeContainerState extends State<HomeContainer> {
     );
   }
 
-  Widget _buildDrawerItem(
-      int index, String title, String icon, VoidCallback? onClick) {
+  Widget _buildDrawerItem(int index, String title, String icon,
+      {VoidCallback? onClick, String? routeToGo}) {
     return InkWell(
       onTap: () {
         if (onClick != null) {
           onClick();
+        } else if (routeToGo != null) {
+          Get.rootDelegate.toNamed(routeToGo);
         }
-        setState(() {
-          _currentIndex = index;
-        });
       },
       //todo add hover effect
       onHover: (value) {
         // value ? state?.onHover(menuItem.route) : state?.onHover('not hovering');
       },
       child: ColoredBox(
-        color:
-            index == _currentIndex ? AppColors.lightRose : Colors.transparent,
+        color: index == selectedMenuIndex
+            ? AppColors.lightRose
+            : Colors.transparent,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 22),
           child: Row(
@@ -155,7 +142,7 @@ class _HomeContainerState extends State<HomeContainer> {
             children: [
               SvgPicture.asset(
                 icon,
-                color: _currentIndex == index
+                color: selectedMenuIndex == index
                     ? AppColors.darkRose
                     : AppColors.lightRose,
               ),
@@ -164,7 +151,7 @@ class _HomeContainerState extends State<HomeContainer> {
                 child: Text(
                   title,
                   style: AppTextStyle.buttonText.copyWith(
-                      color: _currentIndex == index
+                      color: selectedMenuIndex == index
                           ? AppColors.darkRose
                           : AppColors.lightRose),
                 ),

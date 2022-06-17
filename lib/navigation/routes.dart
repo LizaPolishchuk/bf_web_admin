@@ -1,28 +1,99 @@
-import 'package:flutter/material.dart';
-import 'package:salons_adminka/prezentation/home_page.dart';
-import 'package:salons_adminka/prezentation/salon_details_page.dart';
+import 'package:get/get_navigation/src/routes/get_route.dart';
+import 'package:salons_adminka/main.dart';
+import 'package:salons_adminka/prezentation/clients_page/clients_page.dart';
+import 'package:salons_adminka/prezentation/feedbacks_page/feedbacks_page.dart';
+import 'package:salons_adminka/prezentation/home_container.dart';
+import 'package:salons_adminka/prezentation/masters_page/masters_page.dart';
+import 'package:salons_adminka/prezentation/profile_page/salon_details_page.dart';
+import 'package:salons_adminka/prezentation/promos_page/promos_page.dart';
+import 'package:salons_adminka/prezentation/settings_page/settings_page.dart';
+import 'package:salons_adminka/prezentation/support_page/support_page.dart';
+
+import '../prezentation/services_page/services_page.dart';
+
+const int homeIndex = 0;
+const int servicesIndex = 1;
+const int mastersIndex = 2;
+const int clientsIndex = 3;
+const int promosIndex = 4;
+const int feedbacksIndex = 5;
+const int profileIndex = 6;
+const int supportIndex = 7;
+const int settingsIndex = 8;
 
 class Routes {
-  static const home = '/';
-  static const salonDetails = '/salon-details';
+  static const initial = '/';
+  static const profile = '/profile';
+  static const services = '/services';
+  static const masters = '/masters';
+  static const clients = '/clients';
+  static const promos = '/promos';
+  static const feedbacks = '/feedbacks';
+  static const support = '/support';
+  static const settings = '/settings';
 }
 
-Route<dynamic> onGenerateRoute(RouteSettings settings) {
-  switch (settings.name) {
-    case Routes.home:
-      return PageRouteBuilder(
-        pageBuilder: (context, animation1, animation2) => HomePage(),
-        transitionDuration: Duration.zero,
-        reverseTransitionDuration: Duration.zero,
-        settings: settings
-      );
-    case Routes.salonDetails:
-      return PageRouteBuilder(
-        pageBuilder: (context, animation1, animation2) => SalonDetailsPage(),
-        transitionDuration: Duration.zero,
-        reverseTransitionDuration: Duration.zero,
-      );
-    default:
-      throw Exception('Undefined route');
-  }
+abstract class AppPages {
+  static final pages = [
+    GetPage(
+      name: Routes.initial,
+      page: () => const InitialPage(),
+    ),
+    GetPage(
+      name: Routes.services,
+      page: () => const HomeContainer(
+        selectedMenuIndex: servicesIndex,
+        child: ServicesPage(),
+      ),
+    ),
+    GetPage(
+      name: Routes.masters,
+      page: () => const HomeContainer(
+        selectedMenuIndex: mastersIndex,
+        child: MastersPage(),
+      ),
+    ),
+    GetPage(
+      name: Routes.clients,
+      page: () => const HomeContainer(
+        selectedMenuIndex: clientsIndex,
+        child: ClientsPage(),
+      ),
+    ),
+    GetPage(
+      name: Routes.promos,
+      page: () => const HomeContainer(
+        selectedMenuIndex: promosIndex,
+        child: PromosPage(),
+      ),
+    ),
+    GetPage(
+      name: Routes.feedbacks,
+      page: () => const HomeContainer(
+        selectedMenuIndex: feedbacksIndex,
+        child: FeedbacksPage(),
+      ),
+    ),
+    GetPage(
+      name: Routes.profile,
+      page: () => const HomeContainer(
+        selectedMenuIndex: profileIndex,
+        child: ProfilePage(),
+      ),
+    ),
+    GetPage(
+      name: Routes.support,
+      page: () => const HomeContainer(
+        selectedMenuIndex: supportIndex,
+        child: SupportPage(),
+      ),
+    ),
+    GetPage(
+      name: Routes.settings,
+      page: () => const HomeContainer(
+        selectedMenuIndex: settingsIndex,
+        child: SettingsPage(),
+      ),
+    ),
+  ];
 }

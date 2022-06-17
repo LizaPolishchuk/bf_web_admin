@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
-class ClientsPage extends StatefulWidget {
+class ProfilePage extends StatefulWidget {
   final Salon? salon;
 
-  const ClientsPage({Key? key, this.salon}) : super(key: key);
+  const ProfilePage({Key? key, this.salon}) : super(key: key);
 
   @override
-  State<ClientsPage> createState() => _ClientsPageState();
+  State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ClientsPageState extends State<ClientsPage> {
+class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
     super.initState();
+
+    print("Salon details init state");
   }
 
   @override
@@ -22,7 +24,7 @@ class _ClientsPageState extends State<ClientsPage> {
     return Scaffold(
       body: Container(
         child: Text(
-          "Clients Page",
+          "Profile",
           style: TextStyle(color: Colors.black),
         ),
       ),

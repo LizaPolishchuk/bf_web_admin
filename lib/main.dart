@@ -1,11 +1,14 @@
-import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:get/get.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:salons_adminka/event_bus_events/user_success_logged_in_event.dart';
 import 'package:salons_adminka/prezentation/auth_page/auth_bloc.dart';
 import 'package:salons_adminka/prezentation/auth_page/auth_page.dart';
 import 'package:salons_adminka/prezentation/home_container.dart';
+import 'package:salons_adminka/prezentation/home_page/home_page.dart';
 import 'package:salons_adminka/utils/app_theme.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart' as di;
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
@@ -13,6 +16,7 @@ import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 import 'event_bus_events/event_bus.dart';
 import 'event_bus_events/user_logout_event.dart';
 import 'injection_container_web.dart' as webDi;
+import 'navigation/routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,30 +56,28 @@ Future<void> initHive() async {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
+  // Get.changeTheme(Get.isDarkMode? ThemeData.light(): ThemeData.dark());
+
   @override
   Widget build(BuildContext context) {
-    return AdaptiveTheme(
-      light: AppTheme.light,
-      dark: AppTheme.dark,
-      initial: AdaptiveThemeMode.light,
-      builder: (light, dark) => MaterialApp(
-        theme: light,
-        darkTheme: dark,
-        debugShowCheckedModeBanner: false,
-        title: 'Salons Admin Panel UI',
-        // initialRoute: Routes.main,
-        // onGenerateRoute: onGenerateRoute,
-        localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-        ],
-        supportedLocales: const [
-          Locale('en', 'US'),
-          Locale('ru', 'RU'),
-        ],
-        home: const InitialPage(),
-      ),
+    return GetMaterialApp.router(
+      debugShowCheckedModeBanner: false,
+      defaultTransition: Transition.noTransition,
+      getPages: AppPages.pages,
+      routerDelegate: Get.rootDelegate,
+      // routerDelegate: AppRouterDelegate(),
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      themeMode: ThemeMode.light,
+      title: 'B&F Admin Panel',
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en', 'US'),
+        Locale('ru', 'RU'),
+      ],
     );
   }
 }
@@ -104,7 +106,10 @@ class _InitialPageState extends State<InitialPage> {
 
     eventBus.on<UserSuccessLoggedInEvent>().listen((event) {
       setState(() {
-        _initialPage = const HomeContainer();
+        _initialPage = const HomeContainer(
+          selectedMenuIndex: homeIndex,
+          child: HomePage(),
+        );
       });
     });
     eventBus.on<UserLoggedOutEvent>().listen((event) {
@@ -114,7 +119,10 @@ class _InitialPageState extends State<InitialPage> {
     });
 
     // _initialPage = token != null ? const HomeContainer() : const AuthPage();
-    _initialPage = const HomeContainer();
+    _initialPage = const HomeContainer(
+      selectedMenuIndex: homeIndex,
+      child: HomePage(),
+    );
 
     if (token != null && salon == null) {
       token = null;
