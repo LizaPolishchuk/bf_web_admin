@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:salons_adminka/event_bus_events/user_success_logged_in_event.dart';
-import 'package:salons_adminka/navigation/routes.dart';
 import 'package:salons_adminka/prezentation/auth_page/auth_bloc.dart';
 import 'package:salons_adminka/prezentation/auth_page/auth_page.dart';
 import 'package:salons_adminka/prezentation/home_container.dart';
@@ -20,14 +19,13 @@ void main() async {
 
   await Firebase.initializeApp(
     options: const FirebaseOptions(
-      apiKey: "AIzaSyD1iuXsP1pCry9jNdG0l-5Meyu7dJUp3CI",
-      appId: "1:883762712602:web:5629380a6e16d74d8641a3",
-      messagingSenderId: "883762712602",
-      projectId: "salons-5012c",
-      authDomain: "salons-5012c.firebaseapp.com",
-      storageBucket: "salons-5012c.appspot.com",
-      measurementId: "G-HQ1FC3TVZX"
-    ),
+        apiKey: "AIzaSyD1iuXsP1pCry9jNdG0l-5Meyu7dJUp3CI",
+        appId: "1:883762712602:web:5629380a6e16d74d8641a3",
+        messagingSenderId: "883762712602",
+        projectId: "salons-5012c",
+        authDomain: "salons-5012c.firebaseapp.com",
+        storageBucket: "salons-5012c.appspot.com",
+        measurementId: "G-HQ1FC3TVZX"),
   );
 
   await di.init();
@@ -66,8 +64,8 @@ class MyApp extends StatelessWidget {
         darkTheme: dark,
         debugShowCheckedModeBanner: false,
         title: 'Salons Admin Panel UI',
-        initialRoute: Routes.main,
-        onGenerateRoute: onGenerateRoute,
+        // initialRoute: Routes.main,
+        // onGenerateRoute: onGenerateRoute,
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
@@ -115,7 +113,8 @@ class _InitialPageState extends State<InitialPage> {
       });
     });
 
-    _initialPage = token != null ? const HomeContainer() : const AuthPage();
+    // _initialPage = token != null ? const HomeContainer() : const AuthPage();
+    _initialPage = const HomeContainer();
 
     if (token != null && salon == null) {
       token = null;
