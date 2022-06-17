@@ -21,25 +21,26 @@ class _HomeContainerState extends State<HomeContainer> {
   final _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
+  void initState() {
+    super.initState();
+
+    print("HomeContainer init state ${widget.key}");
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Row(
         children: [
           _buildDrawer(),
           Expanded(
-            child: WillPopScope(
-              onWillPop: () async {
-                print("WillPopScope navigator");
-                if (_navigatorKey.currentState?.canPop() == true) {
-                  _navigatorKey.currentState?.pop();
-                }
-                return false;
-              },
-              child: Navigator(
-                key: _navigatorKey,
-                onGenerateRoute: onGenerateRoute,
-                initialRoute: Routes.home,
-              ),
+            child: Router(
+              // key: _navigatorKey,
+              routeInformationProvider:
+                  RouterSingleton.router!.routeInformationProvider,
+              routeInformationParser:
+                  RouterSingleton.router!.routeInformationParser,
+              routerDelegate: RouterSingleton.router!.routerDelegate,
             ),
           )
           // _pages[_currentIndex],
@@ -104,7 +105,7 @@ class _HomeContainerState extends State<HomeContainer> {
                 ),
                 const SizedBox(height: 54),
                 _buildDrawerItem(0, "Главная", AppIcons.icHome, () {
-                  _navigatorKey.currentState?.pushReplacementNamed(Routes.home);
+                  RouterSingleton.router!.go(Routes.home);
                 }),
                 _buildDrawerItem(1, "Услуги", AppIcons.icServices, null),
                 _buildDrawerItem(2, "Мастера", AppIcons.icMasters, null),
@@ -114,8 +115,7 @@ class _HomeContainerState extends State<HomeContainer> {
                 _buildDrawerItem(5, "Отзывы", AppIcons.icFeedbacks, null),
                 const Spacer(),
                 _buildDrawerItem(6, "Проофиль", AppIcons.icProfile, () {
-                  print("clicked profile: ${_navigatorKey.currentState}");
-                  _navigatorKey.currentState?.pushNamed(Routes.salonDetails);
+                  RouterSingleton.router!.go(Routes.salonDetails);
                 }),
                 _buildDrawerItem(7, "Поддержка", AppIcons.icSupport, null),
                 _buildDrawerItem(8, "Настройки", AppIcons.icSettings, null),
@@ -174,5 +174,12 @@ class _HomeContainerState extends State<HomeContainer> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    print("Home container dispose");
+
+    super.dispose();
   }
 }

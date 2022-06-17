@@ -13,6 +13,7 @@ import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 import 'event_bus_events/event_bus.dart';
 import 'event_bus_events/user_logout_event.dart';
 import 'injection_container_web.dart' as webDi;
+import 'navigation/routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,6 +56,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    // RouterSingleton.createGoRouter();
+
     return AdaptiveTheme(
       light: AppTheme.light,
       dark: AppTheme.dark,
@@ -74,7 +77,7 @@ class MyApp extends StatelessWidget {
           Locale('en', 'US'),
           Locale('ru', 'RU'),
         ],
-        home: const InitialPage(),
+        home:  InitialPage(key: GlobalKey(),),
       ),
     );
   }
@@ -114,7 +117,10 @@ class _InitialPageState extends State<InitialPage> {
     });
 
     // _initialPage = token != null ? const HomeContainer() : const AuthPage();
-    _initialPage = const HomeContainer();
+
+    print("set initial page");
+
+    _initialPage =  HomeContainer(key: GlobalKey(),);
 
     if (token != null && salon == null) {
       token = null;
