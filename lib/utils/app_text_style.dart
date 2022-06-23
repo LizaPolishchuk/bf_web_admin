@@ -16,4 +16,9 @@ class AppTextStyle {
       color: AppColors.hintColor,
       fontSize: 14,
       fontWeight: FontWeight.w400);
+
+  static const TextStyle appBarText = TextStyle(
+      color: AppColors.darkRose,
+      fontSize: 25,
+      fontWeight: FontWeight.w500);
 }

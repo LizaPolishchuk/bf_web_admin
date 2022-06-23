@@ -23,6 +23,7 @@ class HomeContainer extends StatelessWidget {
       body: Row(
         children: [
           _buildDrawer(),
+          const SizedBox(width: 38),
           Expanded(
             child: child,
           )

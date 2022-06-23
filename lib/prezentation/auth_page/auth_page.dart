@@ -21,8 +21,7 @@ class _AuthPageState extends State<AuthPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _repeatPasswordController =
-      TextEditingController();
+  final TextEditingController _repeatPasswordController = TextEditingController();
 
   final _emailFormKey = GlobalKey<FormState>();
   final _nameFormKey = GlobalKey<FormState>();
@@ -48,8 +47,7 @@ class _AuthPageState extends State<AuthPage> {
       _authBloc.errorMessage.listen((event) {
         String error = event;
         if (event == "user_not_found") {
-          error =
-              "Такого юзера не существует, пожалуйста, проверьте введенные данные";
+          error = "Такого юзера не существует, пожалуйста, проверьте введенные данные";
         } else if (event == "wrong_password") {
           error = "Не верный пароль";
         }
@@ -60,12 +58,7 @@ class _AuthPageState extends State<AuthPage> {
       }),
     ]);
 
-    _controllersList.addAll([
-      _emailController,
-      _nameController,
-      _passwordController,
-      _repeatPasswordController
-    ]);
+    _controllersList.addAll([_emailController, _nameController, _passwordController, _repeatPasswordController]);
     for (var controller in _controllersList) {
       controller.addListener(() {
         if (_errorText != null) {
@@ -104,18 +97,12 @@ class _AuthPageState extends State<AuthPage> {
                       children: const [
                         Text(
                           "B&F",
-                          style: TextStyle(
-                              color: AppColors.lightBackground,
-                              fontSize: 80,
-                              fontWeight: FontWeight.w700),
+                          style: TextStyle(color: AppColors.lightBackground, fontSize: 80, fontWeight: FontWeight.w700),
                         ),
                         SizedBox(height: 22),
                         Text(
                           "Be Beautiful & Be Free",
-                          style: TextStyle(
-                              color: AppColors.textColor,
-                              fontSize: 40,
-                              fontWeight: FontWeight.w600),
+                          style: TextStyle(color: AppColors.textColor, fontSize: 40, fontWeight: FontWeight.w600),
                         ),
                       ],
                     ),
@@ -146,10 +133,7 @@ class _AuthPageState extends State<AuthPage> {
               children: [
                 const Text(
                   "Вход",
-                  style: TextStyle(
-                      color: AppColors.textColor,
-                      fontSize: 36,
-                      fontWeight: FontWeight.w700),
+                  style: TextStyle(color: AppColors.textColor, fontSize: 36, fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 24),
                 InkWell(
@@ -170,9 +154,7 @@ class _AuthPageState extends State<AuthPage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 24),
-                  child: _registrationMode
-                      ? _buildRegistrationInput()
-                      : _buildLoginInput(),
+                  child: _registrationMode ? _buildRegistrationInput() : _buildLoginInput(),
                 ),
                 _buildLoginButton(),
                 const SizedBox(height: 24),
@@ -188,12 +170,9 @@ class _AuthPageState extends State<AuthPage> {
   Widget _buildLoginInput() {
     return Column(
       children: [
-        _buildInputTextField(
-            _emailFormKey, "Введите ваш E-mail", "E-mail", _emailController),
+        _buildInputTextField(_emailFormKey, "Введите ваш E-mail", "E-mail", _emailController),
         const SizedBox(height: 15),
-        _buildInputTextField(
-            _passwordFormKey, "Введите пароль", "******", _passwordController,
-            isPassword: true),
+        _buildInputTextField(_passwordFormKey, "Введите пароль", "******", _passwordController, isPassword: true),
       ],
     );
   }
@@ -201,18 +180,13 @@ class _AuthPageState extends State<AuthPage> {
   Widget _buildRegistrationInput() {
     return Column(
       children: [
-        _buildInputTextField(
-            _nameFormKey, "Введите ваше Имя", "Имя", _nameController),
+        _buildInputTextField(_nameFormKey, "Введите ваше Имя", "Имя", _nameController),
         const SizedBox(height: 15),
-        _buildInputTextField(
-            _emailFormKey, "Введите ваш E-mail", "E-mail", _emailController),
+        _buildInputTextField(_emailFormKey, "Введите ваш E-mail", "E-mail", _emailController),
         const SizedBox(height: 15),
-        _buildInputTextField(
-            _passwordFormKey, "Введите пароль", "******", _passwordController,
-            isPassword: true),
+        _buildInputTextField(_passwordFormKey, "Введите пароль", "******", _passwordController, isPassword: true),
         const SizedBox(height: 15),
-        _buildInputTextField(_repeatPasswordFormKey, "Повторите пароль",
-            "******", _repeatPasswordController,
+        _buildInputTextField(_repeatPasswordFormKey, "Повторите пароль", "******", _repeatPasswordController,
             isPassword: true),
       ],
     );
@@ -254,19 +228,17 @@ class _AuthPageState extends State<AuthPage> {
     return RoundedButton(
         text: _registrationMode ? "Регистрация" : "Вход",
         width: 230,
+        buttonColor: AppColors.rose,
         textColor: AppColors.textColor,
         onPressed: () {
-          setState(() {
-            _errorText = "";
-          });
+          _errorText = "";
 
           if (_registrationMode) {
             if (_emailFormKey.currentState?.validate() == true &&
                 _nameFormKey.currentState?.validate() == true &&
                 _passwordFormKey.currentState?.validate() == true &&
                 _repeatPasswordFormKey.currentState?.validate() == true) {
-              _authBloc.register(
-                  _emailController.text, _passwordController.text);
+              _authBloc.register(_emailController.text, _passwordController.text);
             }
           } else if (_emailFormKey.currentState?.validate() == true &&
               _passwordFormKey.currentState?.validate() == true) {
@@ -275,8 +247,7 @@ class _AuthPageState extends State<AuthPage> {
         });
   }
 
-  Widget _buildInputTextField(GlobalKey formKey, String label, String hint,
-      TextEditingController controller,
+  Widget _buildInputTextField(GlobalKey formKey, String label, String hint, TextEditingController controller,
       {bool isPassword = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -302,9 +273,7 @@ class _AuthPageState extends State<AuthPage> {
                 return 'Поле должно содержать больше, чем 3 символа';
               }
               if (formKey == _emailFormKey) {
-                if (!RegExp(
-                        r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                    .hasMatch(text)) {
+                if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(text)) {
                   return "Пожалуйста, введите правильный E-mail";
                 }
               }
@@ -318,20 +287,15 @@ class _AuthPageState extends State<AuthPage> {
             controller: controller,
             autovalidateMode: AutovalidateMode.onUserInteraction,
             style: AppTextStyle.bodyText,
-            obscureText: ((controller == _passwordController)
-                    ? _hidePassword
-                    : _hideRepeatedPassword) &&
-                isPassword,
+            obscureText: ((controller == _passwordController) ? _hidePassword : _hideRepeatedPassword) && isPassword,
             decoration: InputDecoration(
               counterText: "",
-              contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               fillColor: Colors.white.withAlpha(50),
               hintText: hint,
               hintStyle: AppTextStyle.hintText,
               floatingLabelBehavior: FloatingLabelBehavior.never,
-              suffixIconConstraints:
-                  const BoxConstraints(maxHeight: 24, maxWidth: 30),
+              suffixIconConstraints: const BoxConstraints(maxHeight: 24, maxWidth: 30),
               suffixIcon: isPassword
                   ? InkWell(
                       onTap: () {
@@ -344,9 +308,7 @@ class _AuthPageState extends State<AuthPage> {
                         });
                       },
                       child: SvgPicture.asset(
-                        ((controller == _passwordController)
-                                ? _hidePassword
-                                : _hideRepeatedPassword)
+                        ((controller == _passwordController) ? _hidePassword : _hideRepeatedPassword)
                             ? AppIcons.icEyeClosed
                             : AppIcons.icEye,
                         alignment: Alignment.centerLeft,

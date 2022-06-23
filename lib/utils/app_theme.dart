@@ -5,8 +5,7 @@ import 'app_colors.dart';
 import 'app_text_style.dart';
 
 abstract class AppTheme {
-  static Brightness get brightness =>
-      SchedulerBinding.instance!.window.platformBrightness;
+  static Brightness get brightness => SchedulerBinding.instance.window.platformBrightness;
 
   static ThemeData get theme => brightness == Brightness.dark ? dark : light;
 
@@ -25,6 +24,10 @@ abstract class AppTheme {
       filled: true,
       fillColor: AppColors.textInputBgGrey,
       enabledBorder: UnderlineInputBorder(
+        borderSide: BorderSide(style: BorderStyle.none),
+        borderRadius: BorderRadius.all(Radius.circular(25)),
+      ),
+      disabledBorder: UnderlineInputBorder(
         borderSide: BorderSide(style: BorderStyle.none),
         borderRadius: BorderRadius.all(Radius.circular(25)),
       ),

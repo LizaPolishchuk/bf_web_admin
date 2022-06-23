@@ -4,7 +4,7 @@ import 'package:salons_adminka/prezentation/clients_page/clients_page.dart';
 import 'package:salons_adminka/prezentation/feedbacks_page/feedbacks_page.dart';
 import 'package:salons_adminka/prezentation/home_container.dart';
 import 'package:salons_adminka/prezentation/masters_page/masters_page.dart';
-import 'package:salons_adminka/prezentation/profile_page/salon_details_page.dart';
+import 'package:salons_adminka/prezentation/profile_page/profile_page.dart';
 import 'package:salons_adminka/prezentation/promos_page/promos_page.dart';
 import 'package:salons_adminka/prezentation/settings_page/settings_page.dart';
 import 'package:salons_adminka/prezentation/support_page/support_page.dart';

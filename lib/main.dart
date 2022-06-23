@@ -91,7 +91,7 @@ class InitialPage extends StatefulWidget {
 
 class _InitialPageState extends State<InitialPage> {
   String? token;
-  Salon? salon;
+  String? salonId;
   late Widget _initialPage;
 
   @override
@@ -99,10 +99,10 @@ class _InitialPageState extends State<InitialPage> {
     super.initState();
 
     LocalStorage localStorage = getIt<LocalStorage>();
-    salon = localStorage.getSalon();
+    salonId = localStorage.getSalonId();
     token = localStorage.getAccessToken();
 
-    print("Main: salon: $salon, token: $token");
+    print("Main: salonId: $salonId, token: $token");
 
     eventBus.on<UserSuccessLoggedInEvent>().listen((event) {
       setState(() {
@@ -118,13 +118,14 @@ class _InitialPageState extends State<InitialPage> {
       });
     });
 
-    // _initialPage = token != null ? const HomeContainer() : const AuthPage();
-    _initialPage = const HomeContainer(
-      selectedMenuIndex: homeIndex,
-      child: HomePage(),
-    );
+    _initialPage =
+        token != null ? const HomeContainer(selectedMenuIndex: homeIndex, child: HomePage()) : const AuthPage();
+    // _initialPage = const HomeContainer(
+    //   selectedMenuIndex: homeIndex,
+    //   child: HomePage(),
+    // );
 
-    if (token != null && salon == null) {
+    if (token != null && salonId == null) {
       token = null;
       getIt<AuthBloc>().logout();
     }

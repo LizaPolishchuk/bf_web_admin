@@ -42,7 +42,7 @@ class RoundedButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 44),
           decoration: BoxDecoration(
             color: isEnabled
-                ? (buttonColor ?? AppColors.rose)
+                ? (buttonColor ?? AppColors.darkRose)
                 : AppColors.darkBackground,
             borderRadius: BorderRadius.circular(52),
           ),

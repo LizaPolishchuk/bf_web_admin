@@ -13,7 +13,10 @@ class AppIcons {
   static const String icGoogle = 'assets/icons/ic_google.svg';
   static const String icEye = 'assets/icons/ic_eye.svg';
   static const String icEyeClosed = 'assets/icons/ic_eye_closed.svg';
+  static const String icEdit = 'assets/icons/ic_edit.svg';
+  static const String icDelete = 'assets/icons/ic_delete.svg';
 
   ///Images
   static const String loginBackground = 'assets/images/login_background.png';
+  static const String salonExample = 'assets/images/salon_example.png';
 }
