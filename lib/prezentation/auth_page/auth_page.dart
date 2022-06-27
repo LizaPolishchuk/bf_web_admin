@@ -310,7 +310,7 @@ class _AuthPageState extends State<AuthPage> {
                       child: SvgPicture.asset(
                         ((controller == _passwordController) ? _hidePassword : _hideRepeatedPassword)
                             ? AppIcons.icEyeClosed
-                            : AppIcons.icEye,
+                            : AppIcons.icEyePassword,
                         alignment: Alignment.centerLeft,
                         color: AppColors.textColor,
                         width: 30,

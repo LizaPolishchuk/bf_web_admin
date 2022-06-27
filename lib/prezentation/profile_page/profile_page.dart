@@ -141,7 +141,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             _pickedPhoto = image;
                           });
                         },
-                        icon: SvgPicture.asset(AppIcons.icEdit),
+                        icon: SvgPicture.asset(AppIcons.icEditCircle),
                       ),
                       // const SizedBox(width: 8),
                       IconButton(
@@ -155,7 +155,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             }
                           });
                         },
-                        icon: SvgPicture.asset(AppIcons.icDelete),
+                        icon: SvgPicture.asset(AppIcons.icDeleteCircle),
                       ),
                     ],
                   ),

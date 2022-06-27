@@ -9,6 +9,7 @@ import 'package:salons_adminka/prezentation/auth_page/auth_bloc.dart';
 import 'package:salons_adminka/prezentation/auth_page/auth_page.dart';
 import 'package:salons_adminka/prezentation/home_container.dart';
 import 'package:salons_adminka/prezentation/home_page/home_page.dart';
+import 'package:salons_adminka/prezentation/services_page/services_page.dart';
 import 'package:salons_adminka/utils/app_theme.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart' as di;
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
@@ -118,8 +119,8 @@ class _InitialPageState extends State<InitialPage> {
       });
     });
 
-    _initialPage =
-        token != null ? const HomeContainer(selectedMenuIndex: homeIndex, child: HomePage()) : const AuthPage();
+    // _initialPage =
+    //     token != null ? const HomeContainer(selectedMenuIndex: homeIndex, child: HomePage()) : const AuthPage();
     // _initialPage = const HomeContainer(
     //   selectedMenuIndex: homeIndex,
     //   child: HomePage(),
@@ -133,6 +134,6 @@ class _InitialPageState extends State<InitialPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: _initialPage);
+    return Scaffold(body: ServicesPage());
   }
 }
