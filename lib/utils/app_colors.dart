@@ -10,4 +10,5 @@ abstract class AppColors {
   static const Color hintColor = Color(0xff979797);
   static const Color textColor = Color(0xff3F3F3F);
   static const Color disabledColor = Color(0xffBBB8B8);
+  static const Color blurColor = Color(0xFF686464);
 }

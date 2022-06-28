@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:salons_adminka/prezentation/widgets/colored_circle.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_adminka/utils/app_images.dart';
 import 'package:salons_adminka/utils/app_text_style.dart';
@@ -72,16 +73,7 @@ class _TableWidgetState extends State<TableWidget> {
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: Row(
         children: [
-          if (isCategory == true)
-            Container(
-              height: 10,
-              width: 10,
-              margin: const EdgeInsets.only(right: 5),
-              decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.circular(50),
-              ),
-            ),
+          if (isCategory == true) const ColoredCircle(color: Colors.red),
           Text(
             text,
             style: style ?? AppTextStyle.bodyText.copyWith(fontSize: 14),
@@ -98,12 +90,12 @@ class _TableWidgetState extends State<TableWidget> {
           onTap: () {},
           child: SvgPicture.asset(AppIcons.icEye),
         ),
-        SizedBox(width: 16),
+        const SizedBox(width: 16),
         InkWell(
           onTap: () {},
           child: SvgPicture.asset(AppIcons.icEdit),
         ),
-        SizedBox(width: 16),
+        const SizedBox(width: 16),
         InkWell(
           onTap: () {},
           child: SvgPicture.asset(AppIcons.icDelete),
