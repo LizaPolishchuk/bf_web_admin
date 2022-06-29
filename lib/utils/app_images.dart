@@ -18,6 +18,8 @@ class AppIcons {
   static const String icDeleteCircle = 'assets/icons/ic_delete_circle.svg';
   static const String icEye = 'assets/icons/ic_eye.svg';
   static const String icDelete = 'assets/icons/ic_delete.svg';
+  static const String icCircleArrowLeft = 'assets/icons/ic_circle_arrow_left.svg';
+  static const String icCircleArrowRight = 'assets/icons/ic_circle_arrow_right.svg';
 
 
   ///Images
