@@ -35,8 +35,6 @@ class ServicesBloc {
   Stream<bool> get isLoading => _isLoadingSubject.stream;
 
   getServices(String salonId, String? categoryId) async {
-    print("getServices for category: $categoryId");
-
     var response = await _getServicesListUseCase(salonId, categoryId);
     if (response.isLeft) {
       _errorSubject.add(response.left.message);
@@ -44,6 +42,23 @@ class ServicesBloc {
       _servicesList = response.right;
       _servicesLoadedSubject.add(_servicesList);
     }
+  }
+
+  searchServices(String searchKey) async {
+    print("searchServices: $searchKey");
+
+    if (searchKey.isEmpty) {
+      _servicesLoadedSubject.add(_servicesList);
+    }
+
+    List<Service> searchedList = [];
+    for (var service in _servicesList) {
+      if (service.name.toLowerCase().contains(searchKey.toLowerCase())) {
+        searchedList.add(service);
+      }
+    }
+
+    _servicesLoadedSubject.add(searchedList);
   }
 
   addService(Service service) async {

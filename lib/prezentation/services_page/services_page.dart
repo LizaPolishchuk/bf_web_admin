@@ -1,14 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/prezentation/services_page/categories_bloc.dart';
 import 'package:salons_adminka/prezentation/services_page/services_bloc.dart';
 import 'package:salons_adminka/prezentation/widgets/colored_circle.dart';
 import 'package:salons_adminka/prezentation/widgets/custom_app_bar.dart';
 import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
+import 'package:salons_adminka/prezentation/widgets/search_pannel.dart';
 import 'package:salons_adminka/prezentation/widgets/table_widget.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
-import 'package:salons_adminka/utils/app_images.dart';
 import 'package:salons_adminka/utils/app_text_style.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
@@ -28,6 +29,8 @@ class _ServicesPageState extends State<ServicesPage> {
   Category? _selectedCategory;
 
   late ServicesBloc _servicesBloc;
+
+  Timer? _searchTimer;
 
   @override
   void initState() {
@@ -74,22 +77,15 @@ class _ServicesPageState extends State<ServicesPage> {
                     ),
                   ),
                 ),
-                const SizedBox(width: 120),
-                const SizedBox(
-                    width: 360,
-                    child: TextField(
-                      style: AppTextStyle.bodyText,
-                      decoration: InputDecoration(
-                        counterText: "",
-                        isDense: true,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                        hintStyle: AppTextStyle.hintText,
-                        fillColor: Colors.white,
-                        floatingLabelBehavior: FloatingLabelBehavior.never,
-                        hintText: "Поиск услуги",
-                        prefixIcon: Align(widthFactor: 1.0, heightFactor: 1.0, child: Icon(Icons.search)),
-                      ),
-                    )),
+                const SizedBox(width: 60),
+                SearchPanel(
+                  hintText: "Поиск услуги",
+                  onSearch: (text) {
+                    _searchTimer = Timer(const Duration(milliseconds: 600), () {
+                      _servicesBloc.searchServices(text);
+                    });
+                  },
+                ),
               ],
             ),
             const SizedBox(height: 20),
@@ -98,32 +94,9 @@ class _ServicesPageState extends State<ServicesPage> {
               child: _buildServicesTable(),
             ),
             const SizedBox(height: 20),
-            // _buildPaginationCounter(),
+            // PaginationCounter(),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildPaginationCounter() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SvgPicture.asset(AppIcons.icCircleArrowLeft),
-          RichText(
-            text: const TextSpan(
-              text: '1',
-              style: AppTextStyle.bodyText,
-              children: <TextSpan>[
-                TextSpan(text: '-25', style: AppTextStyle.hintText),
-              ],
-            ),
-          ),
-          SvgPicture.asset(AppIcons.icCircleArrowRight),
-        ],
       ),
     );
   }
@@ -320,5 +293,12 @@ class _ServicesPageState extends State<ServicesPage> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _searchTimer?.cancel();
+
+    super.dispose();
   }
 }
