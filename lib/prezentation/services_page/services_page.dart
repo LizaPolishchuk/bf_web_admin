@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:salons_adminka/injection_container_web.dart';
@@ -6,6 +7,7 @@ import 'package:salons_adminka/prezentation/services_page/categories_bloc.dart';
 import 'package:salons_adminka/prezentation/services_page/services_bloc.dart';
 import 'package:salons_adminka/prezentation/widgets/colored_circle.dart';
 import 'package:salons_adminka/prezentation/widgets/custom_app_bar.dart';
+import 'package:salons_adminka/prezentation/widgets/info_container.dart';
 import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
 import 'package:salons_adminka/prezentation/widgets/search_pannel.dart';
 import 'package:salons_adminka/prezentation/widgets/table_widget.dart';
@@ -31,6 +33,7 @@ class _ServicesPageState extends State<ServicesPage> {
   late ServicesBloc _servicesBloc;
 
   Timer? _searchTimer;
+  final ValueNotifier<Widget?> _showInfoNotifier = ValueNotifier<Widget?>(null);
 
   @override
   void initState() {
@@ -48,56 +51,64 @@ class _ServicesPageState extends State<ServicesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColors.darkRose,
-        child: const Icon(Icons.add, color: Colors.white),
-        onPressed: () {},
-      ),
-      body: Padding(
-        padding: const EdgeInsets.only(right: 38),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const CustomAppBar(title: "Услуги"),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Flexible(child: _buildCategoriesSelector()),
-                InkWell(
-                  onTap: () {
-                    _showAddCategoryDialog();
-                  },
-                  child: Container(
-                    alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-                    child: const Text(
-                      "Добавить +",
-                      style: AppTextStyle.hintText,
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: AppColors.darkRose,
+          child: const Icon(Icons.add, color: Colors.white),
+          onPressed: () {},
+        ),
+        body: InfoContainer(
+          showInfoNotifier: _showInfoNotifier,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const CustomAppBar(title: "Услуги"),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Flexible(child: _buildCategoriesSelector()),
+                  InkWell(
+                    onTap: () {
+                      _showAddCategoryDialog();
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                      child: const Text(
+                        "Добавить +",
+                        style: AppTextStyle.hintText,
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(width: 60),
-                SearchPanel(
-                  hintText: "Поиск услуги",
-                  onSearch: (text) {
-                    _searchTimer = Timer(const Duration(milliseconds: 600), () {
-                      _servicesBloc.searchServices(text);
-                    });
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Flexible(
-              fit: FlexFit.tight,
-              child: _buildServicesTable(),
-            ),
-            const SizedBox(height: 20),
-            // PaginationCounter(),
-          ],
-        ),
-      ),
+                  const SizedBox(width: 60),
+                  SearchPanel(
+                    hintText: "Поиск услуги",
+                    onSearch: (text) {
+                      _searchTimer = Timer(const Duration(milliseconds: 600), () {
+                        _servicesBloc.searchServices(text);
+                      });
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Flexible(
+                fit: FlexFit.tight,
+                child: _buildServicesTable(),
+              ),
+              const SizedBox(height: 20),
+              // PaginationCounter(),
+            ],
+          ),
+        ));
+  }
+
+  Widget _buildInfoView(Service service) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Text(service.name),
+      ],
     );
   }
 
@@ -108,6 +119,9 @@ class _ServicesPageState extends State<ServicesPage> {
           return TableWidget(
             columnTitles: const ["Название услуги", "Цена, грн", "Время, мин", "Категория", "Действия"],
             items: snapshot.data ?? [],
+            onClickLook: (item) {
+              _showInfoNotifier.value = _buildInfoView(item as Service);
+            },
           );
         });
   }
@@ -297,6 +311,7 @@ class _ServicesPageState extends State<ServicesPage> {
 
   @override
   void dispose() {
+    _showInfoNotifier.dispose();
     _searchTimer?.cancel();
 
     super.dispose();

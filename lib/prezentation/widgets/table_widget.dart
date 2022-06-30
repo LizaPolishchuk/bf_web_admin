@@ -9,11 +9,10 @@ import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 class TableWidget extends StatefulWidget {
   final List<BaseEntity> items;
   final List<String> columnTitles;
-
+  final Function(BaseEntity item) onClickLook;
   // final Function(String) onClickDelete;
-  // final Function(String) onClickDelete;
 
-  const TableWidget({Key? key, required this.items, required this.columnTitles}) : super(key: key);
+  const TableWidget({Key? key, required this.items, required this.columnTitles, required this.onClickLook}) : super(key: key);
 
   @override
   State<TableWidget> createState() => _TableWidgetState();
@@ -51,7 +50,7 @@ class _TableWidgetState extends State<TableWidget> {
                   _buildRowText(service.price.toString()),
                   _buildRowText((service.duration ?? 0).toString()),
                   _buildRowText(service.categoryName ?? "", categoryColor: service.categoryColor),
-                  _buildActions(),
+                  _buildActions(item),
                 ]),
               );
             })
@@ -97,11 +96,13 @@ class _TableWidgetState extends State<TableWidget> {
     );
   }
 
-  Widget _buildActions() {
+  Widget _buildActions(Service service) {
     return Row(
       children: [
         InkWell(
-          onTap: () {},
+          onTap: () {
+            widget.onClickLook(service);
+          },
           child: SvgPicture.asset(AppIcons.icEye),
         ),
         const SizedBox(width: 16),
