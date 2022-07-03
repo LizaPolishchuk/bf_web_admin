@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/prezentation/services_page/categories_bloc.dart';
+import 'package:salons_adminka/prezentation/services_page/service_info_view.dart';
 import 'package:salons_adminka/prezentation/services_page/services_bloc.dart';
 import 'package:salons_adminka/prezentation/widgets/colored_circle.dart';
 import 'package:salons_adminka/prezentation/widgets/custom_app_bar.dart';
@@ -11,6 +13,7 @@ import 'package:salons_adminka/prezentation/widgets/info_container.dart';
 import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
 import 'package:salons_adminka/prezentation/widgets/search_pannel.dart';
 import 'package:salons_adminka/prezentation/widgets/table_widget.dart';
+import 'package:salons_adminka/utils/alert_builder.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_adminka/utils/app_text_style.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
@@ -46,69 +49,78 @@ class _ServicesPageState extends State<ServicesPage> {
 
     _categoriesBloc = getItWeb<CategoriesBloc>();
     _categoriesBloc.getCategories(_currentSalonId);
+
+    _servicesBloc.errorMessage.listen((error) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.red,
+        content: Text(error),
+      ));
+    });
+
+    _servicesBloc.serviceAdded.listen((isSuccess) {
+      _showInfoNotifier.value = null;
+    });
+    _servicesBloc.serviceUpdated.listen((isSuccess) {
+      _showInfoNotifier.value = null;
+    });
+
+    _categoriesBloc.errorMessage.listen((error) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.red,
+        content: Text(error),
+      ));
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: AppColors.darkRose,
-          child: const Icon(Icons.add, color: Colors.white),
-          onPressed: () {},
-        ),
-        body: InfoContainer(
-          showInfoNotifier: _showInfoNotifier,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return InfoContainer(
+      onPressedAddButton: () {
+        _showInfoView(InfoAction.add, null, null);
+      },
+      showInfoNotifier: _showInfoNotifier,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const CustomAppBar(title: "Услуги"),
+          Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const CustomAppBar(title: "Услуги"),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Flexible(child: _buildCategoriesSelector()),
-                  InkWell(
-                    onTap: () {
-                      _showAddCategoryDialog();
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-                      child: const Text(
-                        "Добавить +",
-                        style: AppTextStyle.hintText,
-                      ),
-                    ),
+              Flexible(child: _buildCategoriesSelector()),
+              InkWell(
+                onTap: () {
+                  _showAddCategoryDialog();
+                },
+                child: Container(
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                  child: const Text(
+                    "Добавить +",
+                    style: AppTextStyle.hintText,
                   ),
-                  const SizedBox(width: 60),
-                  SearchPanel(
-                    hintText: "Поиск услуги",
-                    onSearch: (text) {
-                      _searchTimer = Timer(const Duration(milliseconds: 600), () {
-                        _servicesBloc.searchServices(text);
-                      });
-                    },
-                  ),
-                ],
+                ),
               ),
-              const SizedBox(height: 20),
-              Flexible(
-                fit: FlexFit.tight,
-                child: _buildServicesTable(),
+              const SizedBox(width: 60),
+              SearchPanel(
+                hintText: "Поиск услуги",
+                onSearch: (text) {
+                  _searchTimer = Timer(const Duration(milliseconds: 600), () {
+                    _servicesBloc.searchServices(text);
+                  });
+                },
               ),
-              const SizedBox(height: 20),
-              // PaginationCounter(),
             ],
           ),
-        ));
-  }
-
-  Widget _buildInfoView(Service service) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Text(service.name),
-      ],
+          const SizedBox(height: 20),
+          Flexible(
+            fit: FlexFit.tight,
+            child: _buildServicesTable(),
+          ),
+          const SizedBox(height: 20),
+          // PaginationCounter(),
+        ],
+      ),
     );
   }
 
@@ -119,11 +131,42 @@ class _ServicesPageState extends State<ServicesPage> {
           return TableWidget(
             columnTitles: const ["Название услуги", "Цена, грн", "Время, мин", "Категория", "Действия"],
             items: snapshot.data ?? [],
-            onClickLook: (item) {
-              _showInfoNotifier.value = _buildInfoView(item as Service);
+            onClickLook: (item, index) {
+              _showInfoView(InfoAction.view, item, index);
+            },
+            onClickEdit: (item, index) {
+              _showInfoView(InfoAction.edit, item, index);
+            },
+            onClickDelete: (item, index) {
+              AlertBuilder().showAlertForDelete(context, "сервис", item.name, () {
+                _servicesBloc.removeService(item.id, index);
+                Get.back();
+              });
             },
           );
         });
+  }
+
+  void _showInfoView(InfoAction infoAction, BaseEntity? item, int? index) {
+    _showInfoNotifier.value = ServiceInfoView(
+      salonId: _currentSalonId,
+      infoAction: infoAction,
+      service: item as Service?,
+      categories: _categoriesBloc.categoriesList,
+      onClickAction: (service, action) {
+        if (action == InfoAction.add) {
+          _servicesBloc.addService(service);
+        } else if (action == InfoAction.edit) {
+          _servicesBloc.updateService(service, index!);
+        } else if (action == InfoAction.delete) {
+          AlertBuilder().showAlertForDelete(context, "сервис", service.name, () {
+            _servicesBloc.removeService(service.id, index!);
+            _showInfoNotifier.value = null;
+            Get.back();
+          });
+        }
+      },
+    );
   }
 
   Widget _buildCategoriesSelector() {
@@ -166,7 +209,7 @@ class _ServicesPageState extends State<ServicesPage> {
                       alignment: Alignment.topRight,
                       child: InkWell(
                         onTap: () {
-                          Navigator.of(context).pop();
+                          Get.back();
                         },
                         child: const Icon(
                           Icons.close,
@@ -266,7 +309,7 @@ class _ServicesPageState extends State<ServicesPage> {
 
                             _categoriesBloc.addCategory(newCategory);
 
-                            Navigator.of(context).pop();
+                            Get.back();
                           }
                         }),
                   ],
@@ -297,7 +340,7 @@ class _ServicesPageState extends State<ServicesPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (category != null) ColoredCircle(color: Color(category.color ?? 0xFFFFFFFF)),
+            if (category != null) ColoredCircle(color: category.color != null ? Color(category.color!) : Colors.grey),
             Text(
               category != null ? category.name : "Все услуги",
               style: AppTextStyle.hintText

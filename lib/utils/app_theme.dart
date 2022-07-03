@@ -21,6 +21,7 @@ abstract class AppTheme {
     //   bodyText2: TextStyle(color: AppColors.colorMainText),
     // ),
     inputDecorationTheme: const InputDecorationTheme(
+      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
       filled: true,
       fillColor: AppColors.textInputBgGrey,
       enabledBorder: UnderlineInputBorder(

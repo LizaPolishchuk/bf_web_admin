@@ -26,9 +26,9 @@ class ServicesBloc {
 
   Stream<bool> get serviceAdded => _serviceAddedSubject.stream;
 
-  Stream<bool> get serviceUpdated => _serviceAddedSubject.stream;
+  Stream<bool> get serviceUpdated => _serviceUpdatedSubject.stream;
 
-  Stream<bool> get serviceRemoved => _serviceAddedSubject.stream;
+  Stream<bool> get serviceRemoved => _serviceRemovedSubject.stream;
 
   Stream<String> get errorMessage => _errorSubject.stream;
 

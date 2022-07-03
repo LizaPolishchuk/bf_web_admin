@@ -9,10 +9,20 @@ import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 class TableWidget extends StatefulWidget {
   final List<BaseEntity> items;
   final List<String> columnTitles;
-  final Function(BaseEntity item) onClickLook;
+  final Function(BaseEntity item, int index)? onClickLook;
+  final Function(BaseEntity item, int index)? onClickEdit;
+  final Function(BaseEntity item, int index)? onClickDelete;
+
   // final Function(String) onClickDelete;
 
-  const TableWidget({Key? key, required this.items, required this.columnTitles, required this.onClickLook}) : super(key: key);
+  const TableWidget(
+      {Key? key,
+      required this.items,
+      required this.columnTitles,
+      this.onClickLook,
+      this.onClickEdit,
+      this.onClickDelete})
+      : super(key: key);
 
   @override
   State<TableWidget> createState() => _TableWidgetState();
@@ -50,7 +60,7 @@ class _TableWidgetState extends State<TableWidget> {
                   _buildRowText(service.price.toString()),
                   _buildRowText((service.duration ?? 0).toString()),
                   _buildRowText(service.categoryName ?? "", categoryColor: service.categoryColor),
-                  _buildActions(item),
+                  _buildActions(item, index),
                 ]),
               );
             })
@@ -96,23 +106,33 @@ class _TableWidgetState extends State<TableWidget> {
     );
   }
 
-  Widget _buildActions(Service service) {
+  Widget _buildActions(Service service, int index) {
     return Row(
       children: [
         InkWell(
           onTap: () {
-            widget.onClickLook(service);
+            if (widget.onClickLook != null) {
+              widget.onClickLook!(service, index);
+            }
           },
           child: SvgPicture.asset(AppIcons.icEye),
         ),
         const SizedBox(width: 16),
         InkWell(
-          onTap: () {},
+          onTap: () {
+            if (widget.onClickEdit != null) {
+              widget.onClickEdit!(service, index);
+            }
+          },
           child: SvgPicture.asset(AppIcons.icEdit),
         ),
         const SizedBox(width: 16),
         InkWell(
-          onTap: () {},
+          onTap: () {
+            if (widget.onClickEdit != null) {
+              widget.onClickDelete!(service, index);
+            }
+          },
           child: SvgPicture.asset(AppIcons.icDelete),
         )
       ],

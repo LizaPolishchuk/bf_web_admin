@@ -12,7 +12,7 @@ class CategoriesBloc {
   CategoriesBloc(this._getCategoriesListUseCase, this._addCategoryUseCase, this._updateCategoryUseCase,
       this._removeCategoryUseCase);
 
-  List<Category> _categoriesList = [];
+  List<Category> categoriesList = [];
 
   final _categoriesLoadedSubject = PublishSubject<List<Category>>();
   final _categoryAddedSubject = PublishSubject<bool>();
@@ -39,8 +39,8 @@ class CategoriesBloc {
     if (response.isLeft) {
       _errorSubject.add(response.left.message);
     } else {
-      _categoriesList = response.right;
-      _categoriesLoadedSubject.add(_categoriesList);
+      categoriesList = response.right;
+      _categoriesLoadedSubject.add(categoriesList);
     }
   }
 
@@ -49,8 +49,8 @@ class CategoriesBloc {
     if (response.isLeft) {
       _errorSubject.add(response.left.message);
     } else {
-      _categoriesList.add(response.right);
-      _categoriesLoadedSubject.add(_categoriesList);
+      categoriesList.add(response.right);
+      _categoriesLoadedSubject.add(categoriesList);
       _categoryAddedSubject.add(true);
     }
   }
@@ -60,8 +60,8 @@ class CategoriesBloc {
     if (response.isLeft) {
       _errorSubject.add(response.left.message);
     } else {
-      _categoriesList[index] = response.right;
-      _categoriesLoadedSubject.add(_categoriesList);
+      categoriesList[index] = response.right;
+      _categoriesLoadedSubject.add(categoriesList);
       _categoryUpdatedSubject.add(true);
     }
   }
@@ -71,8 +71,8 @@ class CategoriesBloc {
     if (response.isLeft) {
       _errorSubject.add(response.left.message);
     } else {
-      _categoriesList.removeAt(index);
-      _categoriesLoadedSubject.add(_categoriesList);
+      categoriesList.removeAt(index);
+      _categoriesLoadedSubject.add(categoriesList);
       _categoryRemovedSubject.add(true);
     }
   }
