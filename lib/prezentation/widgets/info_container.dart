@@ -68,22 +68,23 @@ class InfoContainer extends StatelessWidget {
             child: ValueListenableBuilder<Widget?>(
               valueListenable: showInfoNotifier,
               builder: (context, value, child) {
-                return AnimatedContainer(
-                  width: value != null ? 360 : 0,
-                  height: MediaQuery.of(context).size.height,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.blurColor.withOpacity(0.25),
-                        blurRadius: 5,
-                        offset: const Offset(2, 2),
+                return AnimatedSize(
+                    duration: const Duration(milliseconds: 200),
+                    child: Container(
+                      width: value != null ? 360 : 0,
+                      height: MediaQuery.of(context).size.height,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.blurColor.withOpacity(0.25),
+                            blurRadius: 5,
+                            offset: const Offset(2, 2),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  duration: const Duration(milliseconds: 200),
-                  child: value,
-                );
+                      child: value,
+                    ));
               },
             ),
           ),
