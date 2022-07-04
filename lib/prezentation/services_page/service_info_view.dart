@@ -1,4 +1,4 @@
-import 'package:dropdown_search/dropdown_search.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:salons_adminka/prezentation/widgets/colored_circle.dart';
@@ -53,12 +53,14 @@ class _ServiceInfoViewState extends State<ServiceInfoView> {
     _serviceForUpdate = widget.service;
 
     if (_serviceForUpdate != null) {
-      if (_serviceForUpdate!.categoryId != null) {
+      if (_serviceForUpdate!.categoryId != null && widget.categories.isNotEmpty) {
         _selectedCategory = widget.categories.firstWhere((element) => element.id == _serviceForUpdate!.categoryId);
       }
       _nameController.text = _serviceForUpdate!.name;
       _priceController.text = _serviceForUpdate!.price?.toString() ?? "";
       _durationController.text = _serviceForUpdate!.duration?.toString() ?? "";
+
+      _enableButtonNotifier.value = true;
     }
   }
 
@@ -74,81 +76,55 @@ class _ServiceInfoViewState extends State<ServiceInfoView> {
               _infoAction == InfoAction.view
                   ? "Просмотр"
                   : _infoAction == InfoAction.edit
-                      ? "Редактировать"
-                      : "Добавить услугу",
+                  ? "Редактировать"
+                  : "Добавить услугу",
               style: AppTextStyle.titleText),
           const SizedBox(height: 35),
           _buildTextField(_nameController, "Название услуги"),
           const SizedBox(height: 15),
-          SizedBox(
-            height: 50,
+          Container(
             width: double.infinity,
-            child: DropdownSearch<Category>(
-              enabled: _infoAction != InfoAction.view,
-              popupProps: PopupProps.menu(
-                menuProps: MenuProps(elevation: 2, shadowColor: AppColors.blurColor.withOpacity(0.25)),
-                fit: FlexFit.loose,
-                constraints: const BoxConstraints(maxHeight: 200),
-                containerBuilder: (context, popupWidget) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 12),
-                    child: popupWidget,
-                  );
-                },
-                itemBuilder: (context, category, isSelected) {
-                  return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        ColoredCircle(color: (category.color != null) ? Color(category.color!) : Colors.grey),
-                        Flexible(
-                          child: Text(
-                            category.name,
-                            style: AppTextStyle.hintText.copyWith(fontSize: 16),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-              dropdownBuilder: (context, category) {
-                if (category == null) {
-                  return Container(
-                    margin: const EdgeInsets.only(top: 3, left: 6),
-                    // alignment: Alignment.centerLeft,
-                    child: const Text(
-                      "Категория",
-                      style: AppTextStyle.hintText,
-                    ),
-                  );
-                }
-                return Container(
-                  margin: const EdgeInsets.only(top: 3, left: 6),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ColoredCircle(color: (category.color != null) ? Color(category.color!) : Colors.grey),
-                      Flexible(
-                        child: Text(
-                          category.name,
-                          style: AppTextStyle.bodyText,
+            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 20),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(25),
+              color: AppColors.textInputBgGrey,
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton2(
+                hint: const Text(
+                  "Категория",
+                  style: AppTextStyle.hintText,
+                ),
+                items: widget.categories
+                    .map(
+                      (category) =>
+                      DropdownMenuItem<Category>(
+                        value: category,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ColoredCircle(color: (category.color != null) ? Color(category.color!) : Colors.grey),
+                            Flexible(
+                              child: Text(
+                                category.name,
+                                style: _selectedCategory == category ? AppTextStyle.bodyText : AppTextStyle.hintText
+                                    .copyWith(fontSize: 16),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  ),
-                );
-              },
-              items: widget.categories,
-              onChanged: (newValue) {
-                setState(() {
-                  _selectedCategory = newValue;
-                  _checkIfEnableButton();
-                });
-              },
-              selectedItem: _selectedCategory,
+                )
+                    .toList(),
+                value: _selectedCategory,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedCategory = value as Category;
+                    _checkIfEnableButton();
+                  });
+                },
+                itemHeight: 40,
+              ),
             ),
           ),
           const SizedBox(height: 15),
@@ -161,22 +137,6 @@ class _ServiceInfoViewState extends State<ServiceInfoView> {
               Flexible(
                 child: _buildTextField(_durationController, "Время", isDuration: true),
               ),
-              // Flexible(
-              //   child: InkWell(
-              //     onTap: () {
-              //       _showAlertToPickTime();
-              //     },
-              //     child: Container(
-              //       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-              //       decoration: const BoxDecoration(
-              //           color: AppColors.textInputBgGrey, borderRadius: BorderRadius.all(Radius.circular(25))),
-              //       child: Text(
-              //         _selectedDuration?.toIso8601String() ?? "Время",
-              //         style: _selectedDuration != null ? AppTextStyle.bodyText : AppTextStyle.hintText,
-              //       ),
-              //     ),
-              //   ),
-              // ),
             ],
           ),
           const SizedBox(height: 120),

@@ -41,6 +41,10 @@ class _TableWidgetState extends State<TableWidget> {
         child: Table(
           defaultVerticalAlignment: TableCellVerticalAlignment.middle,
           children: _getTableRows(),
+
+          // columnWidths: {
+          //   2: FlexColumnWidth(4),
+          // },
         ));
   }
 
@@ -60,6 +64,26 @@ class _TableWidgetState extends State<TableWidget> {
                   _buildRowText(service.price.toString()),
                   _buildRowText((service.duration ?? 0).toString()),
                   _buildRowText(service.categoryName ?? "", categoryColor: service.categoryColor),
+                  _buildActions(item, index),
+                ]),
+              );
+            })
+            .values
+            .toList();
+      } else if (widget.items.first is Master) {
+        tableRows = widget.items
+            .asMap()
+            .map((index, item) {
+              var master = item as Master;
+              return MapEntry(
+                index,
+                _buildTableRow(index, [
+                  _buildRowText(master.name,
+                      style: AppTextStyle.bodyText.copyWith(fontSize: 14, fontWeight: FontWeight.w500),
+                      photoUrl: master.avatar),
+                  _buildRowText(master.phoneNumber ?? ""),
+                  _buildRowText(master.providedServices?.values.join(", ") ?? ""),
+                  _buildRowText(master.status ?? ""),
                   _buildActions(item, index),
                 ]),
               );
@@ -91,28 +115,51 @@ class _TableWidgetState extends State<TableWidget> {
     return TableRow(children: titleWidgets);
   }
 
-  Widget _buildRowText(String text, {TextStyle? style, int? categoryColor}) {
+  Widget _buildRowText(String text, {TextStyle? style, int? categoryColor, String? photoUrl}) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: Row(
         children: [
+          if (photoUrl != null)
+            Container(
+              height: 35,
+              width: 35,
+              margin: const EdgeInsets.only(right: 12),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(50),
+                child: Image.network(
+                  photoUrl,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    }
+                    return Container(color: AppColors.rose);
+                  },
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(color: AppColors.rose);
+                  },
+                ),
+              ),
+            ),
           if (categoryColor != null) ColoredCircle(color: Color(categoryColor)),
-          Text(
-            text,
-            style: style ?? AppTextStyle.bodyText.copyWith(fontSize: 14),
+          Flexible(
+            child: Text(
+              text,
+              style: style ?? AppTextStyle.bodyText.copyWith(fontSize: 14),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildActions(Service service, int index) {
+  Widget _buildActions(BaseEntity item, int index) {
     return Row(
       children: [
         InkWell(
           onTap: () {
             if (widget.onClickLook != null) {
-              widget.onClickLook!(service, index);
+              widget.onClickLook!(item, index);
             }
           },
           child: SvgPicture.asset(AppIcons.icEye),
@@ -121,7 +168,7 @@ class _TableWidgetState extends State<TableWidget> {
         InkWell(
           onTap: () {
             if (widget.onClickEdit != null) {
-              widget.onClickEdit!(service, index);
+              widget.onClickEdit!(item, index);
             }
           },
           child: SvgPicture.asset(AppIcons.icEdit),
@@ -129,8 +176,8 @@ class _TableWidgetState extends State<TableWidget> {
         const SizedBox(width: 16),
         InkWell(
           onTap: () {
-            if (widget.onClickEdit != null) {
-              widget.onClickDelete!(service, index);
+            if (widget.onClickDelete != null) {
+              widget.onClickDelete!(item, index);
             }
           },
           child: SvgPicture.asset(AppIcons.icDelete),
