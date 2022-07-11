@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/prezentation/categories/categories_selector.dart';
 import 'package:salons_adminka/prezentation/services_page/service_info_view.dart';
@@ -120,7 +119,6 @@ class _ServicesPageState extends State<ServicesPage> {
             onClickDelete: (item, index) {
               AlertBuilder().showAlertForDelete(context, "сервис", item.name, () {
                 _servicesBloc.removeService(item.id, index);
-                Get.back();
               });
             },
           );
@@ -142,7 +140,6 @@ class _ServicesPageState extends State<ServicesPage> {
           AlertBuilder().showAlertForDelete(context, "сервис", service.name, () {
             _servicesBloc.removeService(service.id, index!);
             _showInfoNotifier.value = null;
-            Get.back();
           });
         }
       },

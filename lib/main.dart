@@ -129,6 +129,6 @@ class _InitialPageState extends State<InitialPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: _initialPage);
+    return _initialPage;
   }
 }

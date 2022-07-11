@@ -3,23 +3,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:salons_adminka/prezentation/clients_page/additional_client_details_widget.dart';
 import 'package:salons_adminka/prezentation/clients_page/clients_bloc.dart';
 import 'package:salons_adminka/prezentation/clients_page/clients_page.dart';
 import 'package:salons_adminka/prezentation/widgets/custom_app_bar.dart';
 import 'package:salons_adminka/prezentation/widgets/info_container.dart';
 import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
+import 'package:salons_adminka/utils/alert_builder.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_adminka/utils/app_images.dart';
 import 'package:salons_adminka/utils/app_text_style.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class ClientDetailsPage extends StatefulWidget {
-  final Client? client;
   final ClientsBloc clientsBloc;
-  final InfoAction infoAction;
+  final ClientDetailsData clientDetailsData;
 
-  const ClientDetailsPage({Key? key, this.client, required this.clientsBloc, required this.infoAction})
-      : super(key: key);
+  const ClientDetailsPage({Key? key, required this.clientsBloc, required this.clientDetailsData}) : super(key: key);
 
   @override
   State<ClientDetailsPage> createState() => _ClientDetailsPageState();
@@ -39,9 +39,10 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
   void initState() {
     super.initState();
 
-    _client = widget.client;
+    _client = widget.clientDetailsData.client;
 
-    if (widget.infoAction == InfoAction.edit || widget.infoAction == InfoAction.add) {
+    if (widget.clientDetailsData.infoAction == InfoAction.edit ||
+        widget.clientDetailsData.infoAction == InfoAction.add) {
       _isEditModeNotifier = ValueNotifier<bool>(true);
     } else {
       _isEditModeNotifier = ValueNotifier<bool>(false);
@@ -51,7 +52,7 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
       _nameController.text = _client!.name;
       _phoneController.text = _client!.phone ?? "";
 
-      if(_client!.name.isNotEmpty) {
+      if (_client!.name.isNotEmpty) {
         _enableButtonNotifier.value = true;
       }
     }
@@ -85,9 +86,19 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
           Flexible(
             child: Row(
               children: [
-                Flexible(flex: 1, child: _buildMainInfoContainer()),
+                Flexible(
+                  flex: 1,
+                  child: _buildCard(
+                    child: _buildMainInfoContainer(),
+                  ),
+                ),
                 const SizedBox(width: 67),
-                Flexible(flex: 2, child: _buildAdditionalInfo()),
+                Flexible(
+                  flex: 2,
+                  child: _buildCard(
+                    child: AdditionalClientDetails(client: _client),
+                  ),
+                ),
               ],
             ),
           )
@@ -96,7 +107,7 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
     );
   }
 
-  Widget _buildMainInfoContainer() {
+  Widget _buildCard({required Widget child}) {
     return Container(
       height: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
@@ -111,70 +122,76 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
           ),
         ],
       ),
-      child: ValueListenableBuilder<bool>(
-          valueListenable: _isEditModeNotifier,
-          builder: (context, isEditMode, child) {
-            return Column(
-              children: [
-                Opacity(
-                  opacity: isEditMode ? 0 : 1,
-                  child: Align(
-                    alignment: Alignment.topRight,
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.edit,
-                        size: 16,
-                      ),
-                      color: Colors.black,
-                      onPressed: isEditMode
-                          ? null
-                          : () {
-                              _isEditModeNotifier.value = true;
-                            },
-                    ),
-                  ),
-                ),
-                InkWell(
-                  onTap: isEditMode ? () {} : null,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      CircleAvatar(
-                        radius: 50,
-                        backgroundImage: NetworkImage(_client?.photoUrl ?? ""),
-                        backgroundColor: AppColors.rose,
-                      ),
-                      if (isEditMode)
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(50),
-                          child: Container(
-                            width: 100,
-                            height: 100,
-                            color: _client?.photoUrl?.isNotEmpty == true
-                                ? Colors.black.withOpacity(0.5)
-                                : AppColors.textInputBgGrey,
-                            child: Center(
-                              child: SvgPicture.asset(
-                                AppIcons.icGallery,
-                                color: _client?.photoUrl?.isNotEmpty == true ? Colors.white : AppColors.hintColor,
-                              ),
-                            ),
-                          ),
-                        )
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
-                Expanded(
-                  child: isEditMode || _client == null ? _buildMainDetailsInEditMode() : _buildMainDetails(),
-                ),
-              ],
-            );
-          }),
+      child: child,
     );
   }
 
+  Widget _buildMainInfoContainer() {
+    return ValueListenableBuilder<bool>(
+        valueListenable: _isEditModeNotifier,
+        builder: (context, isEditMode, child) {
+          return Column(
+            children: [
+              Opacity(
+                opacity: isEditMode ? 0 : 1,
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.edit,
+                      size: 16,
+                    ),
+                    color: Colors.black,
+                    onPressed: isEditMode
+                        ? null
+                        : () {
+                            _isEditModeNotifier.value = true;
+                          },
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: isEditMode ? () {} : null,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CircleAvatar(
+                      radius: 50,
+                      backgroundImage: NetworkImage(_client?.photoUrl ?? ""),
+                      backgroundColor: AppColors.rose,
+                    ),
+                    if (isEditMode)
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(50),
+                        child: Container(
+                          width: 100,
+                          height: 100,
+                          color: _client?.photoUrl?.isNotEmpty == true
+                              ? Colors.black.withOpacity(0.5)
+                              : AppColors.textInputBgGrey,
+                          child: Center(
+                            child: SvgPicture.asset(
+                              AppIcons.icGallery,
+                              color: _client?.photoUrl?.isNotEmpty == true ? Colors.white : AppColors.hintColor,
+                            ),
+                          ),
+                        ),
+                      )
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              Expanded(
+                child: isEditMode || _client == null ? _buildMainDetailsInEditMode() : _buildMainDetails(),
+              ),
+            ],
+          );
+        });
+  }
+
   Widget _buildMainDetails() {
+    assert(_client != null);
+
     ClientStatus? clientStatus = _client!.status?.isNotEmpty == true
         ? ClientStatus.values.firstWhereOrNull((e) => e.name == _client!.status)
         : null;
@@ -209,7 +226,9 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
         _buildMainContactInfo(),
         const Spacer(),
         TextButton(
-          onPressed: () {},
+          onPressed: () {
+            AlertBuilder().showAlertForDelete(context, "профиль", _client!.name, () {});
+          },
           child: Row(
             children: const [
               Icon(
@@ -318,7 +337,7 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
       onChanged: (text) {
         if (text.isNotEmpty && _enableButtonNotifier.value != true) {
           _enableButtonNotifier.value = true;
-        } else if(text.isEmpty && _enableButtonNotifier.value != false){
+        } else if (text.isEmpty && _enableButtonNotifier.value != false) {
           _enableButtonNotifier.value = false;
         }
       },
@@ -377,16 +396,6 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
           ],
         )
       ],
-    );
-  }
-
-  Widget _buildAdditionalInfo() {
-    return Container(
-      height: double.infinity,
-      decoration: const BoxDecoration(color: Colors.white),
-      child: Column(
-        children: [],
-      ),
     );
   }
 

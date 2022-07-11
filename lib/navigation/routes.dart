@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:salons_adminka/main.dart';
 import 'package:salons_adminka/prezentation/clients_page/clients_page.dart';
@@ -27,6 +28,7 @@ class Routes {
   static const services = '/services';
   static const masters = '/masters';
   static const clients = '/clients';
+  static const clientEdit = '/client/edit';
   static const promos = '/promos';
   static const feedbacks = '/feedbacks';
   static const support = '/support';
@@ -60,6 +62,13 @@ abstract class AppPages {
         child: ClientsPage(),
       ),
     ),
+    // GetPage(
+    //   name: Routes.clientEdit,
+    //   page: () =>  HomeContainer(
+    //     selectedMenuIndex: clientsIndex,
+    //     child: ClientDetailsPage(),
+    //   ),
+    // ),
     GetPage(
       name: Routes.promos,
       page: () => const HomeContainer(

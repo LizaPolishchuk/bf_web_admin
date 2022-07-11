@@ -55,7 +55,12 @@ class AlertBuilder {
                             ),
                           ),
                           const SizedBox(height: 27),
-                          RoundedButton(text: "Удалить", onPressed: onConfirm),
+                          RoundedButton(
+                              text: "Удалить",
+                              onPressed: () {
+                                onConfirm();
+                                Get.back();
+                              }),
                         ],
                       ),
                     ),

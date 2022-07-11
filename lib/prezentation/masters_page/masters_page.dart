@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/prezentation/masters_page/master_info_view.dart';
 import 'package:salons_adminka/prezentation/masters_page/masters_bloc.dart';
@@ -120,7 +119,6 @@ class _MastersPageState extends State<MastersPage> {
             onClickDelete: (item, index) {
               AlertBuilder().showAlertForDelete(context, "мастера", item.name, () {
                 _mastersBloc.removeMaster(item.id, index);
-                Get.back();
               });
             },
           );
@@ -144,7 +142,6 @@ class _MastersPageState extends State<MastersPage> {
           AlertBuilder().showAlertForDelete(context, "мастера", service.name, () {
             _mastersBloc.removeMaster(service.id, index!);
             _showInfoNotifier.value = null;
-            Get.back();
           });
         }
       },
