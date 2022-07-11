@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:salons_adminka/prezentation/clients_page/clients_page.dart';
 import 'package:salons_adminka/prezentation/widgets/colored_circle.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_adminka/utils/app_images.dart';
@@ -90,6 +92,31 @@ class _TableWidgetState extends State<TableWidget> {
             })
             .values
             .toList();
+      } else if (widget.items.first is Client) {
+        tableRows = widget.items
+            .asMap()
+            .map((index, item) {
+              var client = item as Client;
+
+              ClientStatus? clientStatus = client.status?.isNotEmpty == true
+                  ? ClientStatus.values.firstWhereOrNull((e) => e.name == client.status)
+                  : null;
+
+              return MapEntry(
+                index,
+                _buildTableRow(index, [
+                  _buildRowText(client.name,
+                      style: AppTextStyle.bodyText.copyWith(fontSize: 14, fontWeight: FontWeight.w500),
+                      photoUrl: client.photoUrl),
+                  _buildRowText(client.city ?? ""),
+                  _buildRowText(clientStatus?.localizedName() ?? "", iconPath: clientStatus?.iconPath()),
+                  _buildRowText(client.services?.values.join(", ") ?? ""),
+                  _buildActions(item, index),
+                ]),
+              );
+            })
+            .values
+            .toList();
       }
     }
 
@@ -115,11 +142,15 @@ class _TableWidgetState extends State<TableWidget> {
     return TableRow(children: titleWidgets);
   }
 
-  Widget _buildRowText(String text, {TextStyle? style, int? categoryColor, String? photoUrl}) {
+  Widget _buildRowText(String text, {TextStyle? style, int? categoryColor, String? photoUrl, String? iconPath}) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: Row(
         children: [
+          if (iconPath?.isNotEmpty == true) Padding(
+            padding: const EdgeInsets.only(right: 5),
+            child: SvgPicture.asset(iconPath!),
+          ),
           if (photoUrl != null)
             Container(
               height: 35,

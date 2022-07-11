@@ -20,6 +20,8 @@ class AppIcons {
   static const String icDelete = 'assets/icons/ic_delete.svg';
   static const String icCircleArrowLeft = 'assets/icons/ic_circle_arrow_left.svg';
   static const String icCircleArrowRight = 'assets/icons/ic_circle_arrow_right.svg';
+  static const String icNewClient = 'assets/icons/ic_new_client.svg';
+  static const String icVipDiamond = 'assets/icons/ic_vip_diamond.svg';
 
 
   ///Images
