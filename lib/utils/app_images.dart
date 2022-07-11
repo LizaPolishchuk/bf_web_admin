@@ -22,6 +22,7 @@ class AppIcons {
   static const String icCircleArrowRight = 'assets/icons/ic_circle_arrow_right.svg';
   static const String icNewClient = 'assets/icons/ic_new_client.svg';
   static const String icVipDiamond = 'assets/icons/ic_vip_diamond.svg';
+  static const String icGallery = 'assets/icons/ic_gallery.svg';
 
 
   ///Images

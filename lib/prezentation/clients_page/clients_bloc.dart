@@ -15,13 +15,13 @@ class ClientsBloc {
 
   List<Client> _clientsList = [
     Client("", "Anna", "", "https://t4.ftcdn.net/jpg/02/43/87/41/360_F_243874126_YLSIGaDgoNzS91Xdbg1IVpiwXeeZSXdr.jpg",
-        "Kyiv", "vip", null),
+        "Kyiv", "vip", "+380679162622", null),
     Client("", "Anna", "", "https://t4.ftcdn.net/jpg/02/43/87/41/360_F_243874126_YLSIGaDgoNzS91Xdbg1IVpiwXeeZSXdr.jpg",
-        "Kyiv", "vip", null),
+        "Kyiv", "vip", "", null),
     Client("", "Anna", "", "https://t4.ftcdn.net/jpg/02/43/87/41/360_F_243874126_YLSIGaDgoNzS91Xdbg1IVpiwXeeZSXdr.jpg",
-        "Kyiv", "newOne", null),
-    Client("", "Anna", "", "", "Kyiv", "VIP", null),
-    Client("", "Anna", "", "", "Kyiv", "VIP", null),
+        "Kyiv", "newOne", "", null),
+    Client("", "Anna", "", "", "Kyiv", "VIP", "", null),
+    Client("", "Anna", "", "", "Kyiv", "VIP", "", null),
   ];
 
   final _clientsLoadedSubject = PublishSubject<List<Client>>();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:salons_adminka/injection_container_web.dart';
+import 'package:salons_adminka/prezentation/clients_page/client_details_page.dart';
 import 'package:salons_adminka/prezentation/clients_page/clients_bloc.dart';
 import 'package:salons_adminka/prezentation/widgets/base_items_selector.dart';
 import 'package:salons_adminka/prezentation/widgets/custom_app_bar.dart';
@@ -28,6 +29,8 @@ class _ClientsPageState extends State<ClientsPage> {
   // Timer? _searchTimer;
   final ValueNotifier<Widget?> _showInfoNotifier = ValueNotifier<Widget?>(null);
 
+  bool _isVisibleDetails = true;
+
   @override
   void initState() {
     super.initState();
@@ -54,46 +57,62 @@ class _ClientsPageState extends State<ClientsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return InfoContainer(
-      onPressedAddButton: () {
-        _showInfoView(InfoAction.add, null, null);
-      },
-      showInfoNotifier: _showInfoNotifier,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
+    return Padding(
+      padding: const EdgeInsets.only(left: 42, right: 38),
+      child: Stack(
         children: [
-          const CustomAppBar(title: "Клиенты"),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Flexible(
-                  child: BaseItemsSelector(
-                items: ClientStatus.values
-                    .map((status) => BaseEntity(status.index.toString(), status.localizedName(), ""))
-                    .toList(),
-                onSelectedItem: (item) {
-                  // _mastersBloc.getMasters(_currentSalonId, item?.id);
-                },
-              )),
-              const SizedBox(width: 60),
-              SearchPanel(
-                hintText: "Поиск клиента",
-                onSearch: (text) {
-                  // _searchTimer = Timer(const Duration(milliseconds: 600), () {
-                  //   _servicesBloc.searchServices(text);
-                  // });
-                },
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Flexible(
-            fit: FlexFit.tight,
-            child: _buildClientsTable(),
-          ),
-          const SizedBox(height: 20),
-          // PaginationCounter(),
+          if (!_isVisibleDetails)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const CustomAppBar(title: "Клиенты"),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                        child: BaseItemsSelector(
+                      items: ClientStatus.values
+                          .map((status) => BaseEntity(status.index.toString(), status.localizedName(), ""))
+                          .toList(),
+                      onSelectedItem: (item) {
+                        // _mastersBloc.getMasters(_currentSalonId, item?.id);
+                      },
+                    )),
+                    const SizedBox(width: 60),
+                    SearchPanel(
+                      hintText: "Поиск клиента",
+                      onSearch: (text) {
+                        // _searchTimer = Timer(const Duration(milliseconds: 600), () {
+                        //   _servicesBloc.searchServices(text);
+                        // });
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                Flexible(
+                  fit: FlexFit.tight,
+                  child: _buildClientsTable(),
+                ),
+                const SizedBox(height: 20),
+                // PaginationCounter(),
+              ],
+            ),
+          if (_isVisibleDetails)
+            ClientDetailsPage(
+              client: Client(
+                  "",
+                  "Anna",
+                  "",
+                  "https://t4.ftcdn.net/jpg/02/43/87/41/360_F_243874126_YLSIGaDgoNzS91Xdbg1IVpiwXeeZSXdr.jpg",
+                  "Kyiv",
+                  "vip",
+                  "+380679162622",
+                  null),
+              infoAction: InfoAction.view,
+              clientsBloc: _clientsBloc,
+            ),
         ],
       ),
     );
