@@ -4,6 +4,8 @@ import 'package:salons_adminka/prezentation/categories/categories_bloc.dart';
 import 'package:salons_adminka/prezentation/clients_page/clients_bloc.dart';
 import 'package:salons_adminka/prezentation/masters_page/masters_bloc.dart';
 import 'package:salons_adminka/prezentation/profile_page/profile_bloc.dart';
+import 'package:salons_adminka/prezentation/promo_and_bonus_cards/bonus_cards_bloc.dart';
+import 'package:salons_adminka/prezentation/promo_and_bonus_cards/promos_bloc.dart';
 import 'package:salons_adminka/prezentation/services_page/services_bloc.dart';
 
 final getItWeb = GetIt.instance;
@@ -16,4 +18,6 @@ Future<void> init() async {
   getItWeb.registerFactory(() => ServicesBloc(getItWeb(), getItWeb(), getItWeb(), getItWeb()));
   getItWeb.registerFactory(() => MastersBloc(getItWeb(), getItWeb(), getItWeb(), getItWeb()));
   getItWeb.registerFactory(() => ClientsBloc());
+  getItWeb.registerFactory(() => PromosBloc());
+  getItWeb.registerFactory(() => BonusCardsBloc());
 }

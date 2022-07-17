@@ -133,14 +133,14 @@ class _MastersPageState extends State<MastersPage> {
       infoAction: infoAction,
       master: item as Master,
       services: servicesList,
-      onClickAction: (service, action) {
+      onClickAction: (master, action) {
         if (action == InfoAction.add) {
-          _mastersBloc.addMaster(service);
+          _mastersBloc.addMaster(master);
         } else if (action == InfoAction.edit) {
-          _mastersBloc.updateMaster(service, index!);
+          _mastersBloc.updateMaster(master, index!);
         } else if (action == InfoAction.delete) {
-          AlertBuilder().showAlertForDelete(context, "мастера", service.name, () {
-            _mastersBloc.removeMaster(service.id, index!);
+          AlertBuilder().showAlertForDelete(context, "мастера", master.name, () {
+            _mastersBloc.removeMaster(master.id, index!);
             _showInfoNotifier.value = null;
           });
         }

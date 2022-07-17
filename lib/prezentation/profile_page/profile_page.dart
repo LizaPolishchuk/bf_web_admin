@@ -80,8 +80,8 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.only(right: 50, bottom: 35),
+      body:Padding(
+        padding: const EdgeInsets.only(left: 42, right: 50, bottom: 35),
         child: CustomScrollView(
           slivers: [
             SliverFillRemaining(

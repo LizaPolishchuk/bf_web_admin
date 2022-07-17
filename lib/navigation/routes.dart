@@ -6,7 +6,7 @@ import 'package:salons_adminka/prezentation/feedbacks_page/feedbacks_page.dart';
 import 'package:salons_adminka/prezentation/home_container.dart';
 import 'package:salons_adminka/prezentation/masters_page/masters_page.dart';
 import 'package:salons_adminka/prezentation/profile_page/profile_page.dart';
-import 'package:salons_adminka/prezentation/promos_page/promos_page.dart';
+import 'package:salons_adminka/prezentation/promo_and_bonus_cards/promo_and_cards_page.dart';
 import 'package:salons_adminka/prezentation/settings_page/settings_page.dart';
 import 'package:salons_adminka/prezentation/support_page/support_page.dart';
 

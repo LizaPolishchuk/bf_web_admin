@@ -12,6 +12,13 @@ abstract class AppTheme {
   static bool get isDark => brightness == Brightness.dark;
 
   static final light = ThemeData(
+    primaryColor: AppColors.darkRose,
+    colorScheme: const ColorScheme.light(
+      primary: AppColors.darkRose,
+      // onPrimary: Color(0xffF02E65), // <-- SEE HERE
+      // onSurface: Color.fromARGB(255, 66, 125, 145), // <-- SEE HERE
+    ),
+    // primarySwatch: MaterialColor(AppColors.darkRose.value, ),
     // colorScheme: const ColorScheme.light(primary: AppColors.colorRose), //for date picker
     visualDensity: VisualDensity.adaptivePlatformDensity,
     scaffoldBackgroundColor: AppColors.lightBackground,
