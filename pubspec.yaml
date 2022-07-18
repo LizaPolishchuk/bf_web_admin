@@ -46,6 +46,7 @@ dependencies:
   dropdown_button2: ^1.6.3
   flutter_time_picker_spinner: ^2.0.0
   intl: ^0.17.0
+  syncfusion_flutter_calendar: ^20.2.38
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
