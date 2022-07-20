@@ -26,6 +26,8 @@ class _ClientsPageState extends State<ClientsPage> {
 
   // Timer? _searchTimer;
 
+  final ValueNotifier<bool> _showClientInfoNotifier = ValueNotifier<bool>(false);
+
   @override
   void initState() {
     super.initState();
@@ -52,44 +54,62 @@ class _ClientsPageState extends State<ClientsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 42, right: 38),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const CustomAppBar(title: "Клиенты"),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Flexible(
-                  child: BaseItemsSelector(
-                items: ClientStatus.values
-                    .map((status) => BaseEntity(status.index.toString(), status.localizedName(), ""))
-                    .toList(),
-                onSelectedItem: (item) {
-                  // _mastersBloc.getMasters(_currentSalonId, item?.id);
-                },
-              )),
-              const SizedBox(width: 60),
-              SearchPanel(
-                hintText: "Поиск клиента",
-                onSearch: (text) {
-                  // _searchTimer = Timer(const Duration(milliseconds: 600), () {
-                  //   _servicesBloc.searchServices(text);
-                  // });
-                },
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Flexible(
-            fit: FlexFit.tight,
-            child: _buildClientsTable(),
-          ),
-          const SizedBox(height: 20),
-          // PaginationCounter(),
-        ],
+    return Scaffold(
+      // floatingActionButton: ValueListenableBuilder<boo?>(
+      //   valueListenable: _showClientInfoNotifier,
+      //   builder: (context, value, child) {
+      //     return FloatingActionButton(
+      //       backgroundColor: value == null ? AppColors.darkRose : AppColors.darkTurquoise,
+      //       child: Icon(value == null ? Icons.add : Icons.close, color: Colors.white),
+      //       onPressed: () {
+      //         if (value == null) {
+      //           onPressedAddButton();
+      //         } else {
+      //           showInfoNotifier.value = null;
+      //         }
+      //       },
+      //     );
+      //   },
+      // ),
+      body: Padding(
+        padding: const EdgeInsets.only(left: 42, right: 38),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const CustomAppBar(title: "Клиенты"),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                    child: BaseItemsSelector(
+                  items: ClientStatus.values
+                      .map((status) => BaseEntity(status.index.toString(), status.localizedName(), ""))
+                      .toList(),
+                  onSelectedItem: (item) {
+                    // _mastersBloc.getMasters(_currentSalonId, item?.id);
+                  },
+                )),
+                const SizedBox(width: 60),
+                SearchPanel(
+                  hintText: "Поиск клиента",
+                  onSearch: (text) {
+                    // _searchTimer = Timer(const Duration(milliseconds: 600), () {
+                    //   _servicesBloc.searchServices(text);
+                    // });
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Flexible(
+              fit: FlexFit.tight,
+              child: _buildClientsTable(),
+            ),
+            const SizedBox(height: 20),
+            // PaginationCounter(),
+          ],
+        ),
       ),
     );
   }

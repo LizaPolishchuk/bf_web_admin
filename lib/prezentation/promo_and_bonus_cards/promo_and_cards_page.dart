@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/prezentation/promo_and_bonus_cards/bonus_card_info_view.dart';
 import 'package:salons_adminka/prezentation/promo_and_bonus_cards/bonus_cards_bloc.dart';
@@ -11,6 +12,7 @@ import 'package:salons_adminka/prezentation/widgets/info_container.dart';
 import 'package:salons_adminka/prezentation/widgets/search_pannel.dart';
 import 'package:salons_adminka/utils/alert_builder.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
+import 'package:salons_adminka/utils/app_images.dart';
 import 'package:salons_adminka/utils/app_text_style.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
@@ -69,7 +71,7 @@ class _PromosPageState extends State<PromosPage> {
   @override
   Widget build(BuildContext context) {
     return InfoContainer(
-      onPressedAddButton: () {},
+      onPressedAddButton: _showAlertToAddPromoOrCard,
       showInfoNotifier: _showInfoNotifier,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,7 +121,7 @@ class _PromosPageState extends State<PromosPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text("Акции", style: AppTextStyle.bodyText.copyWith(fontWeight: FontWeight.w600, fontSize: 18)),
+        Text("Акции", style: AppTextStyle.bodyText.copyWith(fontWeight: FontWeight.w500, fontSize: 18)),
         const SizedBox(height: 30),
         Flexible(
           child: SizedBox(
@@ -169,12 +171,18 @@ class _PromosPageState extends State<PromosPage> {
             alignment: Alignment.topRight,
             child: _buildPopupMenu(true, promo, index),
           ),
-          const SizedBox(height: 6),
-          Image.network(
-            promo.photoUrl ?? "",
+          SizedBox(
             width: 110,
             height: 110,
-            fit: BoxFit.cover,
+            child: Image.network(
+              promo.photoUrl ?? "",
+              errorBuilder: (context, obj, stackTrace) {
+                return Container(
+                  color: AppColors.lightRose,
+                );
+              },
+              fit: BoxFit.cover,
+            ),
           ),
           const SizedBox(height: 15),
           Text(
@@ -183,7 +191,9 @@ class _PromosPageState extends State<PromosPage> {
           ),
           const SizedBox(height: 8),
           Text(
-            promo.name,
+            promo.description ?? "",
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
             style: AppTextStyle.bodyText.copyWith(fontSize: 12),
           ),
         ],
@@ -196,7 +206,7 @@ class _PromosPageState extends State<PromosPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text("Бонусные карты", style: AppTextStyle.bodyText.copyWith(fontWeight: FontWeight.w600, fontSize: 18)),
+        Text("Бонусные карты", style: AppTextStyle.bodyText.copyWith(fontWeight: FontWeight.w500, fontSize: 18)),
         const SizedBox(height: 30),
         Flexible(
           child: StreamBuilder<List<BonusCard>>(
@@ -307,7 +317,14 @@ class _PromosPageState extends State<PromosPage> {
               ? _showPromoInfoView(InfoAction.edit, item, index)
               : _showBonusCardInfoView(InfoAction.edit, item, index);
         } else if (value == 2) {
-          print("Logout menu is selected.");
+          AlertBuilder().showAlertForDelete(context, isPromo ? "акцию" : "бонусную карту", item.name, () {
+            if (isPromo) {
+              _promosBloc.removePromo(item.id, index);
+            } else {
+              _bonusCardsBloc.removeBonusCard(item.id, index);
+            }
+            _showInfoNotifier.value = null;
+          });
         }
       },
     );
@@ -317,15 +334,15 @@ class _PromosPageState extends State<PromosPage> {
     _showInfoNotifier.value = PromoInfoView(
       salonId: _currentSalonId,
       infoAction: infoAction,
-      promo: item as Promo,
-      onClickAction: (promo, action) {
+      promo: item as Promo?,
+      onClickAction: (promo, action, photo) {
         if (action == InfoAction.add) {
-          // _promosBloc.addMaster(service);
+          _promosBloc.addPromo(promo, photo);
         } else if (action == InfoAction.edit) {
-          // _mastersBloc.updateMaster(service, index!);
+          _promosBloc.updatePromo(promo, index!, photo);
         } else if (action == InfoAction.delete) {
           AlertBuilder().showAlertForDelete(context, "акцию", promo.name, () {
-            // _mastersBloc.removeMaster(service.id, index!);
+            _promosBloc.removePromo(promo.id, index!);
             _showInfoNotifier.value = null;
           });
         }
@@ -337,19 +354,86 @@ class _PromosPageState extends State<PromosPage> {
     _showInfoNotifier.value = BonusCardInfoView(
       salonId: _currentSalonId,
       infoAction: infoAction,
-      bonusCard: item as BonusCard,
+      bonusCard: item as BonusCard?,
       onClickAction: (card, action) {
         if (action == InfoAction.add) {
-          // _promosBloc.addMaster(service);
+          _bonusCardsBloc.addBonusCard(card);
         } else if (action == InfoAction.edit) {
-          // _mastersBloc.updateMaster(service, index!);
+          _bonusCardsBloc.updateBonusCard(card, index!);
         } else if (action == InfoAction.delete) {
           AlertBuilder().showAlertForDelete(context, "бонусную карту", card.name, () {
-            // _mastersBloc.removeMaster(service.id, index!);
+            _bonusCardsBloc.removeBonusCard(card.id, index!);
             _showInfoNotifier.value = null;
           });
         }
       },
+    );
+  }
+
+  void _showAlertToAddPromoOrCard() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)), //this right here
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildAddPromoOrCardButton(
+                "Акция",
+                AppIcons.icPromoPlaceholder,
+                () => _showPromoInfoView(InfoAction.add, null, null),
+              ),
+              const SizedBox(width: 8),
+              _buildAddPromoOrCardButton(
+                "Бонусная карта",
+                AppIcons.icBonusCardPlaceholder,
+                () => _showBonusCardInfoView(InfoAction.add, null, null),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildAddPromoOrCardButton(String title, String imagePath, VoidCallback onClick) {
+    return Container(
+      width: 228,
+      height: 303,
+      padding: const EdgeInsets.only(top: 49, bottom: 36, left: 10, right: 10),
+      decoration: BoxDecoration(
+        color: AppColors.lightBackground,
+        borderRadius: BorderRadius.circular(12.0),
+      ),
+      child: Column(
+        children: [
+          Text(title.toUpperCase(), style: AppTextStyle.bodyText),
+          Flexible(
+            child: Center(
+              child: SizedBox(
+                height: 110,
+                width: 110,
+                child: Image.asset(imagePath, fit: BoxFit.cover,),
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () {
+              onClick();
+              Get.back();
+            },
+            child: Text(
+              "Добавить",
+              style: AppTextStyle.buttonText.copyWith(
+                color: AppColors.darkRose,
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

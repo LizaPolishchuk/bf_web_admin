@@ -175,12 +175,14 @@ class _ProfilePageState extends State<ProfilePage> {
             Flexible(
               child: Padding(
                 padding: const EdgeInsets.only(top: 45),
-                child: _buildSettingsRow("График работы", null, _scheduleController, _scheduleFormKey),
+                child: null
+                // _buildSettingsRow("График работы", null, _scheduleController, _scheduleFormKey),
               ),
             ),
           ],
         ),
         const Spacer(),
+        const SizedBox(height: 10),
         Center(
           child: RoundedButton(
             text: "Сохранить изменения",

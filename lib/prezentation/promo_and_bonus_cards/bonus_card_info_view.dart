@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/prezentation/widgets/info_container.dart';
 import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
@@ -34,6 +36,8 @@ class _BonusCardInfoViewState extends State<BonusCardInfoView> {
   late InfoAction _infoAction;
   late BonusCard? _cardForUpdate;
 
+  late String _currentSalonId;
+
   final cardColors = [
     Color(0xffCAEBE4),
     Color(0xff83A7D3),
@@ -48,6 +52,9 @@ class _BonusCardInfoViewState extends State<BonusCardInfoView> {
   @override
   void initState() {
     super.initState();
+
+    LocalStorage localStorage = getItWeb<LocalStorage>();
+    _currentSalonId = localStorage.getSalonId();
 
     _infoAction = widget.infoAction;
     _cardForUpdate = widget.bonusCard;
@@ -86,7 +93,7 @@ class _BonusCardInfoViewState extends State<BonusCardInfoView> {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String hint, {int lines = 1}) {
+  Widget _buildTextField(TextEditingController controller, String hint, {int lines = 1,bool digitsOnly = false }) {
     return TextField(
       controller: controller,
       onChanged: (text) {
@@ -95,6 +102,9 @@ class _BonusCardInfoViewState extends State<BonusCardInfoView> {
       maxLines: lines,
       minLines: lines,
       enabled: _infoAction != InfoAction.view,
+      inputFormatters: digitsOnly ? [
+        FilteringTextInputFormatter.digitsOnly
+      ] : null,
       style: AppTextStyle.bodyText,
       decoration: InputDecoration(
         hintStyle: AppTextStyle.hintText,
@@ -174,7 +184,7 @@ class _BonusCardInfoViewState extends State<BonusCardInfoView> {
         const SizedBox(height: 15),
         _buildTextField(_descriptionController, "Описание", lines: 6),
         const SizedBox(height: 15),
-        _buildTextField(_discountController, "Скидка, %"),
+        _buildTextField(_discountController, "Скидка, %", digitsOnly: true),
         const SizedBox(height: 15),
         Container(
           height: 80,
@@ -227,7 +237,7 @@ class _BonusCardInfoViewState extends State<BonusCardInfoView> {
                   BonusCard cardToUpdate;
                   if (_infoAction == InfoAction.add) {
                     cardToUpdate = BonusCard("", _nameController.text, _descriptionController.text,
-                        _cardColorNotifier.value?.value, int.tryParse(_discountController.text));
+                        _cardColorNotifier.value?.value, int.tryParse(_discountController.text), _currentSalonId);
 
                     widget.onClickAction(cardToUpdate, _infoAction);
                   } else {
@@ -237,6 +247,7 @@ class _BonusCardInfoViewState extends State<BonusCardInfoView> {
                         description: _descriptionController.text,
                         discount: int.tryParse(_discountController.text),
                         color: _cardColorNotifier.value?.value,
+                        creatorSalon: _currentSalonId,
                       );
 
                       widget.onClickAction(cardToUpdate, _infoAction);
@@ -252,7 +263,7 @@ class _BonusCardInfoViewState extends State<BonusCardInfoView> {
   }
 
   void _checkIfEnableButton() {
-    if (_nameController.text.length > 2 && _discountController.text.isNotEmpty && _cardColorNotifier.value != null) {
+    if (_nameController.text.length > 1 && _discountController.text.isNotEmpty && _cardColorNotifier.value != null) {
       _enableButtonNotifier.value = true;
     } else {
       _enableButtonNotifier.value = false;

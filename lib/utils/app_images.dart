@@ -28,4 +28,6 @@ class AppIcons {
   ///Images
   static const String loginBackground = 'assets/images/login_background.png';
   static const String salonExample = 'assets/images/salon_example.png';
+  static const String icBonusCardPlaceholder = 'assets/images/ic_bonus_card_placeholder.png';
+  static const String icPromoPlaceholder = 'assets/images/ic_promo_placeholder.png';
 }

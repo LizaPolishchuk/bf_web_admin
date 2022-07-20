@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_picker_for_web/image_picker_for_web.dart';
 import 'package:intl/intl.dart';
+import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/prezentation/widgets/info_container.dart';
 import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
@@ -12,7 +13,7 @@ class PromoInfoView extends StatefulWidget {
   final String salonId;
   final Promo? promo;
   final InfoAction infoAction;
-  final Function(Promo promo, InfoAction action) onClickAction;
+  final Function(Promo promo, InfoAction action, PickedFile? pickedFile) onClickAction;
 
   const PromoInfoView({
     Key? key,
@@ -39,9 +40,14 @@ class _PromoInfoViewState extends State<PromoInfoView> {
   final ImagePickerPlugin _picker = ImagePickerPlugin();
   final ValueNotifier<PickedFile?> _pickedPhotoNotifier = ValueNotifier<PickedFile?>(null);
 
+  late String _currentSalonId;
+
   @override
   void initState() {
     super.initState();
+
+    LocalStorage localStorage = getItWeb<LocalStorage>();
+    _currentSalonId = localStorage.getSalonId();
 
     _infoAction = widget.infoAction;
     _promoForUpdate = widget.promo;
@@ -162,7 +168,7 @@ class _PromoInfoViewState extends State<PromoInfoView> {
           ),
           TextButton(
             onPressed: () {
-              widget.onClickAction(_promoForUpdate!, InfoAction.delete);
+              widget.onClickAction(_promoForUpdate!, InfoAction.delete, null);
             },
             child: Text(
               "Удалить",
@@ -284,22 +290,24 @@ class _PromoInfoViewState extends State<PromoInfoView> {
                 text: "Сохранить",
                 buttonColor: value ? AppColors.darkRose : AppColors.disabledColor,
                 onPressed: () {
-                  Promo promoToUpdate;
+                  Promo? promoToUpdate;
                   if (_infoAction == InfoAction.add) {
                     promoToUpdate =
-                        Promo("", _nameController.text, _descriptionController.text, "", _expiredDateNotifier.value);
+                        Promo("", _nameController.text, _descriptionController.text, "", _expiredDateNotifier.value, _currentSalonId);
 
-                    widget.onClickAction(promoToUpdate, _infoAction);
                   } else {
                     if (_promoForUpdate != null) {
                       promoToUpdate = _promoForUpdate!.copy(
                         name: _nameController.text,
                         description: _descriptionController.text,
                         expiredDate: _expiredDateNotifier.value,
+                        creatorSalon: _currentSalonId,
                       );
 
-                      widget.onClickAction(promoToUpdate, _infoAction);
                     }
+
+                    assert(promoToUpdate != null);
+                    widget.onClickAction(promoToUpdate!, _infoAction, _pickedPhotoNotifier.value);
                   }
                 },
               ),
