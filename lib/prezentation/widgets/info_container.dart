@@ -9,29 +9,37 @@ class InfoContainer extends StatelessWidget {
   final Widget child;
   final ValueNotifier<Widget?> showInfoNotifier;
   final VoidCallback onPressedAddButton;
+  final bool hideAddButton;
 
-  const InfoContainer({Key? key, required this.child, required this.showInfoNotifier, required this.onPressedAddButton})
+  const InfoContainer(
+      {Key? key,
+      required this.child,
+      required this.showInfoNotifier,
+      required this.onPressedAddButton,
+      this.hideAddButton = false})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: ValueListenableBuilder<Widget?>(
-        valueListenable: showInfoNotifier,
-        builder: (context, value, child) {
-          return FloatingActionButton(
-            backgroundColor: value == null ? AppColors.darkRose : AppColors.darkTurquoise,
-            child: Icon(value == null ? Icons.add : Icons.close, color: Colors.white),
-            onPressed: () {
-              if (value == null) {
-                onPressedAddButton();
-              } else {
-                showInfoNotifier.value = null;
-              }
-            },
-          );
-        },
-      ),
+      floatingActionButton: hideAddButton
+          ? null
+          : ValueListenableBuilder<Widget?>(
+              valueListenable: showInfoNotifier,
+              builder: (context, value, child) {
+                return FloatingActionButton(
+                  backgroundColor: value == null ? AppColors.darkRose : AppColors.darkTurquoise,
+                  child: Icon(value == null ? Icons.add : Icons.close, color: Colors.white),
+                  onPressed: () {
+                    if (value == null) {
+                      onPressedAddButton();
+                    } else {
+                      showInfoNotifier.value = null;
+                    }
+                  },
+                );
+              },
+            ),
       body: Stack(
         children: [
           Padding(

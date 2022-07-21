@@ -24,6 +24,7 @@ class AppIcons {
   static const String icVipDiamond = 'assets/icons/ic_vip_diamond.svg';
   static const String icGallery = 'assets/icons/ic_gallery.svg';
   static const String icYclientsLogo = 'assets/icons/ic_yclients_logo.svg';
+  static const String icStar = 'assets/icons/ic_star.svg';
 
 
   ///Images

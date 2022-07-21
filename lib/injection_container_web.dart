@@ -2,6 +2,7 @@ import 'package:get_it/get_it.dart';
 import 'package:salons_adminka/prezentation/auth_page/auth_bloc.dart';
 import 'package:salons_adminka/prezentation/categories/categories_bloc.dart';
 import 'package:salons_adminka/prezentation/clients_page/clients_bloc.dart';
+import 'package:salons_adminka/prezentation/feedbacks_page/feedbacks_bloc.dart';
 import 'package:salons_adminka/prezentation/masters_page/masters_bloc.dart';
 import 'package:salons_adminka/prezentation/profile_page/profile_bloc.dart';
 import 'package:salons_adminka/prezentation/promo_and_bonus_cards/bonus_cards_bloc.dart';
@@ -22,4 +23,5 @@ Future<void> init() async {
   getItWeb.registerFactory(() => PromosBloc(getItWeb(), getItWeb(), getItWeb(), getItWeb(), getItWeb()));
   getItWeb.registerFactory(() => BonusCardsBloc(getItWeb(), getItWeb(), getItWeb(), getItWeb()));
   getItWeb.registerFactory(() => SettingsBloc(getItWeb()));
+  getItWeb.registerFactory(() => FeedbacksBloc());
 }

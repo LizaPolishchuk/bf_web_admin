@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:salons_adminka/prezentation/clients_page/clients_page.dart';
 import 'package:salons_adminka/prezentation/widgets/colored_circle.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
@@ -43,10 +44,12 @@ class _TableWidgetState extends State<TableWidget> {
         child: Table(
           defaultVerticalAlignment: TableCellVerticalAlignment.middle,
           children: _getTableRows(),
-
-          // columnWidths: {
-          //   2: FlexColumnWidth(4),
-          // },
+          columnWidths: (widget.items.isNotEmpty && widget.items.first is FeedbackEntity)
+              ? {
+                  0: const FlexColumnWidth(2),
+                  3: const FlexColumnWidth(4),
+                }
+              : {},
         ));
   }
 
@@ -117,6 +120,27 @@ class _TableWidgetState extends State<TableWidget> {
             })
             .values
             .toList();
+      } else if (widget.items.first is FeedbackEntity) {
+        tableRows = widget.items
+            .asMap()
+            .map((index, item) {
+              var feedback = item as FeedbackEntity;
+
+              return MapEntry(
+                index,
+                _buildTableRow(index, [
+                  _buildRowText(feedback.authorName,
+                      style: AppTextStyle.bodyText.copyWith(fontSize: 14, fontWeight: FontWeight.w500),
+                      photoUrl: feedback.authorAvatar),
+                  _buildRowText(DateFormat("dd.MM.yyyy").format(feedback.date)),
+                  _buildPointStars(feedback.points),
+                  _buildRowText(feedback.feedbackText),
+                  _buildActions(item, index, isOnlyView: true),
+                ]),
+              );
+            })
+            .values
+            .toList();
       }
     }
 
@@ -147,10 +171,11 @@ class _TableWidgetState extends State<TableWidget> {
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: Row(
         children: [
-          if (iconPath?.isNotEmpty == true) Padding(
-            padding: const EdgeInsets.only(right: 5),
-            child: SvgPicture.asset(iconPath!),
-          ),
+          if (iconPath?.isNotEmpty == true)
+            Padding(
+              padding: const EdgeInsets.only(right: 5),
+              child: SvgPicture.asset(iconPath!),
+            ),
           if (photoUrl != null)
             Container(
               height: 35,
@@ -184,7 +209,7 @@ class _TableWidgetState extends State<TableWidget> {
     );
   }
 
-  Widget _buildActions(BaseEntity item, int index) {
+  Widget _buildActions(BaseEntity item, int index, {bool isOnlyView = false}) {
     return Row(
       children: [
         InkWell(
@@ -195,24 +220,30 @@ class _TableWidgetState extends State<TableWidget> {
           },
           child: SvgPicture.asset(AppIcons.icEye),
         ),
-        const SizedBox(width: 16),
-        InkWell(
-          onTap: () {
-            if (widget.onClickEdit != null) {
-              widget.onClickEdit!(item, index);
-            }
-          },
-          child: SvgPicture.asset(AppIcons.icEdit),
-        ),
-        const SizedBox(width: 16),
-        InkWell(
-          onTap: () {
-            if (widget.onClickDelete != null) {
-              widget.onClickDelete!(item, index);
-            }
-          },
-          child: SvgPicture.asset(AppIcons.icDelete),
-        )
+        if (!isOnlyView)
+          Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: InkWell(
+              onTap: () {
+                if (widget.onClickEdit != null) {
+                  widget.onClickEdit!(item, index);
+                }
+              },
+              child: SvgPicture.asset(AppIcons.icEdit),
+            ),
+          ),
+        if (!isOnlyView)
+          Padding(
+            padding: const EdgeInsets.only(left: 16),
+            child: InkWell(
+              onTap: () {
+                if (widget.onClickDelete != null) {
+                  widget.onClickDelete!(item, index);
+                }
+              },
+              child: SvgPicture.asset(AppIcons.icDelete),
+            ),
+          )
       ],
     );
   }
@@ -225,5 +256,20 @@ class _TableWidgetState extends State<TableWidget> {
         style: AppTextStyle.hintText,
       ),
     );
+  }
+
+  Widget _buildPointStars(int points) {
+    return SizedBox(
+        height: 16,
+        child: ListView.separated(
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (context, index) {
+            return SvgPicture.asset(AppIcons.icStar);
+          },
+          itemCount: points,
+          separatorBuilder: (BuildContext context, int index) {
+            return const SizedBox(width: 5);
+          },
+        ));
   }
 }
