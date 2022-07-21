@@ -23,11 +23,13 @@ class AppIcons {
   static const String icNewClient = 'assets/icons/ic_new_client.svg';
   static const String icVipDiamond = 'assets/icons/ic_vip_diamond.svg';
   static const String icGallery = 'assets/icons/ic_gallery.svg';
+  static const String icYclientsLogo = 'assets/icons/ic_yclients_logo.svg';
 
 
   ///Images
   static const String loginBackground = 'assets/images/login_background.png';
   static const String salonExample = 'assets/images/salon_example.png';
-  static const String icBonusCardPlaceholder = 'assets/images/ic_bonus_card_placeholder.png';
-  static const String icPromoPlaceholder = 'assets/images/ic_promo_placeholder.png';
+  static const String bonusCardPlaceholder = 'assets/images/ic_bonus_card_placeholder.png';
+  static const String promoPlaceholder = 'assets/images/ic_promo_placeholder.png';
+  static const String subscriptionPlaceholder = 'assets/images/ic_subscription_placeholder.png';
 }

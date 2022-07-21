@@ -7,6 +7,7 @@ import 'package:salons_adminka/prezentation/profile_page/profile_bloc.dart';
 import 'package:salons_adminka/prezentation/promo_and_bonus_cards/bonus_cards_bloc.dart';
 import 'package:salons_adminka/prezentation/promo_and_bonus_cards/promos_bloc.dart';
 import 'package:salons_adminka/prezentation/services_page/services_bloc.dart';
+import 'package:salons_adminka/prezentation/settings_page/settings_bloc.dart';
 
 final getItWeb = GetIt.instance;
 
@@ -20,4 +21,5 @@ Future<void> init() async {
   getItWeb.registerFactory(() => ClientsBloc(getItWeb(), getItWeb(), getItWeb(), getItWeb()));
   getItWeb.registerFactory(() => PromosBloc(getItWeb(), getItWeb(), getItWeb(), getItWeb(), getItWeb()));
   getItWeb.registerFactory(() => BonusCardsBloc(getItWeb(), getItWeb(), getItWeb(), getItWeb()));
+  getItWeb.registerFactory(() => SettingsBloc(getItWeb()));
 }

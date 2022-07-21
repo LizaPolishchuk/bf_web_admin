@@ -11,6 +11,7 @@ class RoundedButton extends StatelessWidget {
   final Color? buttonColor;
   final Color? textColor;
   final TextStyle? textStyle;
+  final double? height;
 
   const RoundedButton(
       {Key? key,
@@ -21,7 +22,8 @@ class RoundedButton extends StatelessWidget {
       this.width,
       this.buttonColor,
       this.textStyle,
-      this.textColor})
+      this.textColor,
+      this.height})
       : super(key: key);
 
   @override
@@ -36,7 +38,7 @@ class RoundedButton extends StatelessWidget {
       },
       child: _buildContainer(
         child: Container(
-          height: 50,
+          height: height ?? 50,
           width: width,
           alignment: Alignment.center,
           padding: const EdgeInsets.symmetric(horizontal: 44),

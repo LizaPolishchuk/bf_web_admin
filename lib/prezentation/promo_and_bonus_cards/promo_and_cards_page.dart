@@ -383,13 +383,13 @@ class _PromosPageState extends State<PromosPage> {
             children: [
               _buildAddPromoOrCardButton(
                 "Акция",
-                AppIcons.icPromoPlaceholder,
+                AppIcons.promoPlaceholder,
                 () => _showPromoInfoView(InfoAction.add, null, null),
               ),
               const SizedBox(width: 8),
               _buildAddPromoOrCardButton(
                 "Бонусная карта",
-                AppIcons.icBonusCardPlaceholder,
+                AppIcons.bonusCardPlaceholder,
                 () => _showBonusCardInfoView(InfoAction.add, null, null),
               ),
             ],
