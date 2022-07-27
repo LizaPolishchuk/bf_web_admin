@@ -66,23 +66,21 @@ class _PromoInfoViewState extends State<PromoInfoView> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 110, left: 20, right: 20, bottom: 60),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Text(
-              _infoAction == InfoAction.view
-                  ? "Просмотр"
-                  : _infoAction == InfoAction.edit
-                      ? "Редактировать"
-                      : "Добавить акцию",
-              style: AppTextStyle.titleText),
-          const SizedBox(height: 35),
-          _infoAction == InfoAction.view ? _buildForViewMode() : _buildForEditMode(),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+            _infoAction == InfoAction.view
+                ? "Просмотр"
+                : _infoAction == InfoAction.edit
+                    ? "Редактировать"
+                    : "Добавить акцию",
+            style: AppTextStyle.titleText),
+        const SizedBox(height: 35),
+        _infoAction == InfoAction.view ? _buildForViewMode() : _buildForEditMode(),
+      ],
     );
   }
 
@@ -292,9 +290,8 @@ class _PromoInfoViewState extends State<PromoInfoView> {
                 onPressed: () {
                   Promo? promoToUpdate;
                   if (_infoAction == InfoAction.add) {
-                    promoToUpdate =
-                        Promo("", _nameController.text, _descriptionController.text, "", _expiredDateNotifier.value, _currentSalonId);
-
+                    promoToUpdate = Promo("", _nameController.text, _descriptionController.text, "",
+                        _expiredDateNotifier.value, _currentSalonId);
                   } else {
                     if (_promoForUpdate != null) {
                       promoToUpdate = _promoForUpdate!.copy(
@@ -303,7 +300,6 @@ class _PromoInfoViewState extends State<PromoInfoView> {
                         expiredDate: _expiredDateNotifier.value,
                         creatorSalon: _currentSalonId,
                       );
-
                     }
 
                     assert(promoToUpdate != null);

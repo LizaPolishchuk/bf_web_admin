@@ -73,27 +73,25 @@ class _BonusCardInfoViewState extends State<BonusCardInfoView> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 110, left: 20, right: 20, bottom: 60),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Text(
-              _infoAction == InfoAction.view
-                  ? "Просмотр"
-                  : _infoAction == InfoAction.edit
-                      ? "Редактировать"
-                      : "Добавить бонусную карту",
-              style: AppTextStyle.titleText),
-          const SizedBox(height: 35),
-          _infoAction == InfoAction.view ? _buildForViewMode() : _buildForEditMode(),
-        ],
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+            _infoAction == InfoAction.view
+                ? "Просмотр"
+                : _infoAction == InfoAction.edit
+                    ? "Редактировать"
+                    : "Добавить бонусную карту",
+            style: AppTextStyle.titleText),
+        const SizedBox(height: 35),
+        _infoAction == InfoAction.view ? _buildForViewMode() : _buildForEditMode(),
+      ],
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String hint, {int lines = 1,bool digitsOnly = false }) {
+  Widget _buildTextField(TextEditingController controller, String hint, {int lines = 1, bool digitsOnly = false}) {
     return TextField(
       controller: controller,
       onChanged: (text) {
@@ -102,9 +100,7 @@ class _BonusCardInfoViewState extends State<BonusCardInfoView> {
       maxLines: lines,
       minLines: lines,
       enabled: _infoAction != InfoAction.view,
-      inputFormatters: digitsOnly ? [
-        FilteringTextInputFormatter.digitsOnly
-      ] : null,
+      inputFormatters: digitsOnly ? [FilteringTextInputFormatter.digitsOnly] : null,
       style: AppTextStyle.bodyText,
       decoration: InputDecoration(
         hintStyle: AppTextStyle.hintText,

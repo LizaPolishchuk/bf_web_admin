@@ -37,53 +37,50 @@ class _FeedbackInfoViewState extends State<FeedbackInfoView> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 148, horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Text("Просмотр", style: AppTextStyle.titleText),
-          const SizedBox(height: 35),
-          CircleAvatar(
-            radius: 40,
-            backgroundImage: NetworkImage(_feedbackEntity.authorAvatar ?? ""),
-            backgroundColor: AppColors.rose,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Text("Просмотр", style: AppTextStyle.titleText),
+        const SizedBox(height: 35),
+        CircleAvatar(
+          radius: 40,
+          backgroundImage: NetworkImage(_feedbackEntity.authorAvatar ?? ""),
+          backgroundColor: AppColors.rose,
+        ),
+        const SizedBox(height: 20),
+        Text(_feedbackEntity.authorName, style: AppTextStyle.titleText),
+        const SizedBox(height: 20),
+        SizedBox(
+          height: 16,
+          child: ListView.separated(
+            shrinkWrap: true,
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (context, index) {
+              return SvgPicture.asset(AppIcons.icStar);
+            },
+            itemCount: _feedbackEntity.points,
+            separatorBuilder: (BuildContext context, int index) {
+              return const SizedBox(width: 5);
+            },
           ),
-          const SizedBox(height: 20),
-          Text(_feedbackEntity.authorName, style: AppTextStyle.titleText),
-          const SizedBox(height: 20),
-          SizedBox(
-            height: 16,
-            child: ListView.separated(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                return SvgPicture.asset(AppIcons.icStar);
-              },
-              itemCount: _feedbackEntity.points,
-              separatorBuilder: (BuildContext context, int index) {
-                return const SizedBox(width: 5);
-              },
-            ),
-          ),
-          const SizedBox(height: 40),
-          Flexible(
-            fit: FlexFit.tight,
-            child: SingleChildScrollView(
-              child: Text(
-                _feedbackEntity.feedbackText,
-                textAlign: TextAlign.center,
-                style: AppTextStyle.hintText.copyWith(
-                  color: AppColors.textColor,
-                ),
+        ),
+        const SizedBox(height: 40),
+        Flexible(
+          fit: FlexFit.tight,
+          child: SingleChildScrollView(
+            child: Text(
+              _feedbackEntity.feedbackText,
+              textAlign: TextAlign.center,
+              style: AppTextStyle.hintText.copyWith(
+                color: AppColors.textColor,
               ),
             ),
           ),
-          const SizedBox(height: 20),
-          _buildBottomButtons(),
-        ],
-      ),
+        ),
+        const SizedBox(height: 20),
+        _buildBottomButtons(),
+      ],
     );
   }
 

@@ -145,9 +145,11 @@ class _AuthPageState extends State<AuthPage> {
                     children: [
                       SvgPicture.asset(AppIcons.icGoogle),
                       const SizedBox(width: 12),
-                      const Text(
-                        "Войти с помощью Google",
-                        style: AppTextStyle.bodyText,
+                      const Flexible(
+                        child: Text(
+                          "Войти с помощью Google",
+                          style: AppTextStyle.bodyText,
+                        ),
                       ),
                     ],
                   ),

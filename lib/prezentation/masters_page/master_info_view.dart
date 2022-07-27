@@ -65,168 +65,166 @@ class _MasterInfoViewState extends State<MasterInfoView> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 148, horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Text(
-              _infoAction == InfoAction.view
-                  ? "Просмотр"
-                  : _infoAction == InfoAction.edit
-                      ? "Редактировать"
-                      : "Добавить мастера",
-              style: AppTextStyle.titleText),
-          const SizedBox(height: 35),
-          _buildTextField(_nameController, "Имя мастера"),
-          const SizedBox(height: 15),
-          _buildTextField(_phoneController, "Номер телефона"),
-          const SizedBox(height: 15),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 20),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25),
-              color: AppColors.textInputBgGrey,
-            ),
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton2(
-                isExpanded: true,
-                hint: const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Сервис",
-                    style: AppTextStyle.hintText,
-                  ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Text(
+            _infoAction == InfoAction.view
+                ? "Просмотр"
+                : _infoAction == InfoAction.edit
+                    ? "Редактировать"
+                    : "Добавить мастера",
+            style: AppTextStyle.titleText),
+        const SizedBox(height: 35),
+        _buildTextField(_nameController, "Имя мастера"),
+        const SizedBox(height: 15),
+        _buildTextField(_phoneController, "Номер телефона"),
+        const SizedBox(height: 15),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 20),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(25),
+            color: AppColors.textInputBgGrey,
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton2(
+              isExpanded: true,
+              hint: const Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Сервис",
+                  style: AppTextStyle.hintText,
                 ),
-                items: widget.services.map((service) {
-                  return DropdownMenuItem<Service>(
-                    value: service,
-                    //disable default onTap to avoid closing menu when selecting an item
-                    enabled: false,
-                    child: StatefulBuilder(
-                      builder: (context, menuSetState) {
-                        final _isSelected = _selectedServices.keys.contains(service.id);
-                        return InkWell(
-                          onTap: () {
+              ),
+              items: widget.services.map((service) {
+                return DropdownMenuItem<Service>(
+                  value: service,
+                  //disable default onTap to avoid closing menu when selecting an item
+                  enabled: false,
+                  child: StatefulBuilder(
+                    builder: (context, menuSetState) {
+                      final _isSelected = _selectedServices.keys.contains(service.id);
+                      return InkWell(
+                        onTap: () {
+                          _isSelected
+                              ? _selectedServices.remove(service.id)
+                              : _selectedServices[service.id] = service.name;
+
+                          _selectedService = service;
+                          //This rebuilds the StatefulWidget to update the button's text
+                          setState(() {});
+                          //This rebuilds the dropdownMenu Widget to update the check mark
+                          menuSetState(() {});
+
+                          _checkIfEnableButton();
+                        },
+                        child: Row(
+                          children: [
                             _isSelected
-                                ? _selectedServices.remove(service.id)
-                                : _selectedServices[service.id] = service.name;
-
-                            _selectedService = service;
-                            //This rebuilds the StatefulWidget to update the button's text
-                            setState(() {});
-                            //This rebuilds the dropdownMenu Widget to update the check mark
-                            menuSetState(() {});
-
-                            _checkIfEnableButton();
-                          },
-                          child: Row(
-                            children: [
-                              _isSelected
-                                  ? const Icon(Icons.check_box_outlined)
-                                  : const Icon(Icons.check_box_outline_blank),
-                              const SizedBox(width: 16),
-                              Text(
-                                service.name,
-                                style: AppTextStyle.hintText.copyWith(fontSize: 16),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                }).toList(),
-                //Use last selected item as the current value so if we've limited menu height, it scroll to last item.
-                value: _selectedServices.isEmpty ? null : _selectedService,
-                onChanged: (value) {},
-                itemHeight: 40,
-                selectedItemBuilder: (context) {
-                  return widget.services.map(
-                    (item) {
-                      return Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          _selectedServices.values.join(', '),
-                          overflow: TextOverflow.ellipsis,
-                          style: AppTextStyle.bodyText.copyWith(fontSize: 14),
-                          maxLines: 1,
+                                ? const Icon(Icons.check_box_outlined)
+                                : const Icon(Icons.check_box_outline_blank),
+                            const SizedBox(width: 16),
+                            Text(
+                              service.name,
+                              style: AppTextStyle.hintText.copyWith(fontSize: 16),
+                            ),
+                          ],
                         ),
                       );
                     },
-                  ).toList();
-                },
-              ),
-            ),
-          ),
-          const SizedBox(height: 120),
-          if (_infoAction == InfoAction.view)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    setState(() {
-                      _infoAction = InfoAction.edit;
-                    });
-                  },
-                  child: Text(
-                    "Изменить",
-                    style: AppTextStyle.bodyText.copyWith(
-                      color: AppColors.hintColor,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    widget.onClickAction(_masterForUpdate!, InfoAction.delete);
-                  },
-                  child: Text(
-                    "Удалить",
-                    style: AppTextStyle.bodyText.copyWith(
-                      color: AppColors.red,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          if (_infoAction != InfoAction.view)
-            ValueListenableBuilder<bool>(
-              valueListenable: _enableButtonNotifier,
-              builder: (context, value, child) {
-                return AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 200),
-                  child: RoundedButton(
-                    text: "Сохранить",
-                    buttonColor: value ? AppColors.darkRose : AppColors.disabledColor,
-                    onPressed: () {
-                      Master masterToUpdate;
-                      if (_infoAction == InfoAction.add) {
-                        masterToUpdate = Master("", _nameController.text, "", "", "", "", [widget.salonId],
-                            _selectedServices, "active", _phoneController.text);
-
-                        widget.onClickAction(masterToUpdate, _infoAction);
-                      } else {
-                        if (_masterForUpdate != null) {
-                          masterToUpdate = _masterForUpdate!.copy(
-                            name: _nameController.text,
-                            phoneNumber: _phoneController.text,
-                            providedServices: _selectedServices,
-                          );
-
-                          widget.onClickAction(masterToUpdate, _infoAction);
-                        }
-                      }
-                    },
                   ),
                 );
+              }).toList(),
+              //Use last selected item as the current value so if we've limited menu height, it scroll to last item.
+              value: _selectedServices.isEmpty ? null : _selectedService,
+              onChanged: (value) {},
+              itemHeight: 40,
+              selectedItemBuilder: (context) {
+                return widget.services.map(
+                  (item) {
+                    return Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        _selectedServices.values.join(', '),
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyle.bodyText.copyWith(fontSize: 14),
+                        maxLines: 1,
+                      ),
+                    );
+                  },
+                ).toList();
               },
             ),
-        ],
-      ),
+          ),
+        ),
+        const SizedBox(height: 120),
+        if (_infoAction == InfoAction.view)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    _infoAction = InfoAction.edit;
+                  });
+                },
+                child: Text(
+                  "Изменить",
+                  style: AppTextStyle.bodyText.copyWith(
+                    color: AppColors.hintColor,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  widget.onClickAction(_masterForUpdate!, InfoAction.delete);
+                },
+                child: Text(
+                  "Удалить",
+                  style: AppTextStyle.bodyText.copyWith(
+                    color: AppColors.red,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        if (_infoAction != InfoAction.view)
+          ValueListenableBuilder<bool>(
+            valueListenable: _enableButtonNotifier,
+            builder: (context, value, child) {
+              return AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                child: RoundedButton(
+                  text: "Сохранить",
+                  buttonColor: value ? AppColors.darkRose : AppColors.disabledColor,
+                  onPressed: () {
+                    Master masterToUpdate;
+                    if (_infoAction == InfoAction.add) {
+                      masterToUpdate = Master("", _nameController.text, "", "", "", "", [widget.salonId],
+                          _selectedServices, "active", _phoneController.text);
+
+                      widget.onClickAction(masterToUpdate, _infoAction);
+                    } else {
+                      if (_masterForUpdate != null) {
+                        masterToUpdate = _masterForUpdate!.copy(
+                          name: _nameController.text,
+                          phoneNumber: _phoneController.text,
+                          providedServices: _selectedServices,
+                        );
+
+                        widget.onClickAction(masterToUpdate, _infoAction);
+                      }
+                    }
+                  },
+                ),
+              );
+            },
+          ),
+      ],
     );
   }
 

@@ -66,155 +66,153 @@ class _ServiceInfoViewState extends State<ServiceInfoView> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 148, horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          Text(
-              _infoAction == InfoAction.view
-                  ? "Просмотр"
-                  : _infoAction == InfoAction.edit
-                  ? "Редактировать"
-                  : "Добавить услугу",
-              style: AppTextStyle.titleText),
-          const SizedBox(height: 35),
-          _buildTextField(_nameController, "Название услуги"),
-          const SizedBox(height: 15),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 20),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(25),
-              color: AppColors.textInputBgGrey,
-            ),
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton2(
-                hint: const Text(
-                  "Категория",
-                  style: AppTextStyle.hintText,
-                ),
-                items: widget.categories
-                    .map(
-                      (category) =>
-                      DropdownMenuItem<Category>(
-                        value: category,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ColoredCircle(color: (category.color != null) ? Color(category.color!) : Colors.grey),
-                            Flexible(
-                              child: Text(
-                                category.name,
-                                style: _selectedCategory == category ? AppTextStyle.bodyText : AppTextStyle.hintText
-                                    .copyWith(fontSize: 16),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                )
-                    .toList(),
-                value: _selectedCategory,
-                onChanged: (value) {
-                  setState(() {
-                    _selectedCategory = value as Category;
-                    _checkIfEnableButton();
-                  });
-                },
-                itemHeight: 40,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.max,
+      children: [
+        Text(
+            _infoAction == InfoAction.view
+                ? "Просмотр"
+                : _infoAction == InfoAction.edit
+                    ? "Редактировать"
+                    : "Добавить услугу",
+            style: AppTextStyle.titleText),
+        const SizedBox(height: 35),
+        _buildTextField(_nameController, "Название услуги"),
+        const SizedBox(height: 15),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 20),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(25),
+            color: AppColors.textInputBgGrey,
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton2(
+              hint: const Text(
+                "Категория",
+                style: AppTextStyle.hintText,
               ),
+              items: widget.categories
+                  .map(
+                    (category) => DropdownMenuItem<Category>(
+                      value: category,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ColoredCircle(color: (category.color != null) ? Color(category.color!) : Colors.grey),
+                          Flexible(
+                            child: Text(
+                              category.name,
+                              style: _selectedCategory == category
+                                  ? AppTextStyle.bodyText
+                                  : AppTextStyle.hintText.copyWith(fontSize: 16),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                  .toList(),
+              value: _selectedCategory,
+              onChanged: (value) {
+                setState(() {
+                  _selectedCategory = value as Category;
+                  _checkIfEnableButton();
+                });
+              },
+              itemHeight: 40,
             ),
           ),
-          const SizedBox(height: 15),
+        ),
+        const SizedBox(height: 15),
+        Row(
+          children: [
+            Flexible(
+              child: _buildTextField(_priceController, "Цена", isPrice: true),
+            ),
+            const SizedBox(width: 15),
+            Flexible(
+              child: _buildTextField(_durationController, "Время", isDuration: true),
+            ),
+          ],
+        ),
+        const SizedBox(height: 120),
+        if (_infoAction == InfoAction.view)
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Flexible(
-                child: _buildTextField(_priceController, "Цена", isPrice: true),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    _infoAction = InfoAction.edit;
+                  });
+                },
+                child: Text(
+                  "Изменить",
+                  style: AppTextStyle.bodyText.copyWith(
+                    color: AppColors.hintColor,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
               ),
-              const SizedBox(width: 15),
-              Flexible(
-                child: _buildTextField(_durationController, "Время", isDuration: true),
+              TextButton(
+                onPressed: () {
+                  widget.onClickAction(_serviceForUpdate!, InfoAction.delete);
+                },
+                child: Text(
+                  "Удалить",
+                  style: AppTextStyle.bodyText.copyWith(
+                    color: AppColors.red,
+                  ),
+                ),
               ),
             ],
           ),
-          const SizedBox(height: 120),
-          if (_infoAction == InfoAction.view)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                TextButton(
+        if (_infoAction != InfoAction.view)
+          ValueListenableBuilder<bool>(
+            valueListenable: _enableButtonNotifier,
+            builder: (context, value, child) {
+              return AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                child: RoundedButton(
+                  text: "Сохранить",
+                  buttonColor: value ? AppColors.darkRose : AppColors.disabledColor,
                   onPressed: () {
-                    setState(() {
-                      _infoAction = InfoAction.edit;
-                    });
-                  },
-                  child: Text(
-                    "Изменить",
-                    style: AppTextStyle.bodyText.copyWith(
-                      color: AppColors.hintColor,
-                      decoration: TextDecoration.underline,
-                    ),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () {
-                    widget.onClickAction(_serviceForUpdate!, InfoAction.delete);
-                  },
-                  child: Text(
-                    "Удалить",
-                    style: AppTextStyle.bodyText.copyWith(
-                      color: AppColors.red,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          if (_infoAction != InfoAction.view)
-            ValueListenableBuilder<bool>(
-              valueListenable: _enableButtonNotifier,
-              builder: (context, value, child) {
-                return AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 200),
-                  child: RoundedButton(
-                    text: "Сохранить",
-                    buttonColor: value ? AppColors.darkRose : AppColors.disabledColor,
-                    onPressed: () {
-                      Service serviceToUpdate;
-                      if (_infoAction == InfoAction.add) {
-                        serviceToUpdate = Service(
-                            "id",
-                            _nameController.text,
-                            "",
-                            double.tryParse(_priceController.text),
-                            widget.salonId,
-                            _selectedCategory?.id,
-                            _selectedCategory?.name,
-                            _selectedCategory?.color,
-                            int.tryParse(_durationController.text));
+                    Service serviceToUpdate;
+                    if (_infoAction == InfoAction.add) {
+                      serviceToUpdate = Service(
+                          "id",
+                          _nameController.text,
+                          "",
+                          double.tryParse(_priceController.text),
+                          widget.salonId,
+                          _selectedCategory?.id,
+                          _selectedCategory?.name,
+                          _selectedCategory?.color,
+                          int.tryParse(_durationController.text));
+
+                      widget.onClickAction(serviceToUpdate, _infoAction);
+                    } else {
+                      if (_serviceForUpdate != null) {
+                        serviceToUpdate = _serviceForUpdate!.copy(
+                            name: _nameController.text,
+                            categoryId: _selectedCategory?.id,
+                            categoryColor: _selectedCategory?.color,
+                            categoryName: _selectedCategory?.name,
+                            price: double.tryParse(_priceController.text),
+                            duration: int.tryParse(_durationController.text));
 
                         widget.onClickAction(serviceToUpdate, _infoAction);
-                      } else {
-                        if (_serviceForUpdate != null) {
-                          serviceToUpdate = _serviceForUpdate!.copy(
-                              name: _nameController.text,
-                              categoryId: _selectedCategory?.id,
-                              categoryColor: _selectedCategory?.color,
-                              categoryName: _selectedCategory?.name,
-                              price: double.tryParse(_priceController.text),
-                              duration: int.tryParse(_durationController.text));
-
-                          widget.onClickAction(serviceToUpdate, _infoAction);
-                        }
                       }
-                    },
-                  ),
-                );
-              },
-            ),
-        ],
-      ),
+                    }
+                  },
+                ),
+              );
+            },
+          ),
+      ],
     );
   }
 
