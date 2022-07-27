@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:image_picker_for_web/image_picker_for_web.dart';
+import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/prezentation/clients_page/additional_client_details_widget.dart';
 import 'package:salons_adminka/prezentation/clients_page/clients_bloc.dart';
 import 'package:salons_adminka/prezentation/clients_page/clients_page.dart';
@@ -18,8 +21,11 @@ import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 class ClientDetailsPage extends StatefulWidget {
   final ClientsBloc clientsBloc;
   final ClientDetailsData clientDetailsData;
+  final VoidCallback onClickBack;
 
-  const ClientDetailsPage({Key? key, required this.clientsBloc, required this.clientDetailsData}) : super(key: key);
+  const ClientDetailsPage(
+      {Key? key, required this.clientsBloc, required this.clientDetailsData, required this.onClickBack})
+      : super(key: key);
 
   @override
   State<ClientDetailsPage> createState() => _ClientDetailsPageState();
@@ -27,6 +33,8 @@ class ClientDetailsPage extends StatefulWidget {
 
 class _ClientDetailsPageState extends State<ClientDetailsPage> {
   late Client? _client;
+  late InfoAction _infoAction;
+
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
 
@@ -34,15 +42,22 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
   final ValueNotifier<bool> _enableButtonNotifier = ValueNotifier<bool>(false);
 
   ClientStatus? _selectedStatus;
+  final ImagePickerPlugin _picker = ImagePickerPlugin();
+  final ValueNotifier<PickedFile?> _pickedPhotoNotifier = ValueNotifier<PickedFile?>(null);
+
+  late String _currentSalonId;
 
   @override
   void initState() {
     super.initState();
 
-    _client = widget.clientDetailsData.client;
+    _currentSalonId = getItWeb<LocalStorage>().getSalonId();
 
-    if (widget.clientDetailsData.infoAction == InfoAction.edit ||
-        widget.clientDetailsData.infoAction == InfoAction.add) {
+    _client = widget.clientDetailsData.client;
+    _infoAction = widget.clientDetailsData.infoAction;
+
+    if (_infoAction == InfoAction.edit ||
+        _infoAction == InfoAction.add) {
       _isEditModeNotifier = ValueNotifier<bool>(true);
     } else {
       _isEditModeNotifier = ValueNotifier<bool>(false);
@@ -51,7 +66,9 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
     if (_client != null) {
       _nameController.text = _client!.name;
       _phoneController.text = _client!.phone ?? "";
-
+      if (_client!.photoUrl?.isNotEmpty == true) {
+        _pickedPhotoNotifier.value = PickedFile(_client!.photoUrl!);
+      }
       if (_client!.name.isNotEmpty) {
         _enableButtonNotifier.value = true;
       }
@@ -61,14 +78,18 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.only(left: 42, right: 38, bottom: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
           const CustomAppBar(title: "Клиенты"),
           InkWell(
+            onTap: () {
+              widget.onClickBack();
+            },
             child: Row(
+              mainAxisSize: MainAxisSize.min,
               children: [
                 SvgPicture.asset(
                   AppIcons.icCircleArrowLeft,
@@ -133,20 +154,19 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
           return Column(
             children: [
               Opacity(
-                opacity: isEditMode ? 0 : 1,
+                opacity: _infoAction == InfoAction.add ? 0 : 1,
                 child: Align(
                   alignment: Alignment.topRight,
                   child: IconButton(
-                    icon: const Icon(
-                      Icons.edit,
+                    splashRadius: 5,
+                    icon: Icon(
+                      isEditMode ? Icons.close : Icons.edit,
                       size: 16,
                     ),
                     color: Colors.black,
-                    onPressed: isEditMode
-                        ? null
-                        : () {
-                            _isEditModeNotifier.value = true;
-                          },
+                    onPressed: () {
+                      _isEditModeNotifier.value = !isEditMode;
+                    },
                   ),
                 ),
               ),
@@ -155,24 +175,40 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
                 child: Stack(
                   alignment: Alignment.center,
                   children: [
-                    CircleAvatar(
-                      radius: 50,
-                      backgroundImage: NetworkImage(_client?.photoUrl ?? ""),
-                      backgroundColor: AppColors.rose,
+                    ValueListenableBuilder<PickedFile?>(
+                      valueListenable: _pickedPhotoNotifier,
+                      builder: (context, pickedPhoto, child) {
+                        return CircleAvatar(
+                          radius: 50,
+                          backgroundImage: NetworkImage(pickedPhoto?.path ?? ""),
+                          backgroundColor: AppColors.rose,
+                        );
+                      },
                     ),
                     if (isEditMode)
                       ClipRRect(
                         borderRadius: BorderRadius.circular(50),
-                        child: Container(
-                          width: 100,
-                          height: 100,
-                          color: _client?.photoUrl?.isNotEmpty == true
-                              ? Colors.black.withOpacity(0.5)
-                              : AppColors.textInputBgGrey,
-                          child: Center(
-                            child: SvgPicture.asset(
-                              AppIcons.icGallery,
-                              color: _client?.photoUrl?.isNotEmpty == true ? Colors.white : AppColors.hintColor,
+                        child: InkWell(
+                          onTap: () async {
+                            // if (pickedPhoto == null) {
+                            var photo = await _picker.pickImage(source: ImageSource.gallery);
+                            _pickedPhotoNotifier.value = photo;
+                            // }
+                            // else {
+                            //   _pickedPhotoNotifier.value = null;
+                            // }
+                          },
+                          child: Container(
+                            width: 100,
+                            height: 100,
+                            color: _client?.photoUrl?.isNotEmpty == true
+                                ? Colors.black.withOpacity(0.5)
+                                : AppColors.textInputBgGrey,
+                            child: Center(
+                              child: SvgPicture.asset(
+                                AppIcons.icGallery,
+                                color: _client?.photoUrl?.isNotEmpty == true ? Colors.white : AppColors.hintColor,
+                              ),
                             ),
                           ),
                         ),
@@ -227,7 +263,10 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
         const Spacer(),
         TextButton(
           onPressed: () {
-            AlertBuilder().showAlertForDelete(context, "профиль", _client!.name, () {});
+            AlertBuilder().showAlertForDelete(context, "клиента", _client!.name, () {
+              widget.clientsBloc.removeClient(_client!.id, widget.clientDetailsData.index!);
+              widget.onClickBack();
+            });
           },
           child: Row(
             children: const [
@@ -320,7 +359,26 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
                   text: "Сохранить",
                   buttonColor: value ? AppColors.darkRose : AppColors.disabledColor,
                   onPressed: () {
+                    _infoAction = InfoAction.view;
                     _isEditModeNotifier.value = false;
+
+                    if (widget.clientDetailsData.infoAction == InfoAction.add) {
+                      _client = Client("", _nameController.text, "", "", "", _selectedStatus?.name,
+                          _phoneController.text, {}, _currentSalonId);
+
+                      widget.clientsBloc.addClient(_client!, _pickedPhotoNotifier.value);
+                    } else {
+                      if (_client != null) {
+                        _client = _client!.copy(
+                          name: _nameController.text,
+                          phone: _phoneController.text,
+                          status: _selectedStatus?.name,
+                        );
+
+                        widget.clientsBloc
+                            .updateClient(_client!, widget.clientDetailsData.index!, _pickedPhotoNotifier.value);
+                      }
+                    }
                   },
                 ),
               );

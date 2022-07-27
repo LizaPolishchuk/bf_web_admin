@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
@@ -8,9 +9,10 @@ class ClientsBloc {
   final AddClientUseCase _addClientUseCase;
   final UpdateClientUseCase _updateClientUseCase;
   final RemoveClientUseCase _removeClientUseCase;
+  final UpdateClientPhotoUseCase _updateClientPhotoUseCase;
 
   ClientsBloc(
-      this._getClientsListUseCase, this._addClientUseCase, this._updateClientUseCase, this._removeClientUseCase);
+      this._getClientsListUseCase, this._addClientUseCase, this._updateClientUseCase, this._removeClientUseCase, this._updateClientPhotoUseCase);
 
   List<Client> _clientsList = [];
 
@@ -61,7 +63,15 @@ class ClientsBloc {
     _clientsLoadedSubject.add(searchedList);
   }
 
-  addClient(Client client) async {
+  addClient(Client client, PickedFile? clientPhoto) async {
+    if (clientPhoto != null) {
+      var photoResponse = await _updateClientPhotoUseCase(client.id, clientPhoto);
+      if (photoResponse.isLeft) {
+        _errorSubject.add(photoResponse.left.message);
+      } else {
+        client.photoUrl = photoResponse.right;
+      }
+    }
     var response = await _addClientUseCase(client);
     if (response.isLeft) {
       _errorSubject.add(response.left.message);
@@ -72,7 +82,15 @@ class ClientsBloc {
     }
   }
 
-  updateClient(Client client, int index) async {
+  updateClient(Client client, int index, PickedFile? clientPhoto) async {
+    if (clientPhoto != null) {
+      var photoResponse = await _updateClientPhotoUseCase(client.id, clientPhoto);
+      if (photoResponse.isLeft) {
+        _errorSubject.add(photoResponse.left.message);
+      } else {
+        client.photoUrl = photoResponse.right;
+      }
+    }
     var response = await _updateClientUseCase(client);
     if (response.isLeft) {
       _errorSubject.add(response.left.message);
@@ -92,6 +110,11 @@ class ClientsBloc {
       _clientsLoadedSubject.add(_clientsList);
       _clientRemovedSubject.add(true);
     }
+  }
+
+  void refreshActualData(){
+    print("refreshActualData");
+    _clientsLoadedSubject.add(_clientsList);
   }
 
   dispose() {}

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:salons_adminka/injection_container_web.dart';
+import 'package:salons_adminka/prezentation/clients_page/client_details_page.dart';
 import 'package:salons_adminka/prezentation/clients_page/clients_bloc.dart';
 import 'package:salons_adminka/prezentation/widgets/base_items_selector.dart';
 import 'package:salons_adminka/prezentation/widgets/custom_app_bar.dart';
@@ -7,6 +8,7 @@ import 'package:salons_adminka/prezentation/widgets/info_container.dart';
 import 'package:salons_adminka/prezentation/widgets/search_pannel.dart';
 import 'package:salons_adminka/prezentation/widgets/table_widget.dart';
 import 'package:salons_adminka/utils/alert_builder.dart';
+import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_adminka/utils/app_images.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
@@ -26,7 +28,7 @@ class _ClientsPageState extends State<ClientsPage> {
 
   // Timer? _searchTimer;
 
-  final ValueNotifier<bool> _showClientInfoNotifier = ValueNotifier<bool>(false);
+  final ValueNotifier<ClientDetailsData?> _showInfoNotifier = ValueNotifier<ClientDetailsData?>(null);
 
   @override
   void initState() {
@@ -55,61 +57,80 @@ class _ClientsPageState extends State<ClientsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // floatingActionButton: ValueListenableBuilder<boo?>(
-      //   valueListenable: _showClientInfoNotifier,
-      //   builder: (context, value, child) {
-      //     return FloatingActionButton(
-      //       backgroundColor: value == null ? AppColors.darkRose : AppColors.darkTurquoise,
-      //       child: Icon(value == null ? Icons.add : Icons.close, color: Colors.white),
-      //       onPressed: () {
-      //         if (value == null) {
-      //           onPressedAddButton();
-      //         } else {
-      //           showInfoNotifier.value = null;
-      //         }
-      //       },
-      //     );
-      //   },
-      // ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 42, right: 38),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const CustomAppBar(title: "Клиенты"),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Flexible(
-                    child: BaseItemsSelector(
-                  items: ClientStatus.values
-                      .map((status) => BaseEntity(status.index.toString(), status.localizedName(), ""))
-                      .toList(),
-                  onSelectedItem: (item) {
-                    // _mastersBloc.getMasters(_currentSalonId, item?.id);
-                  },
-                )),
-                const SizedBox(width: 60),
-                SearchPanel(
-                  hintText: "Поиск клиента",
-                  onSearch: (text) {
-                    // _searchTimer = Timer(const Duration(milliseconds: 600), () {
-                    //   _servicesBloc.searchServices(text);
-                    // });
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Flexible(
-              fit: FlexFit.tight,
-              child: _buildClientsTable(),
-            ),
-            const SizedBox(height: 20),
-            // PaginationCounter(),
-          ],
-        ),
+      floatingActionButton: ValueListenableBuilder<ClientDetailsData?>(
+        valueListenable: _showInfoNotifier,
+        builder: (context, clientData, child) {
+          return FloatingActionButton(
+            backgroundColor: clientData == null ? AppColors.darkRose : AppColors.darkTurquoise,
+            child: Icon(clientData == null ? Icons.add : Icons.close, color: Colors.white),
+            onPressed: () {
+              if (clientData == null) {
+                _showInfoNotifier.value = ClientDetailsData(InfoAction.add, null, null);
+              } else {
+                _showInfoNotifier.value = null;
+
+                WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                  _clientsBloc.refreshActualData();
+                });
+              }
+            },
+          );
+        },
+      ),
+      body: ValueListenableBuilder<ClientDetailsData?>(
+        valueListenable: _showInfoNotifier,
+        builder: (context, clientData, child) {
+          return clientData != null
+              ? ClientDetailsPage(
+                  clientsBloc: _clientsBloc,
+                  clientDetailsData: clientData,
+                  onClickBack: () {
+                    _showInfoNotifier.value = null;
+                    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                      _clientsBloc.refreshActualData();
+                    });
+                  })
+              : Padding(
+                  padding: const EdgeInsets.only(left: 42, right: 38),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const CustomAppBar(title: "Клиенты"),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Flexible(
+                              child: BaseItemsSelector(
+                            items: ClientStatus.values
+                                .map((status) => BaseEntity(status.index.toString(), status.localizedName(), ""))
+                                .toList(),
+                            onSelectedItem: (item) {
+                              // _mastersBloc.getMasters(_currentSalonId, item?.id);
+                            },
+                          )),
+                          const SizedBox(width: 60),
+                          SearchPanel(
+                            hintText: "Поиск клиента",
+                            onSearch: (text) {
+                              // _searchTimer = Timer(const Duration(milliseconds: 600), () {
+                              //   _servicesBloc.searchServices(text);
+                              // });
+                            },
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      Flexible(
+                        fit: FlexFit.tight,
+                        child: _buildClientsTable(),
+                      ),
+                      const SizedBox(height: 20),
+                      // PaginationCounter(),
+                    ],
+                  ),
+                );
+        },
       ),
     );
   }
@@ -118,20 +139,20 @@ class _ClientsPageState extends State<ClientsPage> {
     return StreamBuilder<List<Client>>(
         stream: _clientsBloc.clientsLoaded,
         builder: (context, snapshot) {
+          print("clientsLoaded : ${snapshot.connectionState}");
+
           return TableWidget(
             columnTitles: const ["Имя", "Город", "Статус", "Услуги", "Действия"],
             items: snapshot.data ?? [],
             onClickLook: (item, index) {
-              // Routes.clientEdit,
-              // arguments: [ClientDetailsData(item as Client, InfoAction.view, index), _clientsBloc]);
+              _showInfoNotifier.value = ClientDetailsData(InfoAction.view, item as Client, index);
             },
             onClickEdit: (item, index) {
-              // Get.rootDelegate.toNamed(Routes.clientEdit,
-              //     arguments: [ClientDetailsData(item as Client, InfoAction.edit, index), _clientsBloc]);
+              _showInfoNotifier.value = ClientDetailsData(InfoAction.edit, item as Client, index);
             },
             onClickDelete: (item, index) {
               AlertBuilder().showAlertForDelete(context, "клиента", item.name, () {
-                // _clientsBloc.removeService(item.id, index);
+                _clientsBloc.removeClient(item.id, index);
               });
             },
           );
@@ -147,11 +168,11 @@ class _ClientsPageState extends State<ClientsPage> {
 }
 
 class ClientDetailsData {
-  final Client client;
+  final Client? client;
   final InfoAction infoAction;
-  final int index;
+  final int? index;
 
-  ClientDetailsData(this.client, this.infoAction, this.index);
+  ClientDetailsData(this.infoAction, this.client, this.index);
 }
 
 enum ClientStatus { newOne, vip }

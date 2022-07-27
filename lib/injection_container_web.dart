@@ -19,7 +19,7 @@ Future<void> init() async {
   getItWeb.registerFactory(() => CategoriesBloc(getItWeb(), getItWeb(), getItWeb(), getItWeb()));
   getItWeb.registerFactory(() => ServicesBloc(getItWeb(), getItWeb(), getItWeb(), getItWeb()));
   getItWeb.registerFactory(() => MastersBloc(getItWeb(), getItWeb(), getItWeb(), getItWeb()));
-  getItWeb.registerFactory(() => ClientsBloc(getItWeb(), getItWeb(), getItWeb(), getItWeb()));
+  getItWeb.registerFactory(() => ClientsBloc(getItWeb(), getItWeb(), getItWeb(), getItWeb(), getItWeb()));
   getItWeb.registerFactory(() => PromosBloc(getItWeb(), getItWeb(), getItWeb(), getItWeb(), getItWeb()));
   getItWeb.registerFactory(() => BonusCardsBloc(getItWeb(), getItWeb(), getItWeb(), getItWeb()));
   getItWeb.registerFactory(() => SettingsBloc(getItWeb()));

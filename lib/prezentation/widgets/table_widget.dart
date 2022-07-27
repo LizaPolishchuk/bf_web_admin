@@ -41,15 +41,17 @@ class _TableWidgetState extends State<TableWidget> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(20),
         ),
-        child: Table(
-          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-          children: _getTableRows(),
-          columnWidths: (widget.items.isNotEmpty && widget.items.first is FeedbackEntity)
-              ? {
-                  0: const FlexColumnWidth(2),
-                  3: const FlexColumnWidth(4),
-                }
-              : {},
+        child: SingleChildScrollView(
+          child: Table(
+            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+            children: _getTableRows(),
+            columnWidths: (widget.items.isNotEmpty && widget.items.first is FeedbackEntity)
+                ? {
+                    0: const FlexColumnWidth(2),
+                    3: const FlexColumnWidth(4),
+                  }
+                : {},
+          ),
         ));
   }
 
