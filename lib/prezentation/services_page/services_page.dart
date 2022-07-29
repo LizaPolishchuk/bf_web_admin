@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/prezentation/categories/categories_selector.dart';
 import 'package:salons_adminka/prezentation/services_page/service_info_view.dart';
@@ -66,7 +67,7 @@ class _ServicesPageState extends State<ServicesPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          const CustomAppBar(title: "Услуги"),
+          CustomAppBar(title: AppLocalizations.of(context)!.services),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -82,7 +83,7 @@ class _ServicesPageState extends State<ServicesPage> {
               ),
               const SizedBox(width: 60),
               SearchPanel(
-                hintText: "Поиск услуги",
+                hintText: AppLocalizations.of(context)!.searchService,
                 onSearch: (text) {
                   _searchTimer = Timer(const Duration(milliseconds: 600), () {
                     _servicesBloc.searchServices(text);
@@ -108,7 +109,13 @@ class _ServicesPageState extends State<ServicesPage> {
         stream: _servicesBloc.servicesLoaded,
         builder: (context, snapshot) {
           return TableWidget(
-            columnTitles: const ["Название услуги", "Цена, грн", "Время, мин", "Категория", "Действия"],
+            columnTitles: [
+              AppLocalizations.of(context)!.serviceName,
+              "${AppLocalizations.of(context)!.price}, ${AppLocalizations.of(context)!.uah}",
+              "${AppLocalizations.of(context)!.time}, ${AppLocalizations.of(context)!.min}",
+              AppLocalizations.of(context)!.category,
+              AppLocalizations.of(context)!.actions
+            ],
             items: snapshot.data ?? [],
             onClickLook: (item, index) {
               _showInfoView(InfoAction.view, item, index);
@@ -117,7 +124,8 @@ class _ServicesPageState extends State<ServicesPage> {
               _showInfoView(InfoAction.edit, item, index);
             },
             onClickDelete: (item, index) {
-              AlertBuilder().showAlertForDelete(context, "сервис", item.name, () {
+              AlertBuilder().showAlertForDelete(context, AppLocalizations.of(context)!.service.toLowerCase(), item.name,
+                  () {
                 _servicesBloc.removeService(item.id, index);
               });
             },
@@ -137,7 +145,8 @@ class _ServicesPageState extends State<ServicesPage> {
         } else if (action == InfoAction.edit) {
           _servicesBloc.updateService(service, index!);
         } else if (action == InfoAction.delete) {
-          AlertBuilder().showAlertForDelete(context, "сервис", service.name, () {
+          AlertBuilder().showAlertForDelete(context, AppLocalizations.of(context)!.service.toLowerCase(), service.name,
+              () {
             _servicesBloc.removeService(service.id, index!);
             _showInfoNotifier.value = null;
           });

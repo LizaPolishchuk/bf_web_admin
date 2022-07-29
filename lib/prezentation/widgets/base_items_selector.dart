@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:salons_adminka/prezentation/widgets/colored_circle.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_adminka/utils/app_text_style.dart';
@@ -57,7 +58,7 @@ class _BaseItemsSelectorState extends State<BaseItemsSelector> {
             if (item != null && item is Category)
               ColoredCircle(color: item.color != null ? Color(item.color!) : Colors.grey),
             Text(
-              item != null ? item.name : "Все услуги",
+              item != null ? item.name : AppLocalizations.of(context)!.allServices,
               style: AppTextStyle.hintText
                   .copyWith(color: _selectedItem == item ? AppColors.darkRose : AppColors.hintColor),
             ),

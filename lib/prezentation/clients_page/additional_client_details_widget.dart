@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:salons_adminka/prezentation/widgets/colored_circle.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
@@ -36,9 +37,9 @@ class _AdditionalClientDetailsState extends State<AdditionalClientDetails> {
             flex: 1,
             child: Row(
               children: [
-                Flexible(child: _buildServicesMasters("Сервисы", _serviceList)),
+                Flexible(child: _buildServicesMasters(AppLocalizations.of(context)!.services, _serviceList)),
                 const SizedBox(width: 30),
-                Flexible(child: _buildServicesMasters("Мастера", _mastersList)),
+                Flexible(child: _buildServicesMasters(AppLocalizations.of(context)!.masters, _mastersList)),
               ],
             ),
           ),
@@ -121,7 +122,7 @@ class _AdditionalClientDetailsState extends State<AdditionalClientDetails> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        _buildSectionTitle("Последние визиты"),
+        _buildSectionTitle(AppLocalizations.of(context)!.lastVisits),
         Flexible(
           child: ListView.separated(
             itemBuilder: (context, index) {
@@ -172,7 +173,7 @@ class _AdditionalClientDetailsState extends State<AdditionalClientDetails> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        _buildSectionTitle("Бонусные карты"),
+        _buildSectionTitle(AppLocalizations.of(context)!.bonusCards),
         Flexible(
           child: GridView.count(
             mainAxisSpacing: 5,

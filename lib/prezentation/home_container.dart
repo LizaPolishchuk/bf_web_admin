@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:salons_adminka/navigation/routes.dart';
@@ -22,13 +23,13 @@ class HomeContainer extends StatelessWidget {
       body: Stack(
         children: [
           Positioned(left: _drawerWidth - 4, top: 0, right: 0, bottom: 0, child: child),
-          Positioned(left: 0, top: 0, bottom: 0, child: _buildDrawer()),
+          Positioned(left: 0, top: 0, bottom: 0, child: _buildDrawer(context)),
         ],
       ),
     );
   }
 
-  Widget _buildDrawer() {
+  Widget _buildDrawer(BuildContext context) {
     return Container(
       width: _drawerWidth,
       height: double.infinity,
@@ -75,17 +76,28 @@ class HomeContainer extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 54),
-                _buildDrawerItem(0, "Главная", AppIcons.icHome, routeToGo: Routes.initial),
-                _buildDrawerItem(1, "Услуги", AppIcons.icServices, routeToGo: Routes.services),
-                _buildDrawerItem(2, "Мастера", AppIcons.icMasters, routeToGo: Routes.masters),
-                _buildDrawerItem(3, "Клиенты", AppIcons.icClients, routeToGo: Routes.clients),
-                _buildDrawerItem(4, "Акции/Бонусные карты", AppIcons.icPromos, routeToGo: Routes.promos),
-                _buildDrawerItem(5, "Отзывы", AppIcons.icFeedbacks, routeToGo: Routes.feedbacks),
+                _buildDrawerItem(0, AppLocalizations.of(context)!.main, AppIcons.icHome, routeToGo: Routes.initial),
+                _buildDrawerItem(1, AppLocalizations.of(context)!.services, AppIcons.icServices,
+                    routeToGo: Routes.services),
+                _buildDrawerItem(2, AppLocalizations.of(context)!.masters, AppIcons.icMasters,
+                    routeToGo: Routes.masters),
+                _buildDrawerItem(3, AppLocalizations.of(context)!.clients, AppIcons.icClients,
+                    routeToGo: Routes.clients),
+                _buildDrawerItem(
+                    4,
+                    "${AppLocalizations.of(context)!.promos}/${AppLocalizations.of(context)!.bonusCards}",
+                    AppIcons.icPromos,
+                    routeToGo: Routes.promos),
+                _buildDrawerItem(5, AppLocalizations.of(context)!.feedbacks, AppIcons.icFeedbacks,
+                    routeToGo: Routes.feedbacks),
                 const Spacer(),
-                _buildDrawerItem(6, "Проофиль", AppIcons.icProfile, routeToGo: Routes.profile),
-                _buildDrawerItem(7, "Поддержка", AppIcons.icSupport, routeToGo: Routes.support),
-                _buildDrawerItem(8, "Настройки", AppIcons.icSettings, routeToGo: Routes.settings),
-                _buildDrawerItem(9, "Выйти", AppIcons.icLogout, onClick: () {
+                _buildDrawerItem(6, AppLocalizations.of(context)!.profile, AppIcons.icProfile,
+                    routeToGo: Routes.profile),
+                _buildDrawerItem(7, AppLocalizations.of(context)!.support, AppIcons.icSupport,
+                    routeToGo: Routes.support),
+                _buildDrawerItem(8, AppLocalizations.of(context)!.settings, AppIcons.icSettings,
+                    routeToGo: Routes.settings),
+                _buildDrawerItem(9, AppLocalizations.of(context)!.logout, AppIcons.icLogout, onClick: () {
                   getIt<AuthBloc>().logout();
                 }),
               ],

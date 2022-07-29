@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
 import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/prezentation/promo_and_bonus_cards/bonus_card_info_view.dart';
@@ -77,13 +78,13 @@ class _PromosPageState extends State<PromosPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          const CustomAppBar(title: "Акции/Бонусные карты"),
+          CustomAppBar(title: "${AppLocalizations.of(context)!.promos}/${AppLocalizations.of(context)!.bonusCards}"),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               const Spacer(),
               SearchPanel(
-                hintText: "Поиск",
+                hintText: AppLocalizations.of(context)!.search,
                 onSearch: (text) {
                   // _searchTimer = Timer(const Duration(milliseconds: 600), () {
                   //   _mastersBloc.searchMasters(text);
@@ -121,7 +122,8 @@ class _PromosPageState extends State<PromosPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text("Акции", style: AppTextStyle.bodyText.copyWith(fontWeight: FontWeight.w500, fontSize: 18)),
+        Text(AppLocalizations.of(context)!.promos,
+            style: AppTextStyle.bodyText.copyWith(fontWeight: FontWeight.w500, fontSize: 18)),
         const SizedBox(height: 30),
         Flexible(
           child: SizedBox(
@@ -206,7 +208,8 @@ class _PromosPageState extends State<PromosPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text("Бонусные карты", style: AppTextStyle.bodyText.copyWith(fontWeight: FontWeight.w500, fontSize: 18)),
+        Text(AppLocalizations.of(context)!.bonusCards,
+            style: AppTextStyle.bodyText.copyWith(fontWeight: FontWeight.w500, fontSize: 18)),
         const SizedBox(height: 30),
         Flexible(
           child: StreamBuilder<List<BonusCard>>(
@@ -293,17 +296,18 @@ class _PromosPageState extends State<PromosPage> {
           PopupMenuItem<int>(
             value: 0,
             height: 32,
-            child: Text("Просмотр", style: AppTextStyle.bodyText.copyWith(fontSize: 12)),
+            child: Text(AppLocalizations.of(context)!.view, style: AppTextStyle.bodyText.copyWith(fontSize: 12)),
           ),
           PopupMenuItem<int>(
             value: 1,
             height: 32,
-            child: Text("Изменить", style: AppTextStyle.bodyText.copyWith(fontSize: 12)),
+            child: Text(AppLocalizations.of(context)!.edit, style: AppTextStyle.bodyText.copyWith(fontSize: 12)),
           ),
           PopupMenuItem<int>(
             value: 2,
             height: 32,
-            child: Text("Удалить", style: AppTextStyle.bodyText.copyWith(fontSize: 12, color: AppColors.red)),
+            child: Text(AppLocalizations.of(context)!.delete,
+                style: AppTextStyle.bodyText.copyWith(fontSize: 12, color: AppColors.red)),
           ),
         ];
       },
@@ -317,7 +321,8 @@ class _PromosPageState extends State<PromosPage> {
               ? _showPromoInfoView(InfoAction.edit, item, index)
               : _showBonusCardInfoView(InfoAction.edit, item, index);
         } else if (value == 2) {
-          AlertBuilder().showAlertForDelete(context, isPromo ? "акцию" : "бонусную карту", item.name, () {
+          AlertBuilder().showAlertForDelete(context,
+              isPromo ? AppLocalizations.of(context)!.promo1 : AppLocalizations.of(context)!.bonusCard1, item.name, () {
             if (isPromo) {
               _promosBloc.removePromo(item.id, index);
             } else {
@@ -341,7 +346,7 @@ class _PromosPageState extends State<PromosPage> {
         } else if (action == InfoAction.edit) {
           _promosBloc.updatePromo(promo, index!, photo);
         } else if (action == InfoAction.delete) {
-          AlertBuilder().showAlertForDelete(context, "акцию", promo.name, () {
+          AlertBuilder().showAlertForDelete(context, AppLocalizations.of(context)!.promo1, promo.name, () {
             _promosBloc.removePromo(promo.id, index!);
             _showInfoNotifier.value = null;
           });
@@ -361,7 +366,7 @@ class _PromosPageState extends State<PromosPage> {
         } else if (action == InfoAction.edit) {
           _bonusCardsBloc.updateBonusCard(card, index!);
         } else if (action == InfoAction.delete) {
-          AlertBuilder().showAlertForDelete(context, "бонусную карту", card.name, () {
+          AlertBuilder().showAlertForDelete(context, AppLocalizations.of(context)!.bonusCard1, card.name, () {
             _bonusCardsBloc.removeBonusCard(card.id, index!);
             _showInfoNotifier.value = null;
           });
@@ -382,13 +387,13 @@ class _PromosPageState extends State<PromosPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               _buildAddPromoOrCardButton(
-                "Акция",
+                AppLocalizations.of(context)!.promo,
                 AppIcons.promoPlaceholder,
                 () => _showPromoInfoView(InfoAction.add, null, null),
               ),
               const SizedBox(width: 8),
               _buildAddPromoOrCardButton(
-                "Бонусная карта",
+                AppLocalizations.of(context)!.bonusCard,
                 AppIcons.bonusCardPlaceholder,
                 () => _showBonusCardInfoView(InfoAction.add, null, null),
               ),
@@ -416,7 +421,10 @@ class _PromosPageState extends State<PromosPage> {
               child: SizedBox(
                 height: 110,
                 width: 110,
-                child: Image.asset(imagePath, fit: BoxFit.cover,),
+                child: Image.asset(
+                  imagePath,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),
@@ -426,7 +434,7 @@ class _PromosPageState extends State<PromosPage> {
               Get.back();
             },
             child: Text(
-              "Добавить",
+              AppLocalizations.of(context)!.add,
               style: AppTextStyle.buttonText.copyWith(
                 color: AppColors.darkRose,
               ),

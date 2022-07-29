@@ -1,6 +1,7 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:salons_adminka/prezentation/widgets/colored_circle.dart';
 import 'package:salons_adminka/prezentation/widgets/info_container.dart';
 import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
@@ -73,13 +74,13 @@ class _ServiceInfoViewState extends State<ServiceInfoView> {
       children: [
         Text(
             _infoAction == InfoAction.view
-                ? "Просмотр"
+                ? AppLocalizations.of(context)!.view
                 : _infoAction == InfoAction.edit
-                    ? "Редактировать"
-                    : "Добавить услугу",
+                    ? AppLocalizations.of(context)!.redact
+                    : AppLocalizations.of(context)!.addService,
             style: AppTextStyle.titleText),
         const SizedBox(height: 35),
-        _buildTextField(_nameController, "Название услуги"),
+        _buildTextField(_nameController, AppLocalizations.of(context)!.serviceName),
         const SizedBox(height: 15),
         Container(
           width: double.infinity,
@@ -90,8 +91,8 @@ class _ServiceInfoViewState extends State<ServiceInfoView> {
           ),
           child: DropdownButtonHideUnderline(
             child: DropdownButton2(
-              hint: const Text(
-                "Категория",
+              hint: Text(
+                AppLocalizations.of(context)!.category,
                 style: AppTextStyle.hintText,
               ),
               items: widget.categories
@@ -130,11 +131,11 @@ class _ServiceInfoViewState extends State<ServiceInfoView> {
         Row(
           children: [
             Flexible(
-              child: _buildTextField(_priceController, "Цена", isPrice: true),
+              child: _buildTextField(_priceController, AppLocalizations.of(context)!.price, isPrice: true),
             ),
             const SizedBox(width: 15),
             Flexible(
-              child: _buildTextField(_durationController, "Время", isDuration: true),
+              child: _buildTextField(_durationController, AppLocalizations.of(context)!.time, isDuration: true),
             ),
           ],
         ),
@@ -150,7 +151,7 @@ class _ServiceInfoViewState extends State<ServiceInfoView> {
                   });
                 },
                 child: Text(
-                  "Изменить",
+                  AppLocalizations.of(context)!.edit,
                   style: AppTextStyle.bodyText.copyWith(
                     color: AppColors.hintColor,
                     decoration: TextDecoration.underline,
@@ -162,7 +163,7 @@ class _ServiceInfoViewState extends State<ServiceInfoView> {
                   widget.onClickAction(_serviceForUpdate!, InfoAction.delete);
                 },
                 child: Text(
-                  "Удалить",
+                  AppLocalizations.of(context)!.delete,
                   style: AppTextStyle.bodyText.copyWith(
                     color: AppColors.red,
                   ),
@@ -177,7 +178,7 @@ class _ServiceInfoViewState extends State<ServiceInfoView> {
               return AnimatedSwitcher(
                 duration: const Duration(milliseconds: 200),
                 child: RoundedButton(
-                  text: "Сохранить",
+                  text: AppLocalizations.of(context)!.save,
                   buttonColor: value ? AppColors.darkRose : AppColors.disabledColor,
                   onPressed: () {
                     Service serviceToUpdate;
@@ -236,7 +237,7 @@ class _ServiceInfoViewState extends State<ServiceInfoView> {
         hintStyle: AppTextStyle.hintText,
         counterText: "",
         hintText: hint,
-        suffixText: isPrice ? "грн" : null,
+        suffixText: isPrice ? AppLocalizations.of(context)!.uah : null,
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -56,8 +57,7 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
     _client = widget.clientDetailsData.client;
     _infoAction = widget.clientDetailsData.infoAction;
 
-    if (_infoAction == InfoAction.edit ||
-        _infoAction == InfoAction.add) {
+    if (_infoAction == InfoAction.edit || _infoAction == InfoAction.add) {
       _isEditModeNotifier = ValueNotifier<bool>(true);
     } else {
       _isEditModeNotifier = ValueNotifier<bool>(false);
@@ -83,7 +83,7 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          const CustomAppBar(title: "Клиенты"),
+          CustomAppBar(title: AppLocalizations.of(context)!.clients),
           InkWell(
             onTap: () {
               widget.onClickBack();
@@ -96,8 +96,8 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
                   color: AppColors.hintColor,
                 ),
                 const SizedBox(width: 5),
-                const Text(
-                  "Назад",
+                Text(
+                  AppLocalizations.of(context)!.back,
                   style: AppTextStyle.hintText,
                 )
               ],
@@ -246,7 +246,7 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
               SvgPicture.asset(clientStatus.iconPath()),
               const SizedBox(width: 6),
               Text(
-                clientStatus.localizedName(),
+                clientStatus.localizedName(context),
                 style: AppTextStyle.bodyText,
               )
             ],
@@ -263,22 +263,20 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
         const Spacer(),
         TextButton(
           onPressed: () {
-            AlertBuilder().showAlertForDelete(context, "клиента", _client!.name, () {
+            AlertBuilder().showAlertForDelete(context, AppLocalizations.of(context)!.client1, _client!.name, () {
               widget.clientsBloc.removeClient(_client!.id, widget.clientDetailsData.index!);
               widget.onClickBack();
             });
           },
           child: Row(
-            children: const [
-              Icon(
+            children: [
+              const Icon(
                 Icons.delete_outline,
                 color: AppColors.hintColor,
               ),
-              SizedBox(
-                width: 4,
-              ),
+              const SizedBox(width: 4),
               Text(
-                "Удалить профиль",
+                AppLocalizations.of(context)!.deleteProfile,
                 style: AppTextStyle.hintText,
               )
             ],
@@ -293,9 +291,9 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Column(
         children: [
-          _buildTextField(_nameController, "Имя"),
+          _buildTextField(_nameController, AppLocalizations.of(context)!.name),
           const SizedBox(height: 15),
-          _buildTextField(_phoneController, "Моб. телефон", isPhone: true),
+          _buildTextField(_phoneController, AppLocalizations.of(context)!.mobilePhone, isPhone: true),
           const SizedBox(height: 15),
           Container(
             width: double.infinity,
@@ -306,8 +304,8 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton2(
-                hint: const Text(
-                  "Статус",
+                hint: Text(
+                  AppLocalizations.of(context)!.status,
                   style: AppTextStyle.hintText,
                 ),
                 items: ClientStatus.values
@@ -320,7 +318,7 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
                             SvgPicture.asset(status.iconPath()),
                             const SizedBox(width: 6),
                             Text(
-                              status.localizedName(),
+                              status.localizedName(context),
                               style: AppTextStyle.bodyText,
                             )
                           ],
@@ -333,7 +331,7 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
                     DropdownMenuItem<ClientStatus>(
                       value: null,
                       child: Text(
-                        "Без cтатуса",
+                        AppLocalizations.of(context)!.withoutStatus,
                         style: AppTextStyle.bodyText.copyWith(color: AppColors.hintColor),
                       ),
                     ),
@@ -356,7 +354,7 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
               return AnimatedSwitcher(
                 duration: const Duration(milliseconds: 200),
                 child: RoundedButton(
-                  text: "Сохранить",
+                  text: AppLocalizations.of(context)!.save,
                   buttonColor: value ? AppColors.darkRose : AppColors.disabledColor,
                   onPressed: () {
                     _infoAction = InfoAction.view;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_adminka/utils/app_images.dart';
@@ -41,7 +42,7 @@ class _FeedbackInfoViewState extends State<FeedbackInfoView> {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Text("Просмотр", style: AppTextStyle.titleText),
+        Text(AppLocalizations.of(context)!.view, style: AppTextStyle.titleText),
         const SizedBox(height: 35),
         CircleAvatar(
           radius: 40,
@@ -99,7 +100,7 @@ class _FeedbackInfoViewState extends State<FeedbackInfoView> {
                   color: AppColors.hintColor,
                 ),
                 const SizedBox(width: 5),
-                const Text("Закрыть", style: AppTextStyle.hintText),
+                Text(AppLocalizations.of(context)!.close, style: AppTextStyle.hintText),
               ],
             ),
           ),
@@ -115,7 +116,8 @@ class _FeedbackInfoViewState extends State<FeedbackInfoView> {
             },
             child: Row(
               children: [
-                Text("Следующий отзыв", style: AppTextStyle.hintText.copyWith(color: AppColors.textColor)),
+                Text(AppLocalizations.of(context)!.nextFeedback,
+                    style: AppTextStyle.hintText.copyWith(color: AppColors.textColor)),
                 const SizedBox(width: 5),
                 SvgPicture.asset(
                   AppIcons.icCircleArrowRight,

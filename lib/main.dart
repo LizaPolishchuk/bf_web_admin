@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:salons_adminka/event_bus_events/user_success_logged_in_event.dart';
+import 'package:salons_adminka/l10n/l10n.dart';
 import 'package:salons_adminka/prezentation/auth_page/auth_bloc.dart';
 import 'package:salons_adminka/prezentation/auth_page/auth_page.dart';
 import 'package:salons_adminka/prezentation/home_container.dart';
@@ -65,19 +67,17 @@ class MyApp extends StatelessWidget {
       defaultTransition: Transition.noTransition,
       getPages: AppPages.pages,
       routerDelegate: Get.rootDelegate,
-      // routerDelegate: AppRouterDelegate(),
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: ThemeMode.light,
       title: 'B&F Admin Panel',
       localizationsDelegates: const [
+        AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
       ],
-      supportedLocales: const [
-        Locale('en', 'US'),
-        Locale('ru', 'RU'),
-      ],
+      supportedLocales: L10n.all,
     );
   }
 }

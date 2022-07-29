@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/prezentation/auth_page/auth_bloc.dart';
@@ -47,9 +48,9 @@ class _AuthPageState extends State<AuthPage> {
       _authBloc.errorMessage.listen((event) {
         String error = event;
         if (event == "user_not_found") {
-          error = "Такого юзера не существует, пожалуйста, проверьте введенные данные";
+          error = AppLocalizations.of(context)!.userNotFound;
         } else if (event == "wrong_password") {
-          error = "Не верный пароль";
+          error = AppLocalizations.of(context)!.wrongPassword;
         }
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           backgroundColor: Colors.red,
@@ -131,9 +132,9 @@ class _AuthPageState extends State<AuthPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Text(
-                  "Вход",
-                  style: TextStyle(color: AppColors.textColor, fontSize: 36, fontWeight: FontWeight.w700),
+                Text(
+                  AppLocalizations.of(context)!.login,
+                  style: const TextStyle(color: AppColors.textColor, fontSize: 36, fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 24),
                 InkWell(
@@ -145,9 +146,9 @@ class _AuthPageState extends State<AuthPage> {
                     children: [
                       SvgPicture.asset(AppIcons.icGoogle),
                       const SizedBox(width: 12),
-                      const Flexible(
+                      Flexible(
                         child: Text(
-                          "Войти с помощью Google",
+                          AppLocalizations.of(context)!.loginViaGoogle,
                           style: AppTextStyle.bodyText,
                         ),
                       ),
@@ -172,9 +173,12 @@ class _AuthPageState extends State<AuthPage> {
   Widget _buildLoginInput() {
     return Column(
       children: [
-        _buildInputTextField(_emailFormKey, "Введите ваш E-mail", "E-mail", _emailController),
+        _buildInputTextField(_emailFormKey, AppLocalizations.of(context)!.enterEmail,
+            AppLocalizations.of(context)!.email, _emailController),
         const SizedBox(height: 15),
-        _buildInputTextField(_passwordFormKey, "Введите пароль", "******", _passwordController, isPassword: true),
+        _buildInputTextField(
+            _passwordFormKey, AppLocalizations.of(context)!.enterPassword, "******", _passwordController,
+            isPassword: true),
       ],
     );
   }
@@ -182,13 +186,18 @@ class _AuthPageState extends State<AuthPage> {
   Widget _buildRegistrationInput() {
     return Column(
       children: [
-        _buildInputTextField(_nameFormKey, "Введите ваше Имя", "Имя", _nameController),
+        _buildInputTextField(
+            _nameFormKey, AppLocalizations.of(context)!.enterName, AppLocalizations.of(context)!.name, _nameController),
         const SizedBox(height: 15),
-        _buildInputTextField(_emailFormKey, "Введите ваш E-mail", "E-mail", _emailController),
+        _buildInputTextField(_emailFormKey, AppLocalizations.of(context)!.enterEmail,
+            AppLocalizations.of(context)!.email, _emailController),
         const SizedBox(height: 15),
-        _buildInputTextField(_passwordFormKey, "Введите пароль", "******", _passwordController, isPassword: true),
+        _buildInputTextField(
+            _passwordFormKey, AppLocalizations.of(context)!.enterPassword, "******", _passwordController,
+            isPassword: true),
         const SizedBox(height: 15),
-        _buildInputTextField(_repeatPasswordFormKey, "Повторите пароль", "******", _repeatPasswordController,
+        _buildInputTextField(
+            _repeatPasswordFormKey, AppLocalizations.of(context)!.repeatPassword, "******", _repeatPasswordController,
             isPassword: true),
       ],
     );
@@ -198,13 +207,13 @@ class _AuthPageState extends State<AuthPage> {
     return Column(
       children: [
         InkWell(
-          child: const Text("Забыли пароль?", style: AppTextStyle.bodyText),
+          child: Text(AppLocalizations.of(context)!.forgotPassword, style: AppTextStyle.bodyText),
           onTap: () {},
         ),
         const SizedBox(height: 58),
         Row(
           children: [
-            const Text("Нет аккаунта?", style: AppTextStyle.bodyText),
+            Text(AppLocalizations.of(context)!.noAccount, style: AppTextStyle.bodyText),
             const Spacer(),
             InkWell(
               onTap: () {
@@ -213,7 +222,7 @@ class _AuthPageState extends State<AuthPage> {
                 });
               },
               child: Text(
-                "Зарегистрироваться",
+                AppLocalizations.of(context)!.register,
                 style: AppTextStyle.bodyText.copyWith(
                   decoration: TextDecoration.underline,
                   fontWeight: FontWeight.w600,
@@ -228,7 +237,7 @@ class _AuthPageState extends State<AuthPage> {
 
   Widget _buildLoginButton() {
     return RoundedButton(
-        text: _registrationMode ? "Регистрация" : "Вход",
+        text: _registrationMode ? AppLocalizations.of(context)!.registration : AppLocalizations.of(context)!.login,
         width: 230,
         buttonColor: AppColors.rose,
         textColor: AppColors.textColor,
@@ -269,19 +278,19 @@ class _AuthPageState extends State<AuthPage> {
                 return _errorText;
               }
               if (text == null || text.isEmpty) {
-                return 'Это поле не может быть пустым';
+                return AppLocalizations.of(context)!.fieldCannotBeEmpty;
               }
               if (text.length < 3) {
-                return 'Поле должно содержать больше, чем 3 символа';
+                return AppLocalizations.of(context)!.fieldMustContainMoreThanCharacters;
               }
               if (formKey == _emailFormKey) {
                 if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(text)) {
-                  return "Пожалуйста, введите правильный E-mail";
+                  return AppLocalizations.of(context)!.pleaseEnterValidEmail;
                 }
               }
               if (formKey == _repeatPasswordFormKey) {
                 if (text != _passwordController.text) {
-                  return "Пароли не совпадают";
+                  return AppLocalizations.of(context)!.passwordsDoNotMatch;
                 }
               }
               return null;

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/prezentation/settings_page/settings_bloc.dart';
@@ -63,7 +64,7 @@ class _SettingsPageState extends State<SettingsPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const CustomAppBar(title: "Настройки"),
+                  CustomAppBar(title: AppLocalizations.of(context)!.settings),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -71,9 +72,9 @@ class _SettingsPageState extends State<SettingsPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildInputTextField("E-mail", "", _emailController, false),
+                            _buildInputTextField(AppLocalizations.of(context)!.email, "", _emailController, false),
                             const SizedBox(height: 22),
-                            _buildInputTextField("Пароль", "", _emailController, false),
+                            _buildInputTextField(AppLocalizations.of(context)!.password, "", _emailController, false),
                             const SizedBox(height: 42),
                             TextButton(
                               onPressed: () {},
@@ -82,7 +83,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                   const Icon(Icons.delete_outline, color: AppColors.red),
                                   const SizedBox(width: 4),
                                   Text(
-                                    "Удалить аккаунт",
+                                    AppLocalizations.of(context)!.deleteAccount,
                                     style: AppTextStyle.buttonText.copyWith(color: AppColors.red),
                                   ),
                                 ],
@@ -96,8 +97,8 @@ class _SettingsPageState extends State<SettingsPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              "Подписка",
+                            Text(
+                              AppLocalizations.of(context)!.subscription,
                               style: AppTextStyle.bodyText,
                             ),
                             const SizedBox(height: 8),
@@ -126,14 +127,14 @@ class _SettingsPageState extends State<SettingsPage> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "Ваша платная подписка “Топ-салон”",
+                                        AppLocalizations.of(context)!.yourCurrentSubscription,
                                         style: AppTextStyle.bodyText.copyWith(
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
                                       const SizedBox(height: 6),
-                                      const Text(
-                                        "Дата окончания подписки 12.03.2022",
+                                      Text(
+                                        "${AppLocalizations.of(context)!.subscriptionEndDate} 12.03.2022",
                                         style: AppTextStyle.hintText,
                                       ),
                                       const SizedBox(height: 16),
@@ -141,13 +142,13 @@ class _SettingsPageState extends State<SettingsPage> {
                                         children: [
                                           RoundedButton(
                                             height: 40,
-                                            text: "Продолжить",
+                                            text: AppLocalizations.of(context)!.continueTxt,
                                             onPressed: () {},
                                           ),
                                           const SizedBox(width: 16),
                                           RoundedButton(
                                             height: 40,
-                                            text: "Отменить",
+                                            text: AppLocalizations.of(context)!.cancel,
                                             onPressed: () {},
                                             buttonColor: AppColors.disabledColor,
                                           ),
@@ -159,8 +160,8 @@ class _SettingsPageState extends State<SettingsPage> {
                               ),
                             ),
                             const SizedBox(height: 28),
-                            const Text(
-                              "Синхронизировать данные с YClients",
+                            Text(
+                              AppLocalizations.of(context)!.syncDataWithYClients,
                               style: AppTextStyle.bodyText,
                             ),
                             const SizedBox(height: 8),
@@ -185,7 +186,8 @@ class _SettingsPageState extends State<SettingsPage> {
                                       borderRadius: BorderRadius.circular(20),
                                     ),
                                     alignment: Alignment.center,
-                                    child:  Text("Подключить", style: AppTextStyle.buttonText.copyWith(color: AppColors.textColor)),
+                                    child: Text(AppLocalizations.of(context)!.connect,
+                                        style: AppTextStyle.buttonText.copyWith(color: AppColors.textColor)),
                                   ),
                                 ),
                               ],

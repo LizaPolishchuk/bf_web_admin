@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/prezentation/clients_page/client_details_page.dart';
 import 'package:salons_adminka/prezentation/clients_page/clients_bloc.dart';
@@ -96,14 +97,14 @@ class _ClientsPageState extends State<ClientsPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const CustomAppBar(title: "Клиенты"),
+                      CustomAppBar(title: AppLocalizations.of(context)!.clients),
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Flexible(
                               child: BaseItemsSelector(
                             items: ClientStatus.values
-                                .map((status) => BaseEntity(status.index.toString(), status.localizedName(), ""))
+                                .map((status) => BaseEntity(status.index.toString(), status.localizedName(context), ""))
                                 .toList(),
                             onSelectedItem: (item) {
                               // _mastersBloc.getMasters(_currentSalonId, item?.id);
@@ -111,7 +112,7 @@ class _ClientsPageState extends State<ClientsPage> {
                           )),
                           const SizedBox(width: 60),
                           SearchPanel(
-                            hintText: "Поиск клиента",
+                            hintText: AppLocalizations.of(context)!.searchClient,
                             onSearch: (text) {
                               // _searchTimer = Timer(const Duration(milliseconds: 600), () {
                               //   _servicesBloc.searchServices(text);
@@ -142,7 +143,13 @@ class _ClientsPageState extends State<ClientsPage> {
           print("clientsLoaded : ${snapshot.connectionState}");
 
           return TableWidget(
-            columnTitles: const ["Имя", "Город", "Статус", "Услуги", "Действия"],
+            columnTitles: [
+              AppLocalizations.of(context)!.name,
+              AppLocalizations.of(context)!.city,
+              AppLocalizations.of(context)!.status,
+              AppLocalizations.of(context)!.services,
+              AppLocalizations.of(context)!.actions
+            ],
             items: snapshot.data ?? [],
             onClickLook: (item, index) {
               _showInfoNotifier.value = ClientDetailsData(InfoAction.view, item as Client, index);
@@ -178,10 +185,10 @@ class ClientDetailsData {
 enum ClientStatus { newOne, vip }
 
 extension ClientStatusExtension on ClientStatus {
-  String localizedName() {
+  String localizedName(BuildContext context) {
     switch (this) {
       case ClientStatus.newOne:
-        return "Новый";
+        return AppLocalizations.of(context)!.newTxt;
       case ClientStatus.vip:
         return "VIP";
       default:

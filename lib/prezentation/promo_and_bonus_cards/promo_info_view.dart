@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_picker_for_web/image_picker_for_web.dart';
 import 'package:intl/intl.dart';
@@ -73,10 +74,10 @@ class _PromoInfoViewState extends State<PromoInfoView> {
       children: [
         Text(
             _infoAction == InfoAction.view
-                ? "Просмотр"
+                ? AppLocalizations.of(context)!.view
                 : _infoAction == InfoAction.edit
-                    ? "Редактировать"
-                    : "Добавить акцию",
+                    ? AppLocalizations.of(context)!.redact
+                    : AppLocalizations.of(context)!.addPromo,
             style: AppTextStyle.titleText),
         const SizedBox(height: 35),
         _infoAction == InfoAction.view ? _buildForViewMode() : _buildForEditMode(),
@@ -142,8 +143,8 @@ class _PromoInfoViewState extends State<PromoInfoView> {
       const SizedBox(height: 15),
       Text(
         _expiredDateNotifier.value != null
-            ? "Действует до: ${DateFormat('dd-MMM-yyyy').format(_expiredDateNotifier.value!)}"
-            : "Без срока действия",
+            ? "${AppLocalizations.of(context)!.validUntil}: ${DateFormat('dd-MMM-yyyy').format(_expiredDateNotifier.value!)}"
+            : AppLocalizations.of(context)!.noExpirationDate,
         style: AppTextStyle.hintText,
       ),
       const SizedBox(height: 120),
@@ -157,7 +158,7 @@ class _PromoInfoViewState extends State<PromoInfoView> {
               });
             },
             child: Text(
-              "Изменить",
+              AppLocalizations.of(context)!.edit,
               style: AppTextStyle.bodyText.copyWith(
                 color: AppColors.hintColor,
                 decoration: TextDecoration.underline,
@@ -169,7 +170,7 @@ class _PromoInfoViewState extends State<PromoInfoView> {
               widget.onClickAction(_promoForUpdate!, InfoAction.delete, null);
             },
             child: Text(
-              "Удалить",
+              AppLocalizations.of(context)!.delete,
               style: AppTextStyle.bodyText.copyWith(
                 color: AppColors.red,
               ),
@@ -233,7 +234,9 @@ class _PromoInfoViewState extends State<PromoInfoView> {
                           ),
                         ),
                       Text(
-                        pickedPhoto == null ? "Прикрепить изображение" : "Удалить изображение",
+                        pickedPhoto == null
+                            ? AppLocalizations.of(context)!.attachImage
+                            : AppLocalizations.of(context)!.deleteImage,
                         style: AppTextStyle.hintText,
                       ),
                       if (pickedPhoto != null)
@@ -253,9 +256,9 @@ class _PromoInfoViewState extends State<PromoInfoView> {
           },
         ),
         const SizedBox(height: 15),
-        _buildTextField(_nameController, "Название"),
+        _buildTextField(_nameController, AppLocalizations.of(context)!.title),
         const SizedBox(height: 15),
-        _buildTextField(_descriptionController, "Описание", lines: 6),
+        _buildTextField(_descriptionController, AppLocalizations.of(context)!.description, lines: 6),
         const SizedBox(height: 15),
         ValueListenableBuilder<DateTime?>(
             valueListenable: _expiredDateNotifier,
@@ -272,7 +275,9 @@ class _PromoInfoViewState extends State<PromoInfoView> {
                     color: AppColors.textInputBgGrey,
                   ),
                   child: Text(
-                    expiredDate != null ? DateFormat('dd-MMM-yyyy').format(expiredDate) : "Срок действия",
+                    expiredDate != null
+                        ? DateFormat('dd-MMM-yyyy').format(expiredDate)
+                        : AppLocalizations.of(context)!.validity,
                     style: expiredDate != null ? AppTextStyle.bodyText : AppTextStyle.hintText,
                   ),
                 ),
@@ -285,7 +290,7 @@ class _PromoInfoViewState extends State<PromoInfoView> {
             return AnimatedSwitcher(
               duration: const Duration(milliseconds: 200),
               child: RoundedButton(
-                text: "Сохранить",
+                text: AppLocalizations.of(context)!.save,
                 buttonColor: value ? AppColors.darkRose : AppColors.disabledColor,
                 onPressed: () {
                   Promo? promoToUpdate;

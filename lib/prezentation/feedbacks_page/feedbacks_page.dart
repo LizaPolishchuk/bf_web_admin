@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/prezentation/feedbacks_page/feedback_info_view.dart';
 import 'package:salons_adminka/prezentation/feedbacks_page/feedbacks_bloc.dart';
@@ -61,14 +62,14 @@ class _FeedbacksPageState extends State<FeedbacksPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          const CustomAppBar(title: "Отзывы"),
+          CustomAppBar(title: AppLocalizations.of(context)!.feedbacks),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               const Spacer(),
               const SizedBox(width: 60),
               SearchPanel(
-                hintText: "Поиск услуги",
+                hintText: AppLocalizations.of(context)!.searchService,
                 onSearch: (text) {
                   _searchTimer = Timer(const Duration(milliseconds: 600), () {
                     _feedbacksBloc.searchFeedbacks(text);
@@ -94,7 +95,13 @@ class _FeedbacksPageState extends State<FeedbacksPage> {
         stream: _feedbacksBloc.feedbacksLoaded,
         builder: (context, snapshot) {
           return TableWidget(
-            columnTitles: const ["Имя", "Дата отзыва", "Оценка", "Отзыв", "Действия"],
+            columnTitles: [
+              AppLocalizations.of(context)!.name,
+              AppLocalizations.of(context)!.feedbackDate,
+              AppLocalizations.of(context)!.point,
+              AppLocalizations.of(context)!.feedback,
+              AppLocalizations.of(context)!.actions
+            ],
             items: snapshot.data ?? [],
             onClickLook: (item, index) {
               _showInfoView(item, index);

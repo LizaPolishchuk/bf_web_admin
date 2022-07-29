@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
 import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/prezentation/categories/categories_bloc.dart';
@@ -75,8 +76,8 @@ class _CategoriesSelectorState extends State<CategoriesSelector> {
           child: Container(
             alignment: Alignment.center,
             padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-            child: const Text(
-              "Добавить +",
+            child: Text(
+              "${AppLocalizations.of(context)!.add} +",
               style: AppTextStyle.hintText,
             ),
           ),
@@ -114,8 +115,8 @@ class _CategoriesSelectorState extends State<CategoriesSelector> {
                         ),
                       ),
                     ),
-                    const Text(
-                      "Добавить новую категорию",
+                    Text(
+                      AppLocalizations.of(context)!.addNewCategory,
                       style: AppTextStyle.bodyText,
                     ),
                     const SizedBox(height: 21),
@@ -140,10 +141,10 @@ class _CategoriesSelectorState extends State<CategoriesSelector> {
                                 child: TextField(
                                   style: AppTextStyle.bodyText,
                                   controller: categoryNameController,
-                                  decoration: const InputDecoration(
-                                    hintText: "Название категории",
+                                  decoration:  InputDecoration(
+                                    hintText:  AppLocalizations.of(context)!.categoryName,
                                     counterText: "",
-                                    contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                                     hintStyle: AppTextStyle.hintText,
                                     fillColor: Colors.white,
                                     floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -198,7 +199,7 @@ class _CategoriesSelectorState extends State<CategoriesSelector> {
                     ),
                     const SizedBox(height: 12),
                     RoundedButton(
-                        text: "Добавить",
+                        text: AppLocalizations.of(context)!.add,
                         onPressed: () {
                           if (categoryNameController.text.isNotEmpty && categoryNameController.text.length > 2) {
                             Category newCategory = Category(

@@ -114,7 +114,7 @@ class _TableWidgetState extends State<TableWidget> {
                       style: AppTextStyle.bodyText.copyWith(fontSize: 14, fontWeight: FontWeight.w500),
                       photoUrl: client.photoUrl),
                   _buildRowText(client.city ?? ""),
-                  _buildRowText(clientStatus?.localizedName() ?? "", iconPath: clientStatus?.iconPath()),
+                  _buildRowText(clientStatus?.localizedName(context) ?? "", iconPath: clientStatus?.iconPath()),
                   _buildRowText(client.services?.values.join(", ") ?? ""),
                   _buildActions(item, index),
                 ]),

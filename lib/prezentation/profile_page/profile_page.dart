@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_picker_for_web/image_picker_for_web.dart';
@@ -80,7 +81,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:Padding(
+      body: Padding(
         padding: const EdgeInsets.only(left: 42, right: 50, bottom: 35),
         child: CustomScrollView(
           slivers: [
@@ -89,7 +90,7 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const CustomAppBar(title: "Profile settings"),
+                  CustomAppBar(title: AppLocalizations.of(context)!.profileSettings),
                   Expanded(
                     child: StreamBuilder<Salon>(
                       stream: _profileBloc.salonLoaded,
@@ -131,7 +132,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 children: [
                   Row(
                     children: [
-                      _buildSettingsTitle("Фото"),
+                      _buildSettingsTitle(AppLocalizations.of(context)!.photo),
                       const Spacer(),
                       IconButton(
                         splashRadius: 18,
@@ -160,24 +161,25 @@ class _ProfilePageState extends State<ProfilePage> {
                     ],
                   ),
                   const SizedBox(height: 24),
-                  _buildSettingsRow("Название салона", salon.name, _nameController, _nameFormKey),
+                  _buildSettingsRow(AppLocalizations.of(context)!.salonName, salon.name, _nameController, _nameFormKey),
                   const SizedBox(height: 15),
-                  _buildSettingsRow("Описание", salon.description, _descriptionController, _descriptionFormKey,
-                      hint: "Краткое описание салона"),
+                  _buildSettingsRow(AppLocalizations.of(context)!.description, salon.description,
+                      _descriptionController, _descriptionFormKey,
+                      hint: AppLocalizations.of(context)!.shortSalonDescription),
                   const SizedBox(height: 15),
-                  _buildSettingsRow("Адрес", salon.address, _addressController, _addressFormKey),
+                  _buildSettingsRow(
+                      AppLocalizations.of(context)!.address, salon.address, _addressController, _addressFormKey),
                   const SizedBox(height: 15),
-                  _buildSettingsRow("Номер телефона", salon.phoneNumber, _phoneController, _phoneFormKey),
+                  _buildSettingsRow(
+                      AppLocalizations.of(context)!.phoneNumber, salon.phoneNumber, _phoneController, _phoneFormKey),
                 ],
               ),
             ),
             const SizedBox(width: 50),
-            Flexible(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 45),
-                child: null
-                // _buildSettingsRow("График работы", null, _scheduleController, _scheduleFormKey),
-              ),
+            const Flexible(
+              child: Padding(padding: EdgeInsets.only(top: 45), child: null
+                  // _buildSettingsRow("График работы", null, _scheduleController, _scheduleFormKey),
+                  ),
             ),
           ],
         ),
@@ -185,7 +187,7 @@ class _ProfilePageState extends State<ProfilePage> {
         const SizedBox(height: 10),
         Center(
           child: RoundedButton(
-            text: "Сохранить изменения",
+            text: AppLocalizations.of(context)!.saveChanges,
             onPressed: () {
               _errorText = "";
 
@@ -265,19 +267,19 @@ class _ProfilePageState extends State<ProfilePage> {
                   return null;
                 }
                 if (text == null || text.isEmpty) {
-                  return 'Это поле не может быть пустым';
+                  return AppLocalizations.of(context)!.fieldCannotBeEmpty;
                 }
                 if (text.length < 3) {
-                  return 'Поле должно содержать больше, чем 3 символа';
+                  return AppLocalizations.of(context)!.fieldMustContainMoreThanCharacters;
                 }
                 if (formKey == _phoneFormKey) {
                   if (!RegExp(r"^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$").hasMatch(text)) {
-                    return "Пожалуйста, введите правильный номер телефона в формате +xx(xxx)xxx..";
+                    return AppLocalizations.of(context)!.enterPhoneInRightForm;
                   }
                 }
                 if (formKey == _addressFormKey) {
                   if (!RegExp(r"(?:(?:https?|ftp):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+").hasMatch(text)) {
-                    return "Пожалуйста, введите ссылку Google Maps";
+                    return AppLocalizations.of(context)!.enterGoogleMapLink;
                   }
                 }
                 return null;

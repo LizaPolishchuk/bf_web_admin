@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/prezentation/masters_page/master_info_view.dart';
 import 'package:salons_adminka/prezentation/masters_page/masters_bloc.dart';
@@ -35,7 +36,7 @@ class _MastersPageState extends State<MastersPage> {
   void initState() {
     super.initState();
 
-    LocalStorage localStorage =  getItWeb<LocalStorage>();
+    LocalStorage localStorage = getItWeb<LocalStorage>();
     _currentSalonId = localStorage.getSalonId();
     _servicesList = List<Service>.from(localStorage.getServicesList() as List<dynamic>);
 
@@ -68,21 +69,20 @@ class _MastersPageState extends State<MastersPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          const CustomAppBar(title: "Мастера"),
+          CustomAppBar(title: AppLocalizations.of(context)!.masters),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
               Flexible(
-                child: BaseItemsSelector(
-                  items: _servicesList,
-                  onSelectedItem: (item) {
-                    _mastersBloc.getMasters(_currentSalonId, item?.id);
-                  },
-                )
-              ),
+                  child: BaseItemsSelector(
+                items: _servicesList,
+                onSelectedItem: (item) {
+                  _mastersBloc.getMasters(_currentSalonId, item?.id);
+                },
+              )),
               const SizedBox(width: 60),
               SearchPanel(
-                hintText: "Поиск мастера",
+                hintText: AppLocalizations.of(context)!.searchMaster,
                 onSearch: (text) {
                   _searchTimer = Timer(const Duration(milliseconds: 600), () {
                     _mastersBloc.searchMasters(text);
@@ -108,7 +108,13 @@ class _MastersPageState extends State<MastersPage> {
         stream: _mastersBloc.mastersLoaded,
         builder: (context, snapshot) {
           return TableWidget(
-            columnTitles: const ["Имя мастера", "Номер телефона", "Услуги", "Статус", "Действия"],
+            columnTitles: [
+              AppLocalizations.of(context)!.masterName,
+              AppLocalizations.of(context)!.phoneNumber,
+              AppLocalizations.of(context)!.services,
+              AppLocalizations.of(context)!.status,
+              AppLocalizations.of(context)!.actions
+            ],
             items: snapshot.data ?? [],
             onClickLook: (item, index) {
               _showInfoView(InfoAction.view, item, index);
@@ -117,7 +123,7 @@ class _MastersPageState extends State<MastersPage> {
               _showInfoView(InfoAction.edit, item, index);
             },
             onClickDelete: (item, index) {
-              AlertBuilder().showAlertForDelete(context, "мастера", item.name, () {
+              AlertBuilder().showAlertForDelete(context, AppLocalizations.of(context)!.master1, item.name, () {
                 _mastersBloc.removeMaster(item.id, index);
               });
             },
@@ -125,8 +131,8 @@ class _MastersPageState extends State<MastersPage> {
         });
   }
 
-  void _showInfoView(InfoAction infoAction, BaseEntity? item, int? index)  {
-    List<Service>? servicesList =  List<Service>.from(getItWeb<LocalStorage>().getServicesList() as List<dynamic>);
+  void _showInfoView(InfoAction infoAction, BaseEntity? item, int? index) {
+    List<Service>? servicesList = List<Service>.from(getItWeb<LocalStorage>().getServicesList() as List<dynamic>);
 
     _showInfoNotifier.value = MasterInfoView(
       salonId: _currentSalonId,
@@ -139,7 +145,7 @@ class _MastersPageState extends State<MastersPage> {
         } else if (action == InfoAction.edit) {
           _mastersBloc.updateMaster(master, index!);
         } else if (action == InfoAction.delete) {
-          AlertBuilder().showAlertForDelete(context, "мастера", master.name, () {
+          AlertBuilder().showAlertForDelete(context, AppLocalizations.of(context)!.master1, master.name, () {
             _mastersBloc.removeMaster(master.id, index!);
             _showInfoNotifier.value = null;
           });

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/prezentation/widgets/info_container.dart';
 import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
@@ -80,10 +81,10 @@ class _BonusCardInfoViewState extends State<BonusCardInfoView> {
       children: [
         Text(
             _infoAction == InfoAction.view
-                ? "Просмотр"
+                ? AppLocalizations.of(context)!.view
                 : _infoAction == InfoAction.edit
-                    ? "Редактировать"
-                    : "Добавить бонусную карту",
+                    ? AppLocalizations.of(context)!.redact
+                    : AppLocalizations.of(context)!.addBonusCard,
             style: AppTextStyle.titleText),
         const SizedBox(height: 35),
         _infoAction == InfoAction.view ? _buildForViewMode() : _buildForEditMode(),
@@ -150,7 +151,7 @@ class _BonusCardInfoViewState extends State<BonusCardInfoView> {
               });
             },
             child: Text(
-              "Изменить",
+              AppLocalizations.of(context)!.edit,
               style: AppTextStyle.bodyText.copyWith(
                 color: AppColors.hintColor,
                 decoration: TextDecoration.underline,
@@ -162,7 +163,7 @@ class _BonusCardInfoViewState extends State<BonusCardInfoView> {
               widget.onClickAction(_cardForUpdate!, InfoAction.delete);
             },
             child: Text(
-              "Удалить",
+              AppLocalizations.of(context)!.delete,
               style: AppTextStyle.bodyText.copyWith(
                 color: AppColors.red,
               ),
@@ -176,11 +177,11 @@ class _BonusCardInfoViewState extends State<BonusCardInfoView> {
   Widget _buildForEditMode() {
     return Column(
       children: [
-        _buildTextField(_nameController, "Название"),
+        _buildTextField(_nameController,  AppLocalizations.of(context)!.title),
         const SizedBox(height: 15),
-        _buildTextField(_descriptionController, "Описание", lines: 6),
+        _buildTextField(_descriptionController,  AppLocalizations.of(context)!.description, lines: 6),
         const SizedBox(height: 15),
-        _buildTextField(_discountController, "Скидка, %", digitsOnly: true),
+        _buildTextField(_discountController, "${AppLocalizations.of(context)!.discount}, %", digitsOnly: true),
         const SizedBox(height: 15),
         Container(
           height: 80,
@@ -227,7 +228,7 @@ class _BonusCardInfoViewState extends State<BonusCardInfoView> {
             return AnimatedSwitcher(
               duration: const Duration(milliseconds: 200),
               child: RoundedButton(
-                text: "Сохранить",
+                text: AppLocalizations.of(context)!.save,
                 buttonColor: value ? AppColors.darkRose : AppColors.disabledColor,
                 onPressed: () {
                   BonusCard cardToUpdate;

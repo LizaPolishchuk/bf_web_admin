@@ -1,5 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:salons_adminka/prezentation/widgets/info_container.dart';
 import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
@@ -39,6 +40,7 @@ class _MasterInfoViewState extends State<MasterInfoView> {
 
   Map<String, String> _selectedServices = {};
   Service? _selectedService;
+
   //todo add logic for master status
   MasterStatus? _selectedStatus;
 
@@ -72,15 +74,15 @@ class _MasterInfoViewState extends State<MasterInfoView> {
       children: [
         Text(
             _infoAction == InfoAction.view
-                ? "Просмотр"
+                ? AppLocalizations.of(context)!.view
                 : _infoAction == InfoAction.edit
-                    ? "Редактировать"
-                    : "Добавить мастера",
+                    ? AppLocalizations.of(context)!.redact
+                    : AppLocalizations.of(context)!.addMaster,
             style: AppTextStyle.titleText),
         const SizedBox(height: 35),
-        _buildTextField(_nameController, "Имя мастера"),
+        _buildTextField(_nameController, AppLocalizations.of(context)!.masterName),
         const SizedBox(height: 15),
-        _buildTextField(_phoneController, "Номер телефона"),
+        _buildTextField(_phoneController, AppLocalizations.of(context)!.phoneNumber),
         const SizedBox(height: 15),
         Container(
           width: double.infinity,
@@ -92,10 +94,10 @@ class _MasterInfoViewState extends State<MasterInfoView> {
           child: DropdownButtonHideUnderline(
             child: DropdownButton2(
               isExpanded: true,
-              hint: const Align(
+              hint: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "Сервис",
+                  AppLocalizations.of(context)!.service,
                   style: AppTextStyle.hintText,
                 ),
               ),
@@ -172,7 +174,7 @@ class _MasterInfoViewState extends State<MasterInfoView> {
                   });
                 },
                 child: Text(
-                  "Изменить",
+                  AppLocalizations.of(context)!.edit,
                   style: AppTextStyle.bodyText.copyWith(
                     color: AppColors.hintColor,
                     decoration: TextDecoration.underline,
@@ -184,7 +186,7 @@ class _MasterInfoViewState extends State<MasterInfoView> {
                   widget.onClickAction(_masterForUpdate!, InfoAction.delete);
                 },
                 child: Text(
-                  "Удалить",
+                  AppLocalizations.of(context)!.delete,
                   style: AppTextStyle.bodyText.copyWith(
                     color: AppColors.red,
                   ),
@@ -199,7 +201,7 @@ class _MasterInfoViewState extends State<MasterInfoView> {
               return AnimatedSwitcher(
                 duration: const Duration(milliseconds: 200),
                 child: RoundedButton(
-                  text: "Сохранить",
+                  text: AppLocalizations.of(context)!.save,
                   buttonColor: value ? AppColors.darkRose : AppColors.disabledColor,
                   onPressed: () {
                     Master masterToUpdate;
