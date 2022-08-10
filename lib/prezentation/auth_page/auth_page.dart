@@ -132,9 +132,38 @@ class _AuthPageState extends State<AuthPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  AppLocalizations.of(context)!.login,
-                  style: const TextStyle(color: AppColors.textColor, fontSize: 36, fontWeight: FontWeight.w700),
+                Stack(
+                  alignment: Alignment.centerLeft,
+                  children: [
+                    if(_registrationMode)
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          _registrationMode = false;
+                        });
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SvgPicture.asset(
+                            AppIcons.icCircleArrowLeft,
+                            color: AppColors.hintColor,
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            AppLocalizations.of(context)!.back,
+                            style: AppTextStyle.hintText,
+                          )
+                        ],
+                      ),
+                    ),
+                    Center(
+                      child: Text(
+                        AppLocalizations.of(context)!.login,
+                        style: const TextStyle(color: AppColors.textColor, fontSize: 36, fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 24),
                 InkWell(
