@@ -129,6 +129,6 @@ class _InitialPageState extends State<InitialPage> {
 
   @override
   Widget build(BuildContext context) {
-    return _initialPage;
+    return HomePage();
   }
 }

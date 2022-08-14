@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
+import 'package:salons_adminka/utils/app_text_style.dart';
+import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class CustomCalendar extends StatefulWidget {
@@ -16,21 +20,20 @@ class _CustomCalendarState extends State<CustomCalendar> {
       view: CalendarView.week,
       firstDayOfWeek: 1,
       appointmentBuilder: (context, details) {
-        return _buildOrderItem(details);
+        return _buildOrderSection(details);
       },
       cellEndPadding: 0,
       allowDragAndDrop: true,
+      onDragEnd: (AppointmentDragEndDetails appointmentDragEndDetails) {
+        print("appointmentDragEndDetails: ${appointmentDragEndDetails.droppingTime}");
+      },
       allowAppointmentResize: true,
-
-      // dragAndDropSettings: DragAndDropSettings(
-      //
-      // ),
       showNavigationArrow: true,
       timeSlotViewSettings: const TimeSlotViewSettings(
           timeInterval: Duration(minutes: 30), timeIntervalHeight: 92, timeFormat: 'HH:mm', timeRulerSize: 70),
       cellBorderColor: AppColors.disabledColor.withOpacity(0.3),
       onTap: (calendarTapDetails) {
-        print("on tap ${calendarTapDetails.date}");
+        print("on tap ${calendarTapDetails.appointments?.first}");
       },
       todayHighlightColor: AppColors.darkRose,
       allowedViews: const <CalendarView>[
@@ -38,124 +41,176 @@ class _CustomCalendarState extends State<CustomCalendar> {
         CalendarView.week,
         // CalendarView.month,
       ],
-      // monthCellBuilder: (context, details) {
-      //   return Container(
-      //     decoration: BoxDecoration(
-      //       color: Colors.white,
-      //       border: Border.all(color: Color(0xffEEF0F0), width: 0.5),
-      //     ),
-      //   );
-      // },
-      // scheduleViewMonthHeaderBuilder: (context, details) {
-      //   return _buildOrderItem();
-      // },
-      // resourceViewHeaderBuilder: (context, details) {
-      //   return _buildOrderItem();
-      // },
-      dataSource: MeetingDataSource(_getDataSource()),
+      dataSource: OrdersDataSource(_getDataSource()),
       monthViewSettings: const MonthViewSettings(appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
     );
   }
 
-  Widget _buildOrderItem(CalendarAppointmentDetails details) {
-    print("details: ${details.appointments}");
+  Widget _buildOrderSection(CalendarAppointmentDetails details) {
+    var appointments = details.appointments.toList();
+    List<Widget> orderItems = [];
+
+    for (int i = 0; i < appointments.length; i++) {
+      if (appointments[i] is OrderEntity) {
+        orderItems.add(
+          Positioned(
+            left: i * 10,
+            top: 0,
+            bottom: 0,
+            child: _buildOrderItem(appointments[i]),
+          ),
+        );
+      }
+    }
+
+    return Stack(
+      children: orderItems,
+    );
+  }
+
+  Widget _buildOrderItem(OrderEntity order) {
     return Container(
+      margin: const EdgeInsets.all(2),
       decoration: BoxDecoration(
-        border: Border(left: BorderSide(color: Color(0xffBA83FF), width: 2)),
-        color: Color(0xffF3EBFD),
+        borderRadius: BorderRadius.circular(10),
+        color: order.categoryColor != null
+            ? Color(order.categoryColor!).withOpacity(0.1)
+            : AppColors.darkRose.withOpacity(0.5),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            child: Container(
+              width: 2,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: order.categoryColor != null ? Color(order.categoryColor!) : AppColors.darkRose,
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
           CircleAvatar(
-            backgroundColor: Colors.yellow,
+            backgroundImage: NetworkImage(
+              order.masterAvatar ?? "",
+            ),
+            backgroundColor: AppColors.rose,
             radius: 18,
+          ),
+          const SizedBox(width: 14),
+          SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  order.serviceName,
+                  style: TextStyle(
+                      color: order.categoryColor != null ? Color(order.categoryColor!) : AppColors.darkRose,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500),
+                ),
+                const SizedBox(width: 5),
+                Text(
+                  order.clientName ?? AppLocalizations.of(context)!.client,
+                  style: AppTextStyle.bodyText1,
+                ),
+                const SizedBox(width: 5),
+                Text(
+                  "${AppLocalizations.of(context)!.master}: ${order.masterName}",
+                  style: AppTextStyle.bodyText1,
+                ),
+                const SizedBox(width: 5),
+                Text(
+                  DateFormat('HH:mm').format(order.date),
+                  style: AppTextStyle.bodyText1.copyWith(color: AppColors.hintColor),
+                ),
+              ],
+            ),
           )
         ],
       ),
     );
   }
 
-  List<Meeting> _getDataSource() {
-    final List<Meeting> meetings = <Meeting>[];
+  List<OrderEntity> _getDataSource() {
+    final List<OrderEntity> orders = <OrderEntity>[];
     final DateTime today = DateTime.now();
     final DateTime startTime = DateTime(today.year, today.month, today.day, 9);
     final DateTime endTime = startTime.add(const Duration(hours: 1));
-    meetings.add(Meeting('Conference', startTime, endTime, const Color(0xFF0F8644), false));
-    // meetings.add(Meeting('Conference3', startTime, endTime, const Color(0xFF0F8644), false));
-    // meetings.add(Meeting('Conference4', startTime, endTime, const Color(0xFF0F8644), false));
-    return meetings;
+    orders.add(OrderEntity("id1", "clientId", "Liza", "salonId", "salonName", "masterId", "Master name", "masterAvatar",
+        "serviceId", "Manikur1", startTime, 30, 0xffBA83FF, 300));
+    orders.add(OrderEntity("id2", "clientId", "Liza", "salonId", "salonName", "masterId", "Master name", "masterAvatar",
+        "serviceId", "Manikur2", DateTime(today.year, today.month, today.day, 10), 30, 0xffBA83FF, 300));
+    orders.add(OrderEntity("id3", "clientId", "Liza", "salonId", "salonName", "masterId", "Master name", "masterAvatar",
+        "serviceId", "Manikur3", DateTime(today.year, today.month, today.day, 11), 60, 0xffBA83FF, 300));
+    return orders;
   }
 }
 
-/// An object to set the appointment collection data source to calendar, which
-/// used to map the custom appointment data to the calendar appointment, and
-/// allows to add, remove or reset the appointment collection.
-class MeetingDataSource extends CalendarDataSource {
-  /// Creates a meeting data source, which used to set the appointment
-  /// collection to the calendar
-  MeetingDataSource(List<Meeting> source) {
+class OrdersDataSource extends CalendarDataSource {
+  OrdersDataSource(List<OrderEntity> source) {
     appointments = source;
   }
 
   @override
   Object? convertAppointmentToObject(Object? customData, Appointment appointment) {
-    return Meeting('Conference', appointment.startTime, appointment.endTime, const Color(0xFF0F8644), false);
+    if (customData is OrderEntity) {
+      return customData
+        ..date = appointment.startTime
+        ..durationInMin = appointment.endTime.difference(appointment.startTime).inMinutes;
+    }
+    return OrderEntity(
+        "id",
+        "clientId",
+        "Liza2",
+        "salonId",
+        "salonName",
+        "masterId",
+        "Master name2",
+        "masterAvatar",
+        "serviceId",
+        "Manikur2",
+        appointment.startTime,
+        appointment.startTime.difference(appointment.endTime).inMinutes,
+        Colors.red.value,
+        300);
   }
 
   @override
   DateTime getStartTime(int index) {
-    return _getMeetingData(index).from;
+    return _getOrderData(index).date;
   }
 
   @override
   DateTime getEndTime(int index) {
-    return _getMeetingData(index).to;
+    OrderEntity order = _getOrderData(index);
+    return order.date.add(Duration(minutes: order.durationInMin));
   }
 
   @override
   String getSubject(int index) {
-    return _getMeetingData(index).eventName;
+    return _getOrderData(index).serviceName;
   }
 
   @override
   Color getColor(int index) {
-    return _getMeetingData(index).background;
+    return _getOrderData(index).categoryColor != null ? Color(_getOrderData(index).categoryColor!) : Colors.black45;
   }
 
   @override
   bool isAllDay(int index) {
-    return _getMeetingData(index).isAllDay;
+    return _getOrderData(index).durationInMin > (60 * 24);
   }
 
-  Meeting _getMeetingData(int index) {
-    final dynamic meeting = appointments![index];
-    late final Meeting meetingData;
-    if (meeting is Meeting) {
-      meetingData = meeting;
+  OrderEntity _getOrderData(int index) {
+    final dynamic order = appointments![index];
+    late final OrderEntity orderData;
+    if (order is OrderEntity) {
+      orderData = order;
     }
 
-    return meetingData;
+    return orderData;
   }
-}
-
-/// Custom business object class which contains properties to hold the detailed
-/// information about the event data which will be rendered in calendar.
-class Meeting {
-  /// Creates a meeting class with required details.
-  Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay);
-
-  /// Event name which is equivalent to subject property of [Appointment].
-  String eventName;
-
-  /// From which is equivalent to start time property of [Appointment].
-  DateTime from;
-
-  /// To which is equivalent to end time property of [Appointment].
-  DateTime to;
-
-  /// Background which is equivalent to color property of [Appointment].
-  Color background;
-
-  /// IsAllDay which is equivalent to isAllDay property of [Appointment].
-  bool isAllDay;
 }

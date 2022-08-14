@@ -110,11 +110,11 @@ class _AdditionalClientDetailsState extends State<AdditionalClientDetails> {
 
   List<OrderEntity> _ordersList = [
     OrderEntity("id", "clientId", "Liza", "salonId", "Salon", "masterId", "Master Nika", "masterAvatar", "serviceId",
-        "Маникюр", DateTime.now(), 200),
+        "Маникюр", DateTime.now(), 60, Colors.red.value, 200),
     OrderEntity("id", "clientId", "Liza", "salonId", "Salon", "masterId", "Master Nika", "masterAvatar", "serviceId",
-        "Маникюр", DateTime.now(), 200),
+        "Маникюр", DateTime.now(), 60, Colors.red.value, 200),
     OrderEntity("id", "clientId", "Liza", "salonId", "Salon", "masterId", "Master Nika", "masterAvatar", "serviceId",
-        "Маникюр", DateTime.now(), 200)
+        "Маникюр", DateTime.now(), 60, Colors.red.value, 200)
   ];
 
   Widget _buildLastVisits() {

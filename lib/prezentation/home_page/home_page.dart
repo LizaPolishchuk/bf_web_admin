@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:salons_adminka/prezentation/home_page/calendar_widget.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,9 +19,13 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: SizedBox.expand(child: Center(child: Text("Home Page will be here soon :)")))
+    return Scaffold(
+      body: CustomCalendar(),
+      // SizedBox.expand(
+      //   child: Center(child: Text("Home Page will be here soon :)")),
+      // ),
 
-        // CustomCalendar(),
-        );
+      // CustomCalendar(),
+    );
   }
 }

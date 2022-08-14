@@ -12,6 +12,11 @@ class AppTextStyle {
       fontSize: 16,
       fontWeight: FontWeight.w400);
 
+  static const TextStyle bodyText1 = TextStyle(
+      color: AppColors.textColor,
+      fontSize: 12,
+      fontWeight: FontWeight.w400);
+
   static const TextStyle titleText = TextStyle(
       color: AppColors.textColor,
       fontSize: 20,
