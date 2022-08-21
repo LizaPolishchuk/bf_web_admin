@@ -10,12 +10,14 @@ class InfoContainer extends StatelessWidget {
   final ValueNotifier<Widget?> showInfoNotifier;
   final VoidCallback onPressedAddButton;
   final bool hideAddButton;
+  final EdgeInsets? padding;
 
   const InfoContainer(
       {Key? key,
       required this.child,
       required this.showInfoNotifier,
       required this.onPressedAddButton,
+      this.padding,
       this.hideAddButton = false})
       : super(key: key);
 
@@ -43,7 +45,7 @@ class InfoContainer extends StatelessWidget {
       body: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 42, right: 38),
+            padding: padding ?? const EdgeInsets.only(left: 42, right: 38),
             child: child,
           ),
           ValueListenableBuilder<Widget?>(

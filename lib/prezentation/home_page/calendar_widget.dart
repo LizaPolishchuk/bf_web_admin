@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
@@ -55,6 +56,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
         orderItems.add(
           Positioned(
             left: i * 10,
+            right: 0,
             top: 0,
             bottom: 0,
             child: _buildOrderItem(appointments[i]),
@@ -71,6 +73,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
   Widget _buildOrderItem(OrderEntity order) {
     return Container(
       margin: const EdgeInsets.all(2),
+      padding: const EdgeInsets.symmetric(vertical: 4),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: order.categoryColor != null
@@ -81,7 +84,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 10),
+            padding: const EdgeInsets.symmetric(vertical: 6),
             child: Container(
               width: 2,
               decoration: BoxDecoration(
@@ -90,43 +93,58 @@ class _CustomCalendarState extends State<CustomCalendar> {
               ),
             ),
           ),
-          const SizedBox(width: 10),
-          CircleAvatar(
-            backgroundImage: NetworkImage(
-              order.masterAvatar ?? "",
+          ClipRRect(
+            borderRadius: BorderRadius.circular(50),
+            child: CachedNetworkImage(
+              imageUrl: order.masterAvatar ?? "",
+              imageBuilder: (context, imageProvider) {
+                return Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 6),
+                  child: Image(
+                    image: imageProvider,
+                    width: 30,
+                    height: 30,
+                  ),
+                );
+              },
+              fit: BoxFit.scaleDown,
+              errorWidget: (context, obj, stackTrace) {
+                return const SizedBox.shrink();
+              },
             ),
-            backgroundColor: AppColors.rose,
-            radius: 18,
           ),
-          const SizedBox(width: 14),
-          SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  order.serviceName,
-                  style: TextStyle(
-                      color: order.categoryColor != null ? Color(order.categoryColor!) : AppColors.darkRose,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500),
-                ),
-                const SizedBox(width: 5),
-                Text(
-                  order.clientName ?? AppLocalizations.of(context)!.client,
-                  style: AppTextStyle.bodyText1,
-                ),
-                const SizedBox(width: 5),
-                Text(
-                  "${AppLocalizations.of(context)!.master}: ${order.masterName}",
-                  style: AppTextStyle.bodyText1,
-                ),
-                const SizedBox(width: 5),
-                Text(
-                  DateFormat('HH:mm').format(order.date),
-                  style: AppTextStyle.bodyText1.copyWith(color: AppColors.hintColor),
-                ),
-              ],
+          const SizedBox(width: 8),
+          Flexible(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    order.serviceName,
+                    style: TextStyle(
+                        color: order.categoryColor != null ? Color(order.categoryColor!) : AppColors.darkRose,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500),
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    order.clientName ?? AppLocalizations.of(context)!.client,
+                    style: AppTextStyle.bodyText1,
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    "${AppLocalizations.of(context)!.master}: ${order.masterName}",
+                    maxLines: 3,
+                    style: AppTextStyle.bodyText1,
+                  ),
+                  const SizedBox(width: 5),
+                  Text(
+                    DateFormat('HH:mm').format(order.date),
+                    style: AppTextStyle.bodyText1.copyWith(color: AppColors.hintColor),
+                  ),
+                ],
+              ),
             ),
           )
         ],
@@ -139,8 +157,21 @@ class _CustomCalendarState extends State<CustomCalendar> {
     final DateTime today = DateTime.now();
     final DateTime startTime = DateTime(today.year, today.month, today.day, 9);
     final DateTime endTime = startTime.add(const Duration(hours: 1));
-    orders.add(OrderEntity("id1", "clientId", "Liza", "salonId", "salonName", "masterId", "Master name", "masterAvatar",
-        "serviceId", "Manikur1", startTime, 30, 0xffBA83FF, 300));
+    orders.add(OrderEntity(
+        "id1",
+        "clientId",
+        "Liza dsvdsv sfvdfv",
+        "salonId",
+        "salonName",
+        "masterId",
+        "Master name fdvdfv dfvdv",
+        "masterAvatar",
+        "serviceId",
+        "Manikur1 dfvfdvfd dsvfdv",
+        startTime,
+        30,
+        0xffBA83FF,
+        300));
     orders.add(OrderEntity("id2", "clientId", "Liza", "salonId", "salonName", "masterId", "Master name", "masterAvatar",
         "serviceId", "Manikur2", DateTime(today.year, today.month, today.day, 10), 30, 0xffBA83FF, 300));
     orders.add(OrderEntity("id3", "clientId", "Liza", "salonId", "salonName", "masterId", "Master name", "masterAvatar",
