@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/prezentation/auth_page/auth_bloc.dart';
 import 'package:salons_adminka/utils/app_images.dart';
@@ -10,6 +11,7 @@ import 'package:salons_adminka/utils/app_text_style.dart';
 
 import '../../utils/app_colors.dart';
 import '../widgets/rounded_button.dart';
+import 'details/auth_detais.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({Key? key}) : super(key: key);
@@ -81,121 +83,160 @@ class _AuthPageState extends State<AuthPage> {
         return false;
       },
       child: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Stack(
-            alignment: Alignment.center,
+        body: ScreenTypeLayout.builder(
+            mobile: _mobileView,
+           desktop: _desktopView,
+          tablet: _mobileView,
+        )
+      ),
+    );
+  }
+
+  Widget _mobileView(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          mobileBackground(),
+          Expanded(
+            child: _buildContent(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _desktopView(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          desktopBackground(),
+          Row(
+            mainAxisSize: MainAxisSize.max,
             children: [
-              Image.asset(AppIcons.loginBackground),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Flexible(
-                    fit: FlexFit.tight,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Text(
-                          "B&F",
-                          style: TextStyle(color: AppColors.lightBackground, fontSize: 80, fontWeight: FontWeight.w700),
-                        ),
-                        SizedBox(height: 22),
-                        Text(
-                          "Be Beautiful & Be Free",
-                          style: TextStyle(color: AppColors.textColor, fontSize: 40, fontWeight: FontWeight.w600),
-                        ),
-                      ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text(
+                      "B&F",
+                      style: TextStyle(color: AppColors.lightBackground, fontSize: 80, fontWeight: FontWeight.w700),
                     ),
-                  ),
-                  Flexible(
-                    fit: FlexFit.tight,
-                    child: _buildContent(),
-                  ),
-                ],
+                    SizedBox(height: 22),
+                    Text(
+                      "Be Beautiful & Be Free",
+                      style: TextStyle(color: AppColors.textColor, fontSize: 40, fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: _buildContent(),
               ),
             ],
           ),
-        ),
+        ],
       ),
     );
   }
 
   Widget _buildContent() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 150, vertical: 50),
-      child: CustomScrollView(
-        slivers: [
-          SliverFillRemaining(
-            hasScrollBody: false,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Stack(
-                  alignment: Alignment.centerLeft,
-                  children: [
-                    if(_registrationMode)
-                    InkWell(
-                      onTap: () {
-                        setState(() {
-                          _registrationMode = false;
-                        });
-                      },
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SvgPicture.asset(
-                            AppIcons.icCircleArrowLeft,
-                            color: AppColors.hintColor,
-                          ),
-                          const SizedBox(width: 5),
-                          Text(
-                            AppLocalizations.of(context)!.back,
-                            style: AppTextStyle.hintText,
-                          )
-                        ],
-                      ),
-                    ),
-                    Center(
-                      child: Text(
-                        AppLocalizations.of(context)!.login,
-                        style: const TextStyle(color: AppColors.textColor, fontSize: 36, fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 24),
+    return FractionallySizedBox(
+      widthFactor: 0.7,
+      heightFactor: 0.9,
+      child: ListView(
+        children: [
+          Stack(
+            alignment: Alignment.topLeft,
+            children: [
+              if(_registrationMode)
                 InkWell(
                   onTap: () {
-                    _authBloc.loginViaGoogle();
+                    setState(() {
+                      _registrationMode = false;
+                    });
                   },
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      SvgPicture.asset(AppIcons.icGoogle),
-                      const SizedBox(width: 12),
-                      Flexible(
-                        child: Text(
-                          AppLocalizations.of(context)!.loginViaGoogle,
-                          style: AppTextStyle.bodyText,
-                        ),
+                      SvgPicture.asset(
+                        AppIcons.icCircleArrowLeft,
+                        color: AppColors.hintColor,
                       ),
+                      const SizedBox(width: 5),
+                      Text(
+                        AppLocalizations.of(context)!.back,
+                        style: AppTextStyle.hintText,
+                      )
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 24),
-                  child: _registrationMode ? _buildRegistrationInput() : _buildLoginInput(),
+              Center(
+                child: ResponsiveBuilder(
+                    builder: (context, size) {
+                      if (!size.isDesktop) {
+                        return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                        child: Column(
+                          children: const [
+                            Text(
+                              "B&F",
+                              style: TextStyle(color: AppColors.textColor, fontSize: 50, fontWeight: FontWeight.w700),
+                            ),
+                            SizedBox(height: 10),
+                            Text(
+                              "Be Beautiful & Be Free",
+                              style: TextStyle(color: AppColors.textColor, fontSize: 20, fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                        ),
+                      );
+                      } else {
+                        return const SizedBox.shrink();
+                      }
+                    }
                 ),
-                _buildLoginButton(),
-                const SizedBox(height: 24),
-                if (!_registrationMode) _buildForgotPassword(),
+              )
+            ],
+          ),
+          Center(
+            child: Text(
+              _registrationMode ? AppLocalizations.of(context)!.registration : AppLocalizations.of(context)!.login,
+              style: const TextStyle(color: AppColors.textColor, fontSize: 36, fontWeight: FontWeight.w700),
+            ),
+          ),
+          const SizedBox(height: 24),
+          InkWell(
+            onTap: () {
+              _authBloc.loginViaGoogle();
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(AppIcons.icGoogle),
+                const SizedBox(width: 12),
+                Flexible(
+                  child: Text(
+                    AppLocalizations.of(context)!.loginViaGoogle,
+                    style: AppTextStyle.bodyText,
+                  ),
+                ),
               ],
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 24),
+            child: _registrationMode ? _buildRegistrationInput() : _buildLoginInput(),
+          ),
+          _buildLoginButton(),
+          const SizedBox(height: 24),
+          if (!_registrationMode) _buildForgotPassword(),
         ],
-      ),
+      )
     );
   }
 
@@ -313,7 +354,7 @@ class _AuthPageState extends State<AuthPage> {
                 return AppLocalizations.of(context)!.fieldMustContainMoreThanCharacters;
               }
               if (formKey == _emailFormKey) {
-                if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(text)) {
+                if (!RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(text)) {
                   return AppLocalizations.of(context)!.pleaseEnterValidEmail;
                 }
               }
