@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 import 'package:salons_adminka/navigation/routes.dart';
 import 'package:salons_adminka/prezentation/auth_page/auth_bloc.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
@@ -13,25 +14,33 @@ import '../utils/app_text_style.dart';
 class HomeContainer extends StatelessWidget {
   final Widget child;
   final int selectedMenuIndex;
-  final double _drawerWidth = 264;
+  final double _drawerBigWidth = 264;
+  final double _drawerSmallWidth = 68;
 
   const HomeContainer({Key? key, required this.child, this.selectedMenuIndex = -1}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          Positioned(left: _drawerWidth - 4, top: 0, right: 0, bottom: 0, child: child),
-          Positioned(left: 0, top: 0, bottom: 0, child: _buildDrawer(context)),
-        ],
+    return ResponsiveBuilder(
+      builder: (BuildContext context, SizingInformation size) => Scaffold(
+        body: Stack(
+          children: [
+            Positioned(left: _getDrawerWidth(size) - 4, top: 0, right: 0, bottom: 0, child: child),
+            Positioned(left: 0, top: 0, bottom: 0, child: _buildDrawer(context, size)),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildDrawer(BuildContext context) {
+  double _getDrawerWidth(SizingInformation size) {
+    return size.isDesktop ? _drawerBigWidth : _drawerSmallWidth;
+  }
+
+  Widget _buildDrawer(BuildContext context, SizingInformation size) {
+    final isDesktop = size.isDesktop;
     return Container(
-      width: _drawerWidth,
+      width: _getDrawerWidth(size),
       height: double.infinity,
       padding: const EdgeInsets.only(bottom: 12, top: 42),
       decoration: const BoxDecoration(
@@ -57,49 +66,51 @@ class HomeContainer extends StatelessWidget {
                           "B&F",
                           style: TextStyle(color: AppColors.lightRose, fontSize: 18, fontWeight: FontWeight.w700),
                         ),
-                        const SizedBox(width: 16),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Text(
-                              "Be Beautiful & Be Free",
-                              style: TextStyle(color: AppColors.lightRose, fontSize: 14, fontWeight: FontWeight.w600),
-                            ),
-                            Text(
-                              "WorkPlace",
-                              style: TextStyle(color: AppColors.lightRose, fontSize: 12, fontWeight: FontWeight.w500),
-                            ),
-                          ],
-                        ),
+                        if (isDesktop) const SizedBox(width: 16),
+                        if (isDesktop)
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: const [
+                              Text(
+                                "Be Beautiful & Be Free",
+                                style: TextStyle(color: AppColors.lightRose, fontSize: 14, fontWeight: FontWeight.w600),
+                              ),
+                              Text(
+                                "WorkPlace",
+                                style: TextStyle(color: AppColors.lightRose, fontSize: 12, fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
                       ],
                     ),
                   ),
                 ),
                 const SizedBox(height: 54),
-                _buildDrawerItem(0, AppLocalizations.of(context)!.main, AppIcons.icHome, routeToGo: Routes.initial),
+                _buildDrawerItem(0, AppLocalizations.of(context)!.main, AppIcons.icHome,
+                    routeToGo: Routes.initial, isDesktop: isDesktop),
                 _buildDrawerItem(1, AppLocalizations.of(context)!.services, AppIcons.icServices,
-                    routeToGo: Routes.services),
+                    routeToGo: Routes.services, isDesktop: isDesktop),
                 _buildDrawerItem(2, AppLocalizations.of(context)!.masters, AppIcons.icMasters,
-                    routeToGo: Routes.masters),
+                    routeToGo: Routes.masters, isDesktop: isDesktop),
                 _buildDrawerItem(3, AppLocalizations.of(context)!.clients, AppIcons.icClients,
-                    routeToGo: Routes.clients),
+                    routeToGo: Routes.clients, isDesktop: isDesktop),
                 _buildDrawerItem(
                     4,
                     "${AppLocalizations.of(context)!.promos}/${AppLocalizations.of(context)!.bonusCards}",
                     AppIcons.icPromos,
-                    routeToGo: Routes.promos),
+                    routeToGo: Routes.promos,
+                    isDesktop: isDesktop),
                 _buildDrawerItem(5, AppLocalizations.of(context)!.feedbacks, AppIcons.icFeedbacks,
-                    routeToGo: Routes.feedbacks),
+                    routeToGo: Routes.feedbacks, isDesktop: isDesktop),
                 const Spacer(),
                 _buildDrawerItem(6, AppLocalizations.of(context)!.profile, AppIcons.icProfile,
-                    routeToGo: Routes.profile),
+                    routeToGo: Routes.profile, isDesktop: isDesktop),
                 _buildDrawerItem(7, AppLocalizations.of(context)!.support, AppIcons.icSupport,
-                    routeToGo: Routes.support),
+                    routeToGo: Routes.support, isDesktop: isDesktop),
                 _buildDrawerItem(8, AppLocalizations.of(context)!.settings, AppIcons.icSettings,
-                    routeToGo: Routes.settings),
-                _buildDrawerItem(9, AppLocalizations.of(context)!.logout, AppIcons.icLogout, onClick: () {
-                  getIt<AuthBloc>().logout();
-                }),
+                    routeToGo: Routes.settings, isDesktop: isDesktop),
+                _buildDrawerItem(9, AppLocalizations.of(context)!.logout, AppIcons.icLogout,
+                    onClick: getIt<AuthBloc>().logout, isDesktop: isDesktop),
               ],
             ),
           ),
@@ -108,7 +119,8 @@ class HomeContainer extends StatelessWidget {
     );
   }
 
-  Widget _buildDrawerItem(int index, String title, String icon, {VoidCallback? onClick, String? routeToGo}) {
+  Widget _buildDrawerItem(int index, String title, String icon,
+      {VoidCallback? onClick, String? routeToGo, required bool isDesktop}) {
     return InkWell(
       onTap: () {
         if (onClick != null) {
@@ -132,14 +144,15 @@ class HomeContainer extends StatelessWidget {
                 icon,
                 color: selectedMenuIndex == index ? AppColors.darkRose : AppColors.lightRose,
               ),
-              const SizedBox(width: 20),
-              Flexible(
-                child: Text(
-                  title,
-                  style: AppTextStyle.buttonText
-                      .copyWith(color: selectedMenuIndex == index ? AppColors.darkRose : AppColors.lightRose),
-                ),
-              )
+              if (isDesktop) const SizedBox(width: 20),
+              if (isDesktop)
+                Flexible(
+                  child: Text(
+                    title,
+                    style: AppTextStyle.buttonText
+                        .copyWith(color: selectedMenuIndex == index ? AppColors.darkRose : AppColors.lightRose),
+                  ),
+                )
             ],
           ),
         ),

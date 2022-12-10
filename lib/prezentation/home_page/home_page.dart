@@ -32,6 +32,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildHeader(),
         Flexible(
@@ -51,7 +52,7 @@ class _HomePageState extends State<HomePage> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: CustomCalendar(),
+                    child: const CustomCalendar(),
                   ),
                 ),
               ],
@@ -63,14 +64,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildHeader() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 42, right: 38),
-      child: Row(
-        children: [
-          CustomAppBar(title: _currentSalonName),
-        ],
-      ),
-    );
+    return Padding(padding: const EdgeInsets.only(left: 42), child: CustomAppBar(title: _currentSalonName));
   }
 
   void _showInfoView(InfoAction infoAction, BaseEntity? item, int? index) {}

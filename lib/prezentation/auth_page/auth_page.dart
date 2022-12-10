@@ -279,7 +279,8 @@ class _AuthPageState extends State<AuthPage> {
         const SizedBox(height: 58),
         Row(
           children: [
-            Text(AppLocalizations.of(context)!.noAccount, style: AppTextStyle.bodyText),
+            Text(AppLocalizations.of(context)!.noAccount,
+                style: AppTextStyle.bodyText, overflow: TextOverflow.ellipsis),
             const Spacer(),
             InkWell(
               onTap: () {
@@ -287,13 +288,12 @@ class _AuthPageState extends State<AuthPage> {
                   _registrationMode = true;
                 });
               },
-              child: Text(
-                AppLocalizations.of(context)!.register,
-                style: AppTextStyle.bodyText.copyWith(
-                  decoration: TextDecoration.underline,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+              child: Text(AppLocalizations.of(context)!.register,
+                  style: AppTextStyle.bodyText.copyWith(
+                    decoration: TextDecoration.underline,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  overflow: TextOverflow.ellipsis),
             ),
           ],
         )

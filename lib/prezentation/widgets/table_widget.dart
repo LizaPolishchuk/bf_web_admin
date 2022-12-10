@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 import 'package:salons_adminka/prezentation/clients_page/clients_page.dart';
 import 'package:salons_adminka/prezentation/widgets/colored_circle.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
@@ -212,42 +213,48 @@ class _TableWidgetState extends State<TableWidget> {
   }
 
   Widget _buildActions(BaseEntity item, int index, {bool isOnlyView = false}) {
-    return Row(
-      children: [
-        InkWell(
-          onTap: () {
-            if (widget.onClickLook != null) {
-              widget.onClickLook!(item, index);
-            }
-          },
-          child: SvgPicture.asset(AppIcons.icEye),
-        ),
-        if (!isOnlyView)
-          Padding(
-            padding: const EdgeInsets.only(left: 16),
-            child: InkWell(
-              onTap: () {
-                if (widget.onClickEdit != null) {
-                  widget.onClickEdit!(item, index);
-                }
-              },
-              child: SvgPicture.asset(AppIcons.icEdit),
-            ),
+    return ResponsiveBuilder(builder: (context, SizingInformation size) {
+      final padding = size.isDesktop ? const EdgeInsets.only(left: 16) : const EdgeInsets.only(top: 5);
+      return Flex(
+        direction: size.isDesktop ? Axis.horizontal : Axis.vertical,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          InkWell(
+            onTap: () {
+              if (widget.onClickLook != null) {
+                widget.onClickLook!(item, index);
+              }
+            },
+            child: SvgPicture.asset(AppIcons.icEye),
           ),
-        if (!isOnlyView)
-          Padding(
-            padding: const EdgeInsets.only(left: 16),
-            child: InkWell(
-              onTap: () {
-                if (widget.onClickDelete != null) {
-                  widget.onClickDelete!(item, index);
-                }
-              },
-              child: SvgPicture.asset(AppIcons.icDelete),
+          if (!isOnlyView)
+            Padding(
+              padding: padding,
+              child: InkWell(
+                onTap: () {
+                  if (widget.onClickEdit != null) {
+                    widget.onClickEdit!(item, index);
+                  }
+                },
+                child: SvgPicture.asset(AppIcons.icEdit),
+              ),
             ),
-          )
-      ],
-    );
+          if (!isOnlyView)
+            Padding(
+              padding: padding,
+              child: InkWell(
+                onTap: () {
+                  if (widget.onClickDelete != null) {
+                    widget.onClickDelete!(item, index);
+                  }
+                },
+                child: SvgPicture.asset(AppIcons.icDelete),
+              ),
+            )
+        ],
+      );
+    });
   }
 
   Widget _buildTitle(String title) {

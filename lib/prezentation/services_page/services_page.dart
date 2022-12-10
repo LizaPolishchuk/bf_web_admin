@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/prezentation/categories/categories_selector.dart';
 import 'package:salons_adminka/prezentation/services_page/service_info_view.dart';
@@ -58,53 +59,61 @@ class _ServicesPageState extends State<ServicesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return InfoContainer(
-      onPressedAddButton: () {
-        _showInfoView(InfoAction.add, null, null);
-      },
-      showInfoNotifier: _showInfoNotifier,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CustomAppBar(title: AppLocalizations.of(context)!.services),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Flexible(
-                child: CategoriesSelector(
-                  onSelectedCategory: (category) {
-                    _servicesBloc.getServices(_currentSalonId, category?.id);
-                  },
-                  onCategoriesLoaded: (categories) {
-                    _categoriesList = categories;
-                  },
-                ),
-              ),
-              const SizedBox(width: 60),
-              SearchPanel(
-                hintText: AppLocalizations.of(context)!.searchService,
-                onSearch: (text) {
-                  _searchTimer = Timer(const Duration(milliseconds: 600), () {
-                    _servicesBloc.searchServices(text);
-                  });
-                },
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Flexible(
-            fit: FlexFit.tight,
-            child: _buildServicesTable(),
-          ),
-          const SizedBox(height: 20),
-          // PaginationCounter(),
-        ],
+    return ResponsiveBuilder(
+      builder: (BuildContext context, SizingInformation size) => InfoContainer(
+        onPressedAddButton: () {
+          _showInfoView(InfoAction.add, null, null);
+        },
+        showInfoNotifier: _showInfoNotifier,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CustomAppBar(title: AppLocalizations.of(context)!.services),
+            Flex(
+              mainAxisSize: MainAxisSize.min,
+              direction: size.isDesktop ? Axis.horizontal : Axis.vertical,
+              children: _getFilterOptions(size),
+            ),
+            const SizedBox(height: 20),
+            Flexible(
+              fit: FlexFit.tight,
+              child: _buildServicesTable(size),
+            ),
+            const SizedBox(height: 20),
+            // PaginationCounter(),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildServicesTable() {
+  List<Widget> _getFilterOptions(SizingInformation size) {
+    final widgets = [
+      Flexible(
+        child: CategoriesSelector(
+          onSelectedCategory: (category) {
+            _servicesBloc.getServices(_currentSalonId, category?.id);
+          },
+          onCategoriesLoaded: (categories) {
+            _categoriesList = categories;
+          },
+        ),
+      ),
+      if (size.isDesktop) const SizedBox(width: 60),
+      SearchPanel(
+        hintText: AppLocalizations.of(context)!.searchService,
+        onSearch: (text) {
+          _searchTimer = Timer(const Duration(milliseconds: 600), () {
+            _servicesBloc.searchServices(text);
+          });
+        },
+      ),
+    ];
+    return size.isDesktop ? widgets : widgets.reversed.toList();
+  }
+
+  Widget _buildServicesTable(SizingInformation size) {
     return StreamBuilder<List<Service>>(
         stream: _servicesBloc.servicesLoaded,
         builder: (context, snapshot) {
