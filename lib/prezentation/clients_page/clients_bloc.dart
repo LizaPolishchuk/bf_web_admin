@@ -11,8 +11,8 @@ class ClientsBloc {
   final RemoveClientUseCase _removeClientUseCase;
   final UpdateClientPhotoUseCase _updateClientPhotoUseCase;
 
-  ClientsBloc(
-      this._getClientsListUseCase, this._addClientUseCase, this._updateClientUseCase, this._removeClientUseCase, this._updateClientPhotoUseCase);
+  ClientsBloc(this._getClientsListUseCase, this._addClientUseCase, this._updateClientUseCase, this._removeClientUseCase,
+      this._updateClientPhotoUseCase);
 
   List<Client> _clientsList = [];
 
@@ -112,7 +112,7 @@ class ClientsBloc {
     }
   }
 
-  void refreshActualData(){
+  void refreshActualData() {
     print("refreshActualData");
     _clientsLoadedSubject.add(_clientsList);
   }

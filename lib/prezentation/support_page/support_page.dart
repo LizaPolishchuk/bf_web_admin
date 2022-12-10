@@ -11,7 +11,6 @@ class SupportPage extends StatefulWidget {
 }
 
 class _SupportPageState extends State<SupportPage> {
-
   @override
   void initState() {
     super.initState();
@@ -28,5 +27,4 @@ class _SupportPageState extends State<SupportPage> {
       ),
     );
   }
-
 }

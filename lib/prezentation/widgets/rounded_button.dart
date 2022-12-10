@@ -43,20 +43,17 @@ class RoundedButton extends StatelessWidget {
           alignment: Alignment.center,
           padding: const EdgeInsets.symmetric(horizontal: 44),
           decoration: BoxDecoration(
-            color: isEnabled
-                ? (buttonColor ?? AppColors.darkRose)
-                : AppColors.darkBackground,
+            color: isEnabled ? (buttonColor ?? AppColors.darkRose) : AppColors.darkBackground,
             borderRadius: BorderRadius.circular(52),
           ),
           child: Text(
             text,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: textStyle ?? AppTextStyle.buttonText.copyWith(
-              color: isEnabled
-                  ? textColor ?? AppColors.lightBackground
-                  : AppColors.disabledColor,
-            ),
+            style: textStyle ??
+                AppTextStyle.buttonText.copyWith(
+                  color: isEnabled ? textColor ?? AppColors.lightBackground : AppColors.disabledColor,
+                ),
           ),
         ),
       ),

@@ -40,9 +40,7 @@ Widget desktopBackground() {
           ),
         ),
       ),
-      Flexible(
-          child: mobileBackground()
-      )
+      Flexible(child: mobileBackground())
     ],
   );
 }

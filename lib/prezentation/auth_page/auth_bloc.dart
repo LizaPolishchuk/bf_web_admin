@@ -12,10 +12,7 @@ class AuthBloc {
   final SignUpWithEmailAndPasswordUseCase _signUpWithEmailAndPasswordUseCase;
   final SignOutUseCase _signOut;
 
-  AuthBloc(
-      this._loginWithGoogle,
-      this._loginWithEmailAndPasswordUseCase,
-      this._signUpWithEmailAndPasswordUseCase,
+  AuthBloc(this._loginWithGoogle, this._loginWithEmailAndPasswordUseCase, this._signUpWithEmailAndPasswordUseCase,
       this._signOut);
 
   final _loggedInSuccessSubject = PublishSubject<bool>();

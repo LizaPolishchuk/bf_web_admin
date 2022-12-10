@@ -11,7 +11,8 @@ class PromosBloc {
   final RemovePromoUseCase _removePromoUseCase;
   final UpdatePromoPhotoUseCase _updatePromoPhotoUseCase;
 
-  PromosBloc(this._getPromoListUseCase, this._addPromoUseCase, this._updatePromoUseCase, this._removePromoUseCase, this._updatePromoPhotoUseCase);
+  PromosBloc(this._getPromoListUseCase, this._addPromoUseCase, this._updatePromoUseCase, this._removePromoUseCase,
+      this._updatePromoPhotoUseCase);
 
   List<Promo> _promoList = [];
 

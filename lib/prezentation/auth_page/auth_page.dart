@@ -83,12 +83,11 @@ class _AuthPageState extends State<AuthPage> {
         return false;
       },
       child: Scaffold(
-        body: ScreenTypeLayout.builder(
-            mobile: _mobileView,
-           desktop: _desktopView,
-          tablet: _mobileView,
-        )
-      ),
+          body: ScreenTypeLayout.builder(
+        mobile: _mobileView,
+        desktop: _desktopView,
+        tablet: _mobileView,
+      )),
     );
   }
 
@@ -146,40 +145,39 @@ class _AuthPageState extends State<AuthPage> {
 
   Widget _buildContent() {
     return FractionallySizedBox(
-      widthFactor: 0.7,
-      heightFactor: 0.9,
-      child: ListView(
-        children: [
-          Stack(
-            alignment: Alignment.topLeft,
-            children: [
-              if(_registrationMode)
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      _registrationMode = false;
-                    });
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SvgPicture.asset(
-                        AppIcons.icCircleArrowLeft,
-                        color: AppColors.hintColor,
-                      ),
-                      const SizedBox(width: 5),
-                      Text(
-                        AppLocalizations.of(context)!.back,
-                        style: AppTextStyle.hintText,
-                      )
-                    ],
+        widthFactor: 0.7,
+        heightFactor: 0.9,
+        child: ListView(
+          children: [
+            Stack(
+              alignment: Alignment.topLeft,
+              children: [
+                if (_registrationMode)
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        _registrationMode = false;
+                      });
+                    },
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SvgPicture.asset(
+                          AppIcons.icCircleArrowLeft,
+                          color: AppColors.hintColor,
+                        ),
+                        const SizedBox(width: 5),
+                        Text(
+                          AppLocalizations.of(context)!.back,
+                          style: AppTextStyle.hintText,
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              Center(
-                child: ResponsiveBuilder(
-                    builder: (context, size) {
-                      if (!size.isDesktop) {
-                        return Padding(
+                Center(
+                  child: ResponsiveBuilder(builder: (context, size) {
+                    if (!size.isDesktop) {
+                      return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         child: Column(
                           children: const [
@@ -195,49 +193,47 @@ class _AuthPageState extends State<AuthPage> {
                           ],
                         ),
                       );
-                      } else {
-                        return const SizedBox.shrink();
-                      }
+                    } else {
+                      return const SizedBox.shrink();
                     }
-                ),
-              )
-            ],
-          ),
-          Center(
-            child: Text(
-              _registrationMode ? AppLocalizations.of(context)!.registration : AppLocalizations.of(context)!.login,
-              style: const TextStyle(color: AppColors.textColor, fontSize: 36, fontWeight: FontWeight.w700),
-            ),
-          ),
-          const SizedBox(height: 24),
-          InkWell(
-            onTap: () {
-              _authBloc.loginViaGoogle();
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SvgPicture.asset(AppIcons.icGoogle),
-                const SizedBox(width: 12),
-                Flexible(
-                  child: Text(
-                    AppLocalizations.of(context)!.loginViaGoogle,
-                    style: AppTextStyle.bodyText,
-                  ),
-                ),
+                  }),
+                )
               ],
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 24),
-            child: _registrationMode ? _buildRegistrationInput() : _buildLoginInput(),
-          ),
-          _buildLoginButton(),
-          const SizedBox(height: 24),
-          if (!_registrationMode) _buildForgotPassword(),
-        ],
-      )
-    );
+            Center(
+              child: Text(
+                _registrationMode ? AppLocalizations.of(context)!.registration : AppLocalizations.of(context)!.login,
+                style: const TextStyle(color: AppColors.textColor, fontSize: 36, fontWeight: FontWeight.w700),
+              ),
+            ),
+            const SizedBox(height: 24),
+            InkWell(
+              onTap: () {
+                _authBloc.loginViaGoogle();
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(AppIcons.icGoogle),
+                  const SizedBox(width: 12),
+                  Flexible(
+                    child: Text(
+                      AppLocalizations.of(context)!.loginViaGoogle,
+                      style: AppTextStyle.bodyText,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 24),
+              child: _registrationMode ? _buildRegistrationInput() : _buildLoginInput(),
+            ),
+            _buildLoginButton(),
+            const SizedBox(height: 24),
+            if (!_registrationMode) _buildForgotPassword(),
+          ],
+        ));
   }
 
   Widget _buildLoginInput() {

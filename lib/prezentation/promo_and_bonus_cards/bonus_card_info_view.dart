@@ -177,9 +177,9 @@ class _BonusCardInfoViewState extends State<BonusCardInfoView> {
   Widget _buildForEditMode() {
     return Column(
       children: [
-        _buildTextField(_nameController,  AppLocalizations.of(context)!.title),
+        _buildTextField(_nameController, AppLocalizations.of(context)!.title),
         const SizedBox(height: 15),
-        _buildTextField(_descriptionController,  AppLocalizations.of(context)!.description, lines: 6),
+        _buildTextField(_descriptionController, AppLocalizations.of(context)!.description, lines: 6),
         const SizedBox(height: 15),
         _buildTextField(_discountController, "${AppLocalizations.of(context)!.discount}, %", digitsOnly: true),
         const SizedBox(height: 15),
