@@ -141,8 +141,8 @@ class _CategoriesSelectorState extends State<CategoriesSelector> {
                                 child: TextField(
                                   style: AppTextStyle.bodyText,
                                   controller: categoryNameController,
-                                  decoration:  InputDecoration(
-                                    hintText:  AppLocalizations.of(context)!.categoryName,
+                                  decoration: InputDecoration(
+                                    hintText: AppLocalizations.of(context)!.categoryName,
                                     counterText: "",
                                     contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                                     hintStyle: AppTextStyle.hintText,

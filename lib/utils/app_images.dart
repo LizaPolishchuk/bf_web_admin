@@ -26,7 +26,6 @@ class AppIcons {
   static const String icYclientsLogo = 'assets/icons/ic_yclients_logo.svg';
   static const String icStar = 'assets/icons/ic_star.svg';
 
-
   ///Images
   static const String loginBackground = 'assets/images/login_background.png';
   static const String salonExample = 'assets/images/salon_example.png';
