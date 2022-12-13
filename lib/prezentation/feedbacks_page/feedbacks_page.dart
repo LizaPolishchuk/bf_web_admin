@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/prezentation/feedbacks_page/feedback_info_view.dart';
 import 'package:salons_adminka/prezentation/feedbacks_page/feedbacks_bloc.dart';
@@ -10,6 +11,8 @@ import 'package:salons_adminka/prezentation/widgets/info_container.dart';
 import 'package:salons_adminka/prezentation/widgets/search_pannel.dart';
 import 'package:salons_adminka/prezentation/widgets/table_widget.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
+
+import '../widgets/flex_list_widget.dart';
 
 class FeedbacksPage extends StatefulWidget {
   final Salon? salon;
@@ -54,40 +57,40 @@ class _FeedbacksPageState extends State<FeedbacksPage> {
 
   @override
   Widget build(BuildContext context) {
-    return InfoContainer(
-      onPressedAddButton: () {},
-      hideAddButton: true,
-      showInfoNotifier: _showInfoNotifier,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CustomAppBar(title: AppLocalizations.of(context)!.feedbacks),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Spacer(),
-              const SizedBox(width: 60),
-              SearchPanel(
-                hintText: AppLocalizations.of(context)!.searchService,
-                onSearch: (text) {
-                  _searchTimer = Timer(const Duration(milliseconds: 600), () {
-                    _feedbacksBloc.searchFeedbacks(text);
-                  });
-                },
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Flexible(
-            fit: FlexFit.tight,
-            child: _buildServicesTable(),
-          ),
-          const SizedBox(height: 20),
-          // PaginationCounter(),
-        ],
-      ),
-    );
+    return ResponsiveBuilder(builder: (context, SizingInformation size) {
+      return InfoContainer(
+        onPressedAddButton: () {},
+        hideAddButton: true,
+        showInfoNotifier: _showInfoNotifier,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CustomAppBar(title: AppLocalizations.of(context)!.feedbacks),
+            FlexListWidget(
+              children: [
+                if (size.isDesktop) const Spacer(),
+                SearchPanel(
+                  hintText: AppLocalizations.of(context)!.searchService,
+                  onSearch: (text) {
+                    _searchTimer = Timer(const Duration(milliseconds: 600), () {
+                      _feedbacksBloc.searchFeedbacks(text);
+                    });
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Flexible(
+              fit: FlexFit.tight,
+              child: _buildServicesTable(),
+            ),
+            const SizedBox(height: 20),
+            // PaginationCounter(),
+          ],
+        ),
+      );
+    });
   }
 
   Widget _buildServicesTable() {

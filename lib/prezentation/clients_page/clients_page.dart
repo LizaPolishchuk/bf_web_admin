@@ -5,6 +5,7 @@ import 'package:salons_adminka/prezentation/clients_page/client_details_page.dar
 import 'package:salons_adminka/prezentation/clients_page/clients_bloc.dart';
 import 'package:salons_adminka/prezentation/widgets/base_items_selector.dart';
 import 'package:salons_adminka/prezentation/widgets/custom_app_bar.dart';
+import 'package:salons_adminka/prezentation/widgets/flex_list_widget.dart';
 import 'package:salons_adminka/prezentation/widgets/info_container.dart';
 import 'package:salons_adminka/prezentation/widgets/search_pannel.dart';
 import 'package:salons_adminka/prezentation/widgets/table_widget.dart';
@@ -98,8 +99,7 @@ class _ClientsPageState extends State<ClientsPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       CustomAppBar(title: AppLocalizations.of(context)!.clients),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
+                      FlexListWidget(
                         children: [
                           Flexible(
                               child: BaseItemsSelector(
@@ -110,7 +110,6 @@ class _ClientsPageState extends State<ClientsPage> {
                               // _mastersBloc.getMasters(_currentSalonId, item?.id);
                             },
                           )),
-                          const SizedBox(width: 60),
                           SearchPanel(
                             hintText: AppLocalizations.of(context)!.searchClient,
                             onSearch: (text) {
@@ -140,7 +139,7 @@ class _ClientsPageState extends State<ClientsPage> {
     return StreamBuilder<List<Client>>(
         stream: _clientsBloc.clientsLoaded,
         builder: (context, snapshot) {
-          print("clientsLoaded : ${snapshot.connectionState}");
+          debugPrint("clientsLoaded : ${snapshot.connectionState}");
 
           return TableWidget(
             columnTitles: [

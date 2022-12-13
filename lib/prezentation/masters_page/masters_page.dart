@@ -7,6 +7,7 @@ import 'package:salons_adminka/prezentation/masters_page/master_info_view.dart';
 import 'package:salons_adminka/prezentation/masters_page/masters_bloc.dart';
 import 'package:salons_adminka/prezentation/widgets/base_items_selector.dart';
 import 'package:salons_adminka/prezentation/widgets/custom_app_bar.dart';
+import 'package:salons_adminka/prezentation/widgets/flex_list_widget.dart';
 import 'package:salons_adminka/prezentation/widgets/info_container.dart';
 import 'package:salons_adminka/prezentation/widgets/search_pannel.dart';
 import 'package:salons_adminka/prezentation/widgets/table_widget.dart';
@@ -70,27 +71,23 @@ class _MastersPageState extends State<MastersPage> {
         mainAxisSize: MainAxisSize.min,
         children: [
           CustomAppBar(title: AppLocalizations.of(context)!.masters),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Flexible(
-                  child: BaseItemsSelector(
-                items: _servicesList,
-                onSelectedItem: (item) {
-                  _mastersBloc.getMasters(_currentSalonId, item?.id);
-                },
-              )),
-              const SizedBox(width: 60),
-              SearchPanel(
-                hintText: AppLocalizations.of(context)!.searchMaster,
-                onSearch: (text) {
-                  _searchTimer = Timer(const Duration(milliseconds: 600), () {
-                    _mastersBloc.searchMasters(text);
-                  });
-                },
-              ),
-            ],
-          ),
+          FlexListWidget(children: [
+            Flexible(
+                child: BaseItemsSelector(
+              items: _servicesList,
+              onSelectedItem: (item) {
+                _mastersBloc.getMasters(_currentSalonId, item?.id);
+              },
+            )),
+            SearchPanel(
+              hintText: AppLocalizations.of(context)!.searchMaster,
+              onSearch: (text) {
+                _searchTimer = Timer(const Duration(milliseconds: 600), () {
+                  _mastersBloc.searchMasters(text);
+                });
+              },
+            ),
+          ]),
           const SizedBox(height: 20),
           Flexible(
             fit: FlexFit.tight,
