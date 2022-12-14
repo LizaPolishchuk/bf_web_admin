@@ -100,5 +100,9 @@
   "support":  "Support",
   "logout": "Sign out",
   "client": "Client",
-  "master": "Master"
+  "master": "Master",
+  "addOrder": "Add order",
+  "clientName": "Client name",
+  "orderDate": "Date of order",
+  "orderTime": "Time of order"
 }

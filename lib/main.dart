@@ -71,6 +71,10 @@ class MyApp extends StatelessWidget {
       darkTheme: AppTheme.dark,
       themeMode: ThemeMode.light,
       title: 'B&F Admin Panel',
+      builder: (context, child) => MediaQuery(
+        data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+        child: child!,
+      ),
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,

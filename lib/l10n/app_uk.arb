@@ -100,5 +100,9 @@
   "support": "Підтримка",
   "logout": "Вийти",
   "client": "Клієнт",
-  "master": "Майстер"
+  "master": "Майстер",
+  "addOrder": "Додати запис",
+  "clientName": "Імʼя клієнта",
+  "orderDate": "Дата запису",
+  "orderTime": "Час запису"
 }

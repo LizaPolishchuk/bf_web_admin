@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:salons_adminka/injection_container_web.dart';
-import 'package:salons_adminka/prezentation/home_page/calendar_widget.dart';
+import 'package:salons_adminka/navigation/routes.dart';
 import 'package:salons_adminka/prezentation/widgets/custom_app_bar.dart';
 import 'package:salons_adminka/prezentation/widgets/info_container.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
@@ -35,29 +36,15 @@ class _HomePageState extends State<HomePage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildHeader(),
-        Flexible(
-          child: InfoContainer(
-            padding: const EdgeInsets.only(left: 16, right: 16),
-            onPressedAddButton: () {
-              _showInfoView(InfoAction.add, null, null);
-            },
-            showInfoNotifier: _showInfoNotifier,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Flexible(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: const CustomCalendar(),
-                  ),
-                ),
-              ],
-            ),
+        InkWell(
+          child: Container(
+            color: Colors.amber,
+            width: 100,
+            height: 100,
           ),
+          onTap: () {
+            Get.rootDelegate.toNamed(Routes.calendar);
+          },
         ),
       ],
     );

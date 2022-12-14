@@ -7,7 +7,6 @@ import 'package:salons_adminka/utils/app_text_style.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
-import 'event_dialog.dart';
 
 class CustomCalendar extends StatefulWidget {
   const CustomCalendar({Key? key}) : super(key: key);
@@ -75,19 +74,20 @@ class _CustomCalendarState extends State<CustomCalendar> {
   Widget _buildOrderItem(OrderEntity order) {
     return InkWell(
       onTap: () async {
-        await showDialog<bool>(
-          context: context,
-          builder: (BuildContext context) => EventAlertDialog(
-            order: order,
-            themeData: Theme.of(context),
-            close: "Close",
-            showMore: "Show more",
-          ),
-        ).then((value) {
-          if (value ?? false) {
-            //Add any action for show more functional
-          }
-        });
+
+        // await showDialog<bool>(
+        //   context: context,
+        //   builder: (BuildContext context) => EventAlertDialog(
+        //     order: order,
+        //     themeData: Theme.of(context),
+        //     close: "Close",
+        //     showMore: "Show more",
+        //   ),
+        // ).then((value) {
+        //   if (value ?? false) {
+        //     //Add any action for show more functional
+        //   }
+        // });
       },
       child: Container(
         margin: const EdgeInsets.all(2),

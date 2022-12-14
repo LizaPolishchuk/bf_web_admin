@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:salons_adminka/main.dart';
+import 'package:salons_adminka/prezentation/calendar_page/calendar_page.dart';
 import 'package:salons_adminka/prezentation/clients_page/clients_page.dart';
 import 'package:salons_adminka/prezentation/feedbacks_page/feedbacks_page.dart';
 import 'package:salons_adminka/prezentation/home_container.dart';
@@ -33,6 +34,7 @@ class Routes {
   static const feedbacks = '/feedbacks';
   static const support = '/support';
   static const settings = '/settings';
+  static const calendar = '/calendar';
 }
 
 abstract class AppPages {
@@ -102,6 +104,13 @@ abstract class AppPages {
       page: () => const HomeContainer(
         selectedMenuIndex: settingsIndex,
         child: SettingsPage(),
+      ),
+    ),
+    GetPage(
+      name: Routes.calendar,
+      page: () => const HomeContainer(
+        selectedMenuIndex: homeIndex,
+        child: CalendarPage(),
       ),
     ),
   ];
