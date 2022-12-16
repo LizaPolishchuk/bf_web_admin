@@ -3,12 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/prezentation/promo_and_bonus_cards/bonus_card_info_view.dart';
 import 'package:salons_adminka/prezentation/promo_and_bonus_cards/bonus_cards_bloc.dart';
 import 'package:salons_adminka/prezentation/promo_and_bonus_cards/promo_info_view.dart';
 import 'package:salons_adminka/prezentation/promo_and_bonus_cards/promos_bloc.dart';
 import 'package:salons_adminka/prezentation/widgets/custom_app_bar.dart';
+import 'package:salons_adminka/prezentation/widgets/flex_list_widget.dart';
 import 'package:salons_adminka/prezentation/widgets/info_container.dart';
 import 'package:salons_adminka/prezentation/widgets/search_pannel.dart';
 import 'package:salons_adminka/utils/alert_builder.dart';
@@ -71,50 +73,51 @@ class _PromosPageState extends State<PromosPage> {
 
   @override
   Widget build(BuildContext context) {
-    return InfoContainer(
-      onPressedAddButton: _showAlertToAddPromoOrCard,
-      showInfoNotifier: _showInfoNotifier,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CustomAppBar(title: "${AppLocalizations.of(context)!.promos}/${AppLocalizations.of(context)!.bonusCards}"),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Spacer(),
-              SearchPanel(
-                hintText: AppLocalizations.of(context)!.search,
-                onSearch: (text) {
-                  // _searchTimer = Timer(const Duration(milliseconds: 600), () {
-                  //   _mastersBloc.searchMasters(text);
-                  // });
-                },
-              ),
-            ],
-          ),
-          const SizedBox(height: 20),
-          Flexible(
-            fit: FlexFit.tight,
-            child: Row(
+    return ResponsiveBuilder(builder: (context, SizingInformation size) {
+      return InfoContainer(
+        onPressedAddButton: _showAlertToAddPromoOrCard,
+        showInfoNotifier: _showInfoNotifier,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CustomAppBar(title: "${AppLocalizations.of(context)!.promos}/${AppLocalizations.of(context)!.bonusCards}"),
+            FlexListWidget(
               children: [
-                Flexible(
-                  flex: 1,
-                  child: _buildPromosSection(),
-                ),
-                const SizedBox(width: 66),
-                Flexible(
-                  flex: 2,
-                  child: _buildBonusCardsSection(),
+                if (size.isDesktop) const Spacer(),
+                SearchPanel(
+                  hintText: AppLocalizations.of(context)!.search,
+                  onSearch: (text) {
+                    // _searchTimer = Timer(const Duration(milliseconds: 600), () {
+                    //   _mastersBloc.searchMasters(text);
+                    // });
+                  },
                 ),
               ],
             ),
-          ),
-          const SizedBox(height: 20),
-          // PaginationCounter(),
-        ],
-      ),
-    );
+            const SizedBox(height: 20),
+            Flexible(
+              fit: FlexFit.tight,
+              child: Row(
+                children: [
+                  Flexible(
+                    flex: 1,
+                    child: _buildPromosSection(),
+                  ),
+                  const SizedBox(width: 66),
+                  Flexible(
+                    flex: 2,
+                    child: _buildBonusCardsSection(),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            // PaginationCounter(),
+          ],
+        ),
+      );
+    });
   }
 
   Widget _buildPromosSection() {
