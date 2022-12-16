@@ -41,6 +41,9 @@ class _HomePageState extends State<HomePage> {
             color: Colors.amber,
             width: 100,
             height: 100,
+            child: const Text(
+              "Click here to open calendar",
+            ),
           ),
           onTap: () {
             Get.rootDelegate.toNamed(Routes.calendar);

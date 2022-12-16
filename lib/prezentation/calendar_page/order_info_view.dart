@@ -7,7 +7,6 @@ import 'package:salons_adminka/prezentation/widgets/info_container.dart';
 import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_adminka/utils/app_text_style.dart';
-import 'package:salons_adminka/utils/extentions.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 enum OrderStatus { active, reserved, cancelled }
@@ -37,7 +36,6 @@ class OrderInfoView extends StatefulWidget {
 class _OrderInfoViewState extends State<OrderInfoView> {
   final TextEditingController _clientNameController = TextEditingController();
   final TextEditingController _clientPhoneController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
   final ValueNotifier<DateTime?> _orderDateNotifier = ValueNotifier<DateTime?>(null);
   final ValueNotifier<TimeOfDay?> _orderTimeNotifier = ValueNotifier<TimeOfDay?>(null);
 
@@ -68,7 +66,6 @@ class _OrderInfoViewState extends State<OrderInfoView> {
       _orderTimeNotifier.value = TimeOfDay.fromDateTime(_orderForUpdate!.date);
 
       _clientNameController.text = _orderForUpdate!.clientName ?? "";
-      _priceController.text = _orderForUpdate!.price.toString();
       // _clientPhoneController.text = _orderForUpdate!.cli ?? "";
 
       _enableButtonNotifier.value = true;
@@ -93,8 +90,6 @@ class _OrderInfoViewState extends State<OrderInfoView> {
         _buildTextField(_clientNameController, AppLocalizations.of(context)!.clientName),
         const SizedBox(height: 15),
         _buildTextField(_clientPhoneController, AppLocalizations.of(context)!.phoneNumber),
-        const SizedBox(height: 15),
-        _buildTextField(_priceController, AppLocalizations.of(context)!.price.capitalize(), onlyDigits: true),
         const SizedBox(height: 15),
         _buildDropDownSelector(AppLocalizations.of(context)!.service, widget.services, _selectedService),
         const SizedBox(height: 15),
@@ -171,7 +166,6 @@ class _OrderInfoViewState extends State<OrderInfoView> {
                         newDate,
                         60,
                         _selectedService?.categoryColor,
-                        double.tryParse(_priceController.text) ?? 0,
                       );
 
                       print("orderToUpdate: $orderToUpdate");
@@ -186,7 +180,6 @@ class _OrderInfoViewState extends State<OrderInfoView> {
                           masterAvatar: _selectedMaster?.avatar,
                           serviceId: _selectedService?.id,
                           serviceName: _selectedService?.name,
-                          price: double.tryParse(_priceController.text),
                           durationInMin: 60,
                           date: newDate,
                         );
@@ -376,7 +369,7 @@ class _OrderInfoViewState extends State<OrderInfoView> {
 
   void _checkIfEnableButton() {
     if (_clientNameController.text.length > 2 &&
-        _priceController.text.length > 1 &&
+        _clientPhoneController.text.length > 1 &&
         _selectedService != null &&
         _selectedMaster != null &&
         _orderDateNotifier.value != null &&
