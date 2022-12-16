@@ -43,6 +43,20 @@ class _CalendarPageState extends State<CalendarPage> {
     _ordersBloc.ordersLoaded.listen((event) {
       print("ordersLoaded: ${event.length}");
     });
+
+    _ordersBloc.errorMessage.listen((error) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        backgroundColor: Colors.red,
+        content: Text(error),
+      ));
+    });
+
+    _ordersBloc.orderAdded.listen((isSuccess) {
+      _showInfoNotifier.value = null;
+    });
+    _ordersBloc.orderUpdated.listen((isSuccess) {
+      _showInfoNotifier.value = null;
+    });
   }
 
   @override
@@ -68,7 +82,11 @@ class _CalendarPageState extends State<CalendarPage> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const CustomCalendar(),
+                    child: CustomCalendar(
+                      onClickOrder: (order, index) {
+                        _showInfoView(InfoAction.view, order, index);
+                      },
+                    ),
                   ),
                 ),
               ],
@@ -79,7 +97,7 @@ class _CalendarPageState extends State<CalendarPage> {
     );
   }
 
-  void _showInfoView(InfoAction infoAction, BaseEntity? item, int? index) {
+  void _showInfoView(InfoAction infoAction, OrderEntity? item, int? index) {
     LocalStorage _localStorage = getItWeb<LocalStorage>();
     List<Service>? servicesList = List<Service>.from(_localStorage.getServicesList() as List<dynamic>);
     List<Master>? mastersList = List<Master>.from(_localStorage.getMastersList() as List<dynamic>);
@@ -87,18 +105,18 @@ class _CalendarPageState extends State<CalendarPage> {
     _showInfoNotifier.value = OrderInfoView(
       salon: _currentSalon,
       infoAction: infoAction,
-      order: item as OrderEntity?,
+      order: item,
       masters: mastersList,
       services: servicesList,
       onClickAction: (order, action) {
         if (action == InfoAction.add) {
           _ordersBloc.addOrder(order);
         } else if (action == InfoAction.edit) {
-          // _mastersBloc.updateMaster(master, index!);
+          _ordersBloc.updateOrder(order, index!);
         } else if (action == InfoAction.delete) {
-          AlertBuilder()
-              .showAlertForDelete(context, AppLocalizations.of(context)!.master1, order.date.toIso8601String(), () {
-            // _mastersBloc.removeMaster(master.id, index!);
+          AlertBuilder().showAlertForDelete(context, AppLocalizations.of(context)!.order1, order.date.toIso8601String(),
+              () {
+            _ordersBloc.removeOrder(order.id, index!);
             _showInfoNotifier.value = null;
           });
         }

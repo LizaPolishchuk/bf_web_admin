@@ -52,27 +52,27 @@ class OrdersBloc {
       _ordersLoadedSubject.add(_ordersList);
       _orderAddedSubject.add(true);
     }
+  }
 
-    updateOrder(OrderEntity orderEntity, int index) async {
-      var response = await _updateOrderUseCase(orderEntity);
-      if (response.isLeft) {
-        _errorSubject.add(response.left.message);
-      } else {
-        _ordersList[index] = response.right;
-        _ordersLoadedSubject.add(_ordersList);
-        _orderUpdatedSubject.add(true);
-      }
+  updateOrder(OrderEntity orderEntity, int index) async {
+    var response = await _updateOrderUseCase(orderEntity);
+    if (response.isLeft) {
+      _errorSubject.add(response.left.message);
+    } else {
+      _ordersList[index] = response.right;
+      _ordersLoadedSubject.add(_ordersList);
+      _orderUpdatedSubject.add(true);
+    }
+  }
 
-      removeOrder(String orderId, int index) async {
-        var response = await _removeOrderUseCase(orderId);
-        if (response.isLeft) {
-          _errorSubject.add(response.left.message);
-        } else {
-          _ordersList.removeAt(index);
-          _ordersLoadedSubject.add(_ordersList);
-          _orderRemovedSubject.add(true);
-        }
-      }
+  removeOrder(String orderId, int index) async {
+    var response = await _removeOrderUseCase(orderId);
+    if (response.isLeft) {
+      _errorSubject.add(response.left.message);
+    } else {
+      _ordersList.removeAt(index);
+      _ordersLoadedSubject.add(_ordersList);
+      _orderRemovedSubject.add(true);
     }
   }
 }

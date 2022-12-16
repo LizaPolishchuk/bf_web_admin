@@ -312,7 +312,6 @@ class _OrderInfoViewState extends State<OrderInfoView> {
           }).toList(),
           value: selectedItem,
           onChanged: (value) {
-            print("onChanged");
             setState(() {
               if (value is Service) {
                 _selectedService = value;
@@ -352,6 +351,8 @@ class _OrderInfoViewState extends State<OrderInfoView> {
         lastDate: DateTime(2101));
     if (picked != null && picked != _orderDateNotifier.value) {
       _orderDateNotifier.value = picked;
+
+      _checkIfEnableButton();
     }
   }
 
@@ -362,6 +363,8 @@ class _OrderInfoViewState extends State<OrderInfoView> {
     );
     if (picked != null && picked != _orderTimeNotifier.value) {
       _orderTimeNotifier.value = picked;
+
+      _checkIfEnableButton();
     }
   }
 

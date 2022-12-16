@@ -104,5 +104,6 @@
   "addOrder": "Add order",
   "clientName": "Client name",
   "orderDate": "Date of order",
-  "orderTime": "Time of order"
+  "orderTime": "Time of order",
+  "order1": "Order"
 }

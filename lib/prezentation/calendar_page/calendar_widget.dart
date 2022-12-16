@@ -9,7 +9,9 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 
 class CustomCalendar extends StatefulWidget {
-  const CustomCalendar({Key? key}) : super(key: key);
+  final Function(OrderEntity, int) onClickOrder;
+
+  const CustomCalendar({Key? key, required this.onClickOrder}) : super(key: key);
 
   @override
   State<CustomCalendar> createState() => _CustomCalendarState();
@@ -60,7 +62,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
             right: 0,
             top: 0,
             bottom: 0,
-            child: _buildOrderItem(appointments[i]),
+            child: _buildOrderItem(appointments[i], i),
           ),
         );
       }
@@ -71,9 +73,11 @@ class _CustomCalendarState extends State<CustomCalendar> {
     );
   }
 
-  Widget _buildOrderItem(OrderEntity order) {
+  Widget _buildOrderItem(OrderEntity order, int index) {
     return InkWell(
       onTap: () async {
+
+        widget.onClickOrder(order, index);
 
         // await showDialog<bool>(
         //   context: context,

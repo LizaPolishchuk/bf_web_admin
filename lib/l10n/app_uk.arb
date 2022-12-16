@@ -104,5 +104,6 @@
   "addOrder": "Додати запис",
   "clientName": "Імʼя клієнта",
   "orderDate": "Дата запису",
-  "orderTime": "Час запису"
+  "orderTime": "Час запису",
+  "order1": "Запис"
 }
