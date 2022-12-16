@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
 import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
@@ -40,7 +41,7 @@ class AlertBuilder {
                         children: [
                           Flexible(
                             child: Text(
-                              "Вы действительно хотите удалить $itemType?",
+                              "${AppLocalizations.of(context)!.doYouReallyWantToDelete} $itemType?",
                               overflow: TextOverflow.ellipsis,
                               maxLines: 3,
                               textAlign: TextAlign.center,
@@ -56,7 +57,7 @@ class AlertBuilder {
                           ),
                           const SizedBox(height: 27),
                           RoundedButton(
-                              text: "Удалить",
+                              text: AppLocalizations.of(context)!.delete,
                               onPressed: () {
                                 onConfirm();
                                 Get.back();

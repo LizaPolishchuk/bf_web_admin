@@ -54,23 +54,23 @@ class OrdersBloc {
     }
   }
 
-  updateOrder(OrderEntity orderEntity, int index) async {
+  updateOrder(OrderEntity orderEntity) async {
     var response = await _updateOrderUseCase(orderEntity);
     if (response.isLeft) {
       _errorSubject.add(response.left.message);
     } else {
-      _ordersList[index] = response.right;
+      _ordersList[_ordersList.indexOf(orderEntity)] = response.right;
       _ordersLoadedSubject.add(_ordersList);
       _orderUpdatedSubject.add(true);
     }
   }
 
-  removeOrder(String orderId, int index) async {
+  removeOrder(String orderId) async {
     var response = await _removeOrderUseCase(orderId);
     if (response.isLeft) {
       _errorSubject.add(response.left.message);
     } else {
-      _ordersList.removeAt(index);
+      _ordersList.removeWhere((element) => element.id == orderId);
       _ordersLoadedSubject.add(_ordersList);
       _orderRemovedSubject.add(true);
     }

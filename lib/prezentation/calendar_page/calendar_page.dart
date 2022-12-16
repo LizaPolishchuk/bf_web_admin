@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
 import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/prezentation/calendar_page/calendar_widget.dart';
 import 'package:salons_adminka/prezentation/calendar_page/order_info_view.dart';
@@ -40,10 +41,6 @@ class _CalendarPageState extends State<CalendarPage> {
     _ordersBloc = getIt<OrdersBloc>();
     _ordersBloc.getOrders(_currentSalon.id);
 
-    _ordersBloc.ordersLoaded.listen((event) {
-      print("ordersLoaded: ${event.length}");
-    });
-
     _ordersBloc.errorMessage.listen((error) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.red,
@@ -82,11 +79,25 @@ class _CalendarPageState extends State<CalendarPage> {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: CustomCalendar(
-                      onClickOrder: (order, index) {
-                        _showInfoView(InfoAction.view, order, index);
-                      },
-                    ),
+                    child: StreamBuilder<List<OrderEntity>>(
+                        stream: _ordersBloc.ordersLoaded,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+
+                          var orders = snapshot.data ?? [];
+                          print("orders: $orders");
+
+                          return CustomCalendar(
+                            orders: orders,
+                            onClickOrder: (order) {
+                              _showInfoView(InfoAction.view, order, null);
+                            },
+                          );
+                        }),
                   ),
                 ),
               ],
@@ -112,11 +123,11 @@ class _CalendarPageState extends State<CalendarPage> {
         if (action == InfoAction.add) {
           _ordersBloc.addOrder(order);
         } else if (action == InfoAction.edit) {
-          _ordersBloc.updateOrder(order, index!);
+          _ordersBloc.updateOrder(order);
         } else if (action == InfoAction.delete) {
-          AlertBuilder().showAlertForDelete(context, AppLocalizations.of(context)!.order1, order.date.toIso8601String(),
-              () {
-            _ordersBloc.removeOrder(order.id, index!);
+          AlertBuilder().showAlertForDelete(
+              context, AppLocalizations.of(context)!.order1, DateFormat('dd-MMM-yyyy').format(order.date), () {
+            _ordersBloc.removeOrder(order.id);
             _showInfoNotifier.value = null;
           });
         }

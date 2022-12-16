@@ -7,11 +7,11 @@ import 'package:salons_adminka/utils/app_text_style.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
-
 class CustomCalendar extends StatefulWidget {
-  final Function(OrderEntity, int) onClickOrder;
+  final List<OrderEntity> orders;
+  final Function(OrderEntity) onClickOrder;
 
-  const CustomCalendar({Key? key, required this.onClickOrder}) : super(key: key);
+  const CustomCalendar({Key? key, required this.onClickOrder, required this.orders}) : super(key: key);
 
   @override
   State<CustomCalendar> createState() => _CustomCalendarState();
@@ -23,6 +23,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
     return SfCalendar(
       view: CalendarView.week,
       firstDayOfWeek: 1,
+      initialDisplayDate: DateTime.now().subtract(const Duration(minutes: 10)),
       appointmentBuilder: (context, details) {
         return _buildOrderSection(details);
       },
@@ -45,7 +46,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
         CalendarView.week,
         // CalendarView.month,
       ],
-      dataSource: OrdersDataSource(_getDataSource()),
+      dataSource: OrdersDataSource(widget.orders),
       monthViewSettings: const MonthViewSettings(appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
     );
   }
@@ -62,7 +63,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
             right: 0,
             top: 0,
             bottom: 0,
-            child: _buildOrderItem(appointments[i], i),
+            child: _buildOrderItem(appointments[i]),
           ),
         );
       }
@@ -73,25 +74,11 @@ class _CustomCalendarState extends State<CustomCalendar> {
     );
   }
 
-  Widget _buildOrderItem(OrderEntity order, int index) {
+  Widget _buildOrderItem(OrderEntity order) {
     return InkWell(
       onTap: () async {
-
-        widget.onClickOrder(order, index);
-
-        // await showDialog<bool>(
-        //   context: context,
-        //   builder: (BuildContext context) => EventAlertDialog(
-        //     order: order,
-        //     themeData: Theme.of(context),
-        //     close: "Close",
-        //     showMore: "Show more",
-        //   ),
-        // ).then((value) {
-        //   if (value ?? false) {
-        //     //Add any action for show more functional
-        //   }
-        // });
+        // print("onCLick index: $index");
+        widget.onClickOrder(order);
       },
       child: Container(
         margin: const EdgeInsets.all(2),
@@ -175,32 +162,32 @@ class _CustomCalendarState extends State<CustomCalendar> {
     );
   }
 
-  List<OrderEntity> _getDataSource() {
-    final List<OrderEntity> orders = <OrderEntity>[];
-    final DateTime today = DateTime.now();
-    final DateTime startTime = DateTime(today.year, today.month, today.day, 9);
-    //final DateTime endTime = startTime.add(const Duration(hours: 1));
-    orders.add(OrderEntity(
-        "id1",
-        "clientId",
-        "Liza dsvdsv sfvdfv",
-        "salonId",
-        "salonName",
-        "masterId",
-        "Master name fdvdfv dfvdv",
-        "masterAvatar",
-        "serviceId",
-        "Manikur1 dfvfdvfd dsvfdv",
-        startTime,
-        30,
-        0xffBA83FF,
-        300));
-    orders.add(OrderEntity("id2", "clientId", "Liza", "salonId", "salonName", "masterId", "Master name", "masterAvatar",
-        "serviceId", "Manikur2", DateTime(today.year, today.month, today.day, 10), 30, 0xffBA83FF, 300));
-    orders.add(OrderEntity("id3", "clientId", "Liza", "salonId", "salonName", "masterId", "Master name", "masterAvatar",
-        "serviceId", "Manikur3", DateTime(today.year, today.month, today.day, 11), 60, 0xffBA83FF, 300));
-    return orders;
-  }
+// List<OrderEntity> _getDataSource() {
+//   final List<OrderEntity> orders = <OrderEntity>[];
+//   final DateTime today = DateTime.now();
+//   final DateTime startTime = DateTime(today.year, today.month, today.day, 9);
+//   //final DateTime endTime = startTime.add(const Duration(hours: 1));
+//   orders.add(OrderEntity(
+//       "id1",
+//       "clientId",
+//       "Liza dsvdsv sfvdfv",
+//       "salonId",
+//       "salonName",
+//       "masterId",
+//       "Master name fdvdfv dfvdv",
+//       "masterAvatar",
+//       "serviceId",
+//       "Manikur1 dfvfdvfd dsvfdv",
+//       startTime,
+//       30,
+//       0xffBA83FF,
+//       300));
+//   orders.add(OrderEntity("id2", "clientId", "Liza", "salonId", "salonName", "masterId", "Master name", "masterAvatar",
+//       "serviceId", "Manikur2", DateTime(today.year, today.month, today.day, 10), 30, 0xffBA83FF, 300));
+//   orders.add(OrderEntity("id3", "clientId", "Liza", "salonId", "salonName", "masterId", "Master name", "masterAvatar",
+//       "serviceId", "Manikur3", DateTime(today.year, today.month, today.day, 11), 60, 0xffBA83FF, 300));
+//   return orders;
+// }
 }
 
 class OrdersDataSource extends CalendarDataSource {
@@ -214,22 +201,9 @@ class OrdersDataSource extends CalendarDataSource {
       return customData
         ..date = appointment.startTime
         ..durationInMin = appointment.endTime.difference(appointment.startTime).inMinutes;
+    } else {
+      return null;
     }
-    return OrderEntity(
-        "id",
-        "clientId",
-        "Liza2",
-        "salonId",
-        "salonName",
-        "masterId",
-        "Master name2",
-        "masterAvatar",
-        "serviceId",
-        "Manikur2",
-        appointment.startTime,
-        appointment.startTime.difference(appointment.endTime).inMinutes,
-        Colors.red.value,
-        300);
   }
 
   @override

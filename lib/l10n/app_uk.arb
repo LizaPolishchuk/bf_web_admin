@@ -105,5 +105,6 @@
   "clientName": "Імʼя клієнта",
   "orderDate": "Дата запису",
   "orderTime": "Час запису",
-  "order1": "Запис"
+  "order1": "Запис",
+  "doYouReallyWantToDelete": "Ви дійсно хочете видалити"
 }
