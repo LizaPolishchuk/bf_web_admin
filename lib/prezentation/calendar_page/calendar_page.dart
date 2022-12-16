@@ -93,6 +93,9 @@ class _CalendarPageState extends State<CalendarPage> {
 
                           return CustomCalendar(
                             orders: orders,
+                            onUpdateOrder: (order) {
+                              _ordersBloc.updateOrder(order);
+                            },
                             onClickOrder: (order) {
                               _showInfoView(InfoAction.view, order, null);
                             },

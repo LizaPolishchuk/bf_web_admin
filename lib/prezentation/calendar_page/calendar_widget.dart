@@ -10,8 +10,10 @@ import 'package:syncfusion_flutter_calendar/calendar.dart';
 class CustomCalendar extends StatefulWidget {
   final List<OrderEntity> orders;
   final Function(OrderEntity) onClickOrder;
+  final Function(OrderEntity) onUpdateOrder;
 
-  const CustomCalendar({Key? key, required this.onClickOrder, required this.orders}) : super(key: key);
+  const CustomCalendar({Key? key, required this.onClickOrder, required this.onUpdateOrder, required this.orders})
+      : super(key: key);
 
   @override
   State<CustomCalendar> createState() => _CustomCalendarState();
@@ -29,10 +31,32 @@ class _CustomCalendarState extends State<CustomCalendar> {
       },
       cellEndPadding: 0,
       allowDragAndDrop: true,
-      onDragEnd: (AppointmentDragEndDetails appointmentDragEndDetails) {
+      // onAppointmentResizeEnd: (appointmentResizeEndDetails) {
+      //   debugPrint("onAppointmentResizeEnd: ${appointmentResizeEndDetails.startTime}");
+      //
+      //   if (appointmentResizeEndDetails.startTime != null &&
+      //       appointmentResizeEndDetails.endTime != null &&
+      //       appointmentResizeEndDetails.appointment is OrderEntity) {
+      //     var orderToUpdate = appointmentResizeEndDetails.appointment as OrderEntity;
+      //
+      //     var newDuration =
+      //         appointmentResizeEndDetails.endTime!.difference(appointmentResizeEndDetails.startTime!).inMinutes;
+      //
+      //     print("newDuration: $newDuration");
+      //     // orderToUpdate.durationInMin = newDuration;
+      //     // widget.onUpdateOrder(orderToUpdate);
+      //   }
+      // },
+      onDragEnd: (appointmentDragEndDetails) {
         debugPrint("appointmentDragEndDetails: ${appointmentDragEndDetails.droppingTime}");
+
+        if (appointmentDragEndDetails.droppingTime != null && appointmentDragEndDetails.appointment is OrderEntity) {
+          var orderToUpdate = appointmentDragEndDetails.appointment as OrderEntity;
+          orderToUpdate.date = appointmentDragEndDetails.droppingTime!;
+          widget.onUpdateOrder(orderToUpdate);
+        }
       },
-      allowAppointmentResize: true,
+      allowAppointmentResize: false,
       showNavigationArrow: true,
       timeSlotViewSettings: const TimeSlotViewSettings(
           timeInterval: Duration(minutes: 30), timeIntervalHeight: 92, timeFormat: 'HH:mm', timeRulerSize: 70),

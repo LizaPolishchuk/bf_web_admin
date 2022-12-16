@@ -209,7 +209,9 @@ class _OrderInfoViewState extends State<OrderInfoView> {
         builder: (context, date, child) {
           return InkWell(
             onTap: () {
-              _showOrderDatePicker(context);
+              if (_infoAction != InfoAction.view) {
+                _showOrderDatePicker(context);
+              }
             },
             child: Container(
               width: double.infinity,
@@ -239,7 +241,9 @@ class _OrderInfoViewState extends State<OrderInfoView> {
         builder: (context, time, child) {
           return InkWell(
             onTap: () {
-              _showOrderTimePicker(context);
+              if (_infoAction != InfoAction.view) {
+                _showOrderTimePicker(context);
+              }
             },
             child: Container(
               width: double.infinity,
@@ -311,17 +315,19 @@ class _OrderInfoViewState extends State<OrderInfoView> {
             );
           }).toList(),
           value: selectedItem,
-          onChanged: (value) {
-            setState(() {
-              if (value is Service) {
-                _selectedService = value;
-              } else if (value is Master) {
-                _selectedMaster = value;
-              }
-            });
+          onChanged: _infoAction != InfoAction.view
+              ? (value) {
+                  setState(() {
+                    if (value is Service) {
+                      _selectedService = value;
+                    } else if (value is Master) {
+                      _selectedMaster = value;
+                    }
+                  });
 
-            _checkIfEnableButton();
-          },
+                  _checkIfEnableButton();
+                }
+              : null,
           itemHeight: 40,
           selectedItemBuilder: (context) {
             return items.map(
