@@ -36,18 +36,25 @@ class _HomePageState extends State<HomePage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildHeader(),
-        InkWell(
-          child: Container(
-            color: Colors.amber,
-            width: 100,
-            height: 100,
-            child: const Text(
-              "Click here to open calendar",
+        Row(
+          children: [
+            InkWell(
+              child: Container(
+                color: Theme.of(context).colorScheme.primary,
+                width: 100,
+                height: 100,
+                child: const Text(
+                  "Click here to open calendar",
+                ),
+              ),
+              onTap: () {
+                Get.rootDelegate.toNamed(Routes.calendar);
+              },
             ),
-          ),
-          onTap: () {
-            Get.rootDelegate.toNamed(Routes.calendar);
-          },
+            IconButton(
+                onPressed: () async => SwitchThemeModeUseCase(getItWeb()).call(),
+                icon: Icon(Theme.of(context).brightness == Brightness.dark ? Icons.nightlight : Icons.sunny))
+          ],
         ),
       ],
     );
