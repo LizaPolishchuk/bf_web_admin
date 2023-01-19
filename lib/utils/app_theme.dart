@@ -61,9 +61,7 @@ abstract class AppTheme {
   );
 
   static final dark = ThemeData(
-    colorScheme: const ColorScheme.dark(
-      primary: Colors.blue,
-    ), //for date picker
+    // colorScheme: const ColorScheme.light(primary: AppColors.colorRose), //for date picker
     visualDensity: VisualDensity.adaptivePlatformDensity,
     scaffoldBackgroundColor: AppColors.darkBackground,
     // canvasColor: AppColors.colorMainText,

@@ -3,8 +3,7 @@ import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_adminka/utils/app_text_style.dart';
 
 class RoundedButton extends StatelessWidget {
-  final String? text;
-  final Widget? child;
+  final String text;
   final VoidCallback onPressed;
   final bool isEnabled;
   final bool isLoading;
@@ -16,7 +15,7 @@ class RoundedButton extends StatelessWidget {
 
   const RoundedButton(
       {Key? key,
-      this.text,
+      required this.text,
       required this.onPressed,
       this.isEnabled = true,
       this.isLoading = false,
@@ -24,8 +23,7 @@ class RoundedButton extends StatelessWidget {
       this.buttonColor,
       this.textStyle,
       this.textColor,
-      this.height,
-      this.child})
+      this.height})
       : super(key: key);
 
   @override
@@ -48,16 +46,15 @@ class RoundedButton extends StatelessWidget {
             color: isEnabled ? (buttonColor ?? AppColors.darkRose) : AppColors.darkBackground,
             borderRadius: BorderRadius.circular(52),
           ),
-          child: child ??
-              Text(
-                text ?? "",
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: textStyle ??
-                    AppTextStyle.buttonText.copyWith(
-                      color: isEnabled ? textColor ?? AppColors.lightBackground : AppColors.disabledColor,
-                    ),
-              ),
+          child: Text(
+            text,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: textStyle ??
+                AppTextStyle.buttonText.copyWith(
+                  color: isEnabled ? textColor ?? AppColors.lightBackground : AppColors.disabledColor,
+                ),
+          ),
         ),
       ),
     );

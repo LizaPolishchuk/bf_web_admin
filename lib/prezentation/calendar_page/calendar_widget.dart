@@ -11,9 +11,17 @@ class CustomCalendar extends StatefulWidget {
   final List<OrderEntity> orders;
   final Function(OrderEntity) onClickOrder;
   final Function(OrderEntity) onUpdateOrder;
+  final CalendarView calendarView;
+  final bool isEnabled;
 
-  const CustomCalendar({Key? key, required this.onClickOrder, required this.onUpdateOrder, required this.orders})
-      : super(key: key);
+  const CustomCalendar({
+    Key? key,
+    required this.onClickOrder,
+    required this.onUpdateOrder,
+    required this.orders,
+    this.calendarView = CalendarView.week,
+    this.isEnabled = true,
+  }) : super(key: key);
 
   @override
   State<CustomCalendar> createState() => _CustomCalendarState();
@@ -23,14 +31,14 @@ class _CustomCalendarState extends State<CustomCalendar> {
   @override
   Widget build(BuildContext context) {
     return SfCalendar(
-      view: CalendarView.week,
+      view: widget.calendarView,
       firstDayOfWeek: 1,
       initialDisplayDate: DateTime.now().subtract(const Duration(minutes: 10)),
       appointmentBuilder: (context, details) {
         return _buildOrderSection(details);
       },
       cellEndPadding: 0,
-      allowDragAndDrop: true,
+      allowDragAndDrop: widget.isEnabled,
       // onAppointmentResizeEnd: (appointmentResizeEndDetails) {
       //   debugPrint("onAppointmentResizeEnd: ${appointmentResizeEndDetails.startTime}");
       //
@@ -61,9 +69,6 @@ class _CustomCalendarState extends State<CustomCalendar> {
       timeSlotViewSettings: const TimeSlotViewSettings(
           timeInterval: Duration(minutes: 30), timeIntervalHeight: 92, timeFormat: 'HH:mm', timeRulerSize: 70),
       cellBorderColor: AppColors.disabledColor.withOpacity(0.3),
-      onTap: (calendarTapDetails) {
-        debugPrint("on tap ${calendarTapDetails.appointments?.first}");
-      },
       todayHighlightColor: AppColors.darkRose,
       allowedViews: const <CalendarView>[
         CalendarView.day,
@@ -102,7 +107,9 @@ class _CustomCalendarState extends State<CustomCalendar> {
     return InkWell(
       onTap: () async {
         // print("onCLick index: $index");
-        widget.onClickOrder(order);
+        if (widget.isEnabled) {
+          widget.onClickOrder(order);
+        }
       },
       child: Container(
         margin: const EdgeInsets.all(2),

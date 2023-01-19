@@ -14,4 +14,6 @@ abstract class AppColors {
   static const Color red = Color(0xFFD75554);
   static const Color darkTurquoise = Color(0xFFA4D1CC);
   static const Color lightTurquoise = Color(0xFFCAEBE4);
+  static const Color darkPurple = Color(0xFFBA83FF);
+  static const Color lightPurple = Color(0xFFF3EBFD);
 }

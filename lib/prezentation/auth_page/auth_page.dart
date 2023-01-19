@@ -107,7 +107,6 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   Widget _desktopView(BuildContext context) {
-    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Stack(
@@ -121,10 +120,10 @@ class _AuthPageState extends State<AuthPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+                  children: const [
                     Text(
                       "B&F",
-                      style: TextStyle(color: theme.colorScheme.primary, fontSize: 80, fontWeight: FontWeight.w700),
+                      style: TextStyle(color: AppColors.lightBackground, fontSize: 80, fontWeight: FontWeight.w700),
                     ),
                     SizedBox(height: 22),
                     Text(

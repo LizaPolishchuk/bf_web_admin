@@ -98,33 +98,19 @@ class _PromosPageState extends State<PromosPage> {
             const SizedBox(height: 20),
             Flexible(
               fit: FlexFit.tight,
-              child: size.isDesktop
-                  ? Row(
-                      children: [
-                        Flexible(
-                          flex: 1,
-                          child: _buildPromosSection(),
-                        ),
-                        const SizedBox(width: 66),
-                        Flexible(
-                          flex: 2,
-                          child: _buildBonusCardsSection(),
-                        ),
-                      ],
-                    )
-                  : Column(
-                      children: [
-                        Flexible(
-                          flex: 2,
-                          child: _buildPromosSection(),
-                        ),
-                        const SizedBox(height: 20),
-                        Flexible(
-                          flex: 2,
-                          child: _buildBonusCardsSection(),
-                        ),
-                      ],
-                    ),
+              child: Row(
+                children: [
+                  Flexible(
+                    flex: 1,
+                    child: _buildPromosSection(),
+                  ),
+                  const SizedBox(width: 66),
+                  Flexible(
+                    flex: 2,
+                    child: _buildBonusCardsSection(),
+                  ),
+                ],
+              ),
             ),
             const SizedBox(height: 20),
             // PaginationCounter(),
@@ -139,12 +125,8 @@ class _PromosPageState extends State<PromosPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Row(
-          children: [
-            Text(AppLocalizations.of(context)!.promos,
-                style: AppTextStyle.bodyText.copyWith(fontWeight: FontWeight.w500, fontSize: 18)),
-          ],
-        ),
+        Text(AppLocalizations.of(context)!.promos,
+            style: AppTextStyle.bodyText.copyWith(fontWeight: FontWeight.w500, fontSize: 18)),
         const SizedBox(height: 30),
         Flexible(
           child: SizedBox(
@@ -152,19 +134,16 @@ class _PromosPageState extends State<PromosPage> {
             child: StreamBuilder<List<Promo>>(
               stream: _promosBloc.promosLoaded,
               builder: (context, snapshot) {
-                return ResponsiveBuilder(builder: (context, SizingInformation size) {
-                  return ListView.separated(
-                    scrollDirection: size.isDesktop ? Axis.vertical : Axis.horizontal,
-                    controller: ScrollController(),
-                    itemBuilder: (context, index) {
-                      return _buildPromoItem(snapshot.data![index], index);
-                    },
-                    separatorBuilder: (context, index) {
-                      return const SizedBox(height: 20, width: double.infinity);
-                    },
-                    itemCount: snapshot.data?.length ?? 0,
-                  );
-                });
+                return ListView.separated(
+                  controller: ScrollController(),
+                  itemBuilder: (context, index) {
+                    return _buildPromoItem(snapshot.data![index], index);
+                  },
+                  separatorBuilder: (context, index) {
+                    return const SizedBox(height: 20, width: double.infinity);
+                  },
+                  itemCount: snapshot.data?.length ?? 0,
+                );
               },
             ),
           ),
@@ -239,22 +218,20 @@ class _PromosPageState extends State<PromosPage> {
           child: StreamBuilder<List<BonusCard>>(
               stream: _bonusCardsBloc.bonusCardsLoaded,
               builder: (context, snapshot) {
-                return ResponsiveBuilder(builder: (context, size) {
-                  return GridView.count(
-                    controller: ScrollController(),
-                    scrollDirection: Axis.horizontal,
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 30,
-                    mainAxisSpacing: 30,
-                    childAspectRatio: size.isDesktop ? 1 / 1.5 : 0.5,
-                    children: snapshot.data
-                            ?.asMap()
-                            .map((index, item) => MapEntry(index, _buildBonusCardItem(item, index)))
-                            .values
-                            .toList() ??
-                        [],
-                  );
-                });
+                return GridView.count(
+                  controller: ScrollController(),
+                  scrollDirection: Axis.horizontal,
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 30,
+                  mainAxisSpacing: 30,
+                  childAspectRatio: 1 / 1.5,
+                  children: snapshot.data
+                          ?.asMap()
+                          .map((index, item) => MapEntry(index, _buildBonusCardItem(item, index)))
+                          .values
+                          .toList() ??
+                      [],
+                );
               }),
         ),
       ],

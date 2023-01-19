@@ -11,6 +11,8 @@ class AppTextStyle {
 
   static const TextStyle titleText = TextStyle(color: AppColors.textColor, fontSize: 20, fontWeight: FontWeight.w500);
 
+  static const TextStyle titleText2 = TextStyle(color: AppColors.hintColor, fontSize: 18, fontWeight: FontWeight.w500);
+
   static const TextStyle hintText = TextStyle(color: AppColors.hintColor, fontSize: 14, fontWeight: FontWeight.w400);
 
   static const TextStyle appBarText = TextStyle(color: AppColors.darkRose, fontSize: 25, fontWeight: FontWeight.w500);
