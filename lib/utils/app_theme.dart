@@ -50,9 +50,10 @@ abstract class AppTheme {
 
   static final dark = ThemeData(
     colorScheme: const ColorScheme.dark(
-      primary: AppColors.darkBlue,
-      secondary: AppColors.blue,
+      primary: AppColors.blue,
+      secondary: AppColors.darkBlue,
     ),
+    primaryColor: AppColors.blue,
     visualDensity: VisualDensity.adaptivePlatformDensity,
     hintColor: AppColors.hintColor,
     scaffoldBackgroundColor: AppColors.darkBackground,
@@ -89,7 +90,7 @@ abstract class AppTheme {
 getInputDecorationTheme({required bool isDark}) {
   return InputDecorationTheme(
     filled: true,
-    fillColor: isDark ? AppColors.textInputBgDarkGrey : AppColors.hintColor,
+    fillColor: isDark ? AppColors.textInputBgGrey : AppColors.hintColor,
     // labelStyle: AppTextStyle.bodyMediumText.copyWith(color: Colors.white) ,
     contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
     hintStyle: AppTextStyle.hintText,

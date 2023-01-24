@@ -10,6 +10,7 @@ import 'package:salons_adminka/prezentation/widgets/custom_app_bar.dart';
 import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_adminka/utils/app_images.dart';
+import 'package:salons_adminka/utils/app_theme.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -129,7 +130,7 @@ class _SettingsPageState extends State<SettingsPage> {
         width: double.infinity,
         constraints: const BoxConstraints(minHeight: 128),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppTheme.isDark ? AppColors.darkBlue : Colors.white,
           borderRadius: BorderRadius.circular(25),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 27, vertical: 24),

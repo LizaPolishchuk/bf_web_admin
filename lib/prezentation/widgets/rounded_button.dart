@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
+import 'package:salons_adminka/utils/app_theme.dart';
 
 class RoundedButton extends StatelessWidget {
   final String? text;
@@ -40,12 +41,12 @@ class RoundedButton extends StatelessWidget {
       child: _buildContainer(
         child: Container(
           height: height ?? 50,
-          width: width ?? 300,
+          width: width ?? 250,
           alignment: Alignment.center,
           padding: const EdgeInsets.symmetric(horizontal: 44),
           decoration: BoxDecoration(
             color: isEnabled
-                ? buttonColor ?? (Theme.of(context).brightness == Brightness.dark ? AppColors.blue : AppColors.darkRose)
+                ? buttonColor ?? Theme.of(context).colorScheme.primary
                 : AppColors.disabledColor,
             borderRadius: BorderRadius.circular(52),
           ),
@@ -57,7 +58,7 @@ class RoundedButton extends StatelessWidget {
                 style: textStyle ??
                     Theme.of(context).textTheme.labelMedium?.copyWith(
                           color: isEnabled
-                              ? (Theme.of(context).brightness == Brightness.dark ? Colors.white : textColor) ??
+                              ? (AppTheme.isDark ? Colors.white : textColor) ??
                                   AppColors.lightBackground
                               : Colors.white,
                         ),

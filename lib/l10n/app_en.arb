@@ -17,7 +17,7 @@
   "fieldMustContainMoreThanCharacters": "The field must contain more than 3 characters.",
   "pleaseEnterValidEmail": "Please enter a valid E-mail",
   "passwordsDoNotMatch": "Passwords do not match",
-  "add": "add",
+  "add": "Add",
   "addNewCategory": "Add new category",
   "categoryName": "Category name",
   "services": "Services",

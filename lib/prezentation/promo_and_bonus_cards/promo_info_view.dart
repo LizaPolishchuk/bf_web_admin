@@ -289,7 +289,7 @@ class _PromoInfoViewState extends State<PromoInfoView> {
               duration: const Duration(milliseconds: 200),
               child: RoundedButton(
                 text: AppLocalizations.of(context)!.save,
-                buttonColor: value ? AppColors.darkRose : AppColors.disabledColor,
+                isEnabled: value,
                 onPressed: () {
                   Promo? promoToUpdate;
                   if (_infoAction == InfoAction.add) {

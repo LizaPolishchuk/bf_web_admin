@@ -178,7 +178,7 @@ class _ServiceInfoViewState extends State<ServiceInfoView> {
                 duration: const Duration(milliseconds: 200),
                 child: RoundedButton(
                   text: AppLocalizations.of(context)!.save,
-                  buttonColor: value ? AppColors.darkRose : AppColors.disabledColor,
+                  isEnabled: value,
                   onPressed: () {
                     Service serviceToUpdate;
                     if (_infoAction == InfoAction.add) {

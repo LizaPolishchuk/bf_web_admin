@@ -12,6 +12,7 @@ import 'package:salons_adminka/prezentation/widgets/table_widget.dart';
 import 'package:salons_adminka/utils/alert_builder.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_adminka/utils/app_images.dart';
+import 'package:salons_adminka/utils/app_theme.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class ClientsPage extends StatefulWidget {
@@ -63,7 +64,8 @@ class _ClientsPageState extends State<ClientsPage> {
         valueListenable: _showInfoNotifier,
         builder: (context, clientData, child) {
           return FloatingActionButton(
-            backgroundColor: clientData == null ? AppColors.darkRose : AppColors.darkTurquoise,
+            backgroundColor:
+                clientData == null || AppTheme.isDark ? Theme.of(context).colorScheme.primary : AppColors.darkTurquoise,
             child: Icon(clientData == null ? Icons.add : Icons.close, color: Colors.white),
             onPressed: () {
               if (clientData == null) {

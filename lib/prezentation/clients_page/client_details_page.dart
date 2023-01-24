@@ -16,6 +16,7 @@ import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
 import 'package:salons_adminka/utils/alert_builder.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_adminka/utils/app_images.dart';
+import 'package:salons_adminka/utils/app_theme.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class ClientDetailsPage extends StatefulWidget {
@@ -133,7 +134,7 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
       padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: Colors.white,
+        color: AppTheme.isDark ? AppColors.darkBlue : Colors.white,
         boxShadow: [
           BoxShadow(
             color: const Color(0xFFC4C4C4).withOpacity(0.25),
@@ -162,7 +163,7 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
                       isEditMode ? Icons.close : Icons.edit,
                       size: 16,
                     ),
-                    color: Colors.black,
+                    color: AppTheme.isDark ? Colors.white : Colors.black,
                     onPressed: () {
                       _isEditModeNotifier.value = !isEditMode;
                     },
@@ -180,7 +181,7 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
                         return CircleAvatar(
                           radius: 50,
                           backgroundImage: NetworkImage(pickedPhoto?.path ?? ""),
-                          backgroundColor: AppColors.rose,
+                          backgroundColor: Theme.of(context).colorScheme.primary,
                         );
                       },
                     ),
@@ -202,7 +203,7 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
                             height: 100,
                             color: _client?.photoUrl?.isNotEmpty == true
                                 ? Colors.black.withOpacity(0.5)
-                                : AppColors.textInputBgGrey,
+                                : null,
                             child: Center(
                               child: SvgPicture.asset(
                                 AppIcons.icGallery,
@@ -296,7 +297,7 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
           const SizedBox(height: 15),
           Container(
             width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 20),
+            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(25),
               color: AppColors.textInputBgGrey,
@@ -318,7 +319,7 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
                             const SizedBox(width: 6),
                             Text(
                               status.localizedName(context),
-                              style: Theme.of(context).textTheme.bodyMedium,
+                              style: Theme.of(context).textTheme.displaySmall,
                             )
                           ],
                         ),
@@ -331,7 +332,7 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
                       value: null,
                       child: Text(
                         AppLocalizations.of(context)!.withoutStatus,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.hintColor),
+                        style: Theme.of(context).textTheme.displaySmall,
                       ),
                     ),
                   ),
@@ -354,7 +355,6 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
                 duration: const Duration(milliseconds: 200),
                 child: RoundedButton(
                   text: AppLocalizations.of(context)!.save,
-                  buttonColor: value ? AppColors.darkRose : AppColors.disabledColor,
                   onPressed: () {
                     _infoAction = InfoAction.view;
                     _isEditModeNotifier.value = false;

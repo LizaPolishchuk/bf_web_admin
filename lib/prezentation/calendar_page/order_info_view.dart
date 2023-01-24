@@ -137,7 +137,6 @@ class _OrderInfoViewState extends State<OrderInfoView> {
                 duration: const Duration(milliseconds: 200),
                 child: RoundedButton(
                   text: AppLocalizations.of(context)!.save,
-                  buttonColor: value ? AppColors.darkRose : AppColors.disabledColor,
                   onPressed: () {
                     var selectedDate = _orderDateNotifier.value!;
                     var selectedTime = _orderTimeNotifier.value!;

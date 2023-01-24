@@ -227,7 +227,7 @@ class _BonusCardInfoViewState extends State<BonusCardInfoView> {
               duration: const Duration(milliseconds: 200),
               child: RoundedButton(
                 text: AppLocalizations.of(context)!.save,
-                buttonColor: value ? AppColors.darkRose : AppColors.disabledColor,
+                isEnabled: value,
                 onPressed: () {
                   BonusCard cardToUpdate;
                   if (_infoAction == InfoAction.add) {

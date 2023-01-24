@@ -12,6 +12,7 @@ import 'package:salons_adminka/prezentation/widgets/custom_app_bar.dart';
 import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_adminka/utils/app_images.dart';
+import 'package:salons_adminka/utils/app_theme.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -160,7 +161,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   _pickedPhoto = image;
                 });
               },
-              icon: SvgPicture.asset(AppIcons.icEditCircle),
+              icon: SvgPicture.asset(
+                AppTheme.isDark ? AppIcons.icEditCircleBlue : AppIcons.icEditCircle,
+              ),
             ),
             // const SizedBox(width: 8),
             IconButton(
@@ -174,7 +177,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   }
                 });
               },
-              icon: SvgPicture.asset(AppIcons.icDeleteCircle),
+              icon: SvgPicture.asset(
+                AppIcons.icDeleteCircle,
+                color: AppTheme.isDark ? AppColors.blue : AppColors.lightRose,
+              ),
             ),
           ],
         ),
@@ -248,7 +254,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             _pickedPhoto = image;
                           });
                         },
-                        icon: SvgPicture.asset(AppIcons.icEditCircle),
+                        icon: SvgPicture.asset(
+                          AppTheme.isDark ? AppIcons.icEditCircleBlue : AppIcons.icEditCircle,
+                        ),
                       ),
                       // const SizedBox(width: 8),
                       IconButton(
@@ -262,7 +270,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             }
                           });
                         },
-                        icon: SvgPicture.asset(AppIcons.icDeleteCircle),
+                        icon: SvgPicture.asset(
+                          AppIcons.icDeleteCircle,
+                          color: AppTheme.isDark ? AppColors.blue : AppColors.lightRose,
+                        ),
                       ),
                     ],
                   ),
@@ -322,7 +333,7 @@ class _ProfilePageState extends State<ProfilePage> {
         source,
         errorBuilder: (context, obj, stackTrace) {
           return Container(
-            color: AppColors.lightRose,
+            color: AppTheme.isDark ? AppColors.blue : AppColors.lightRose,
           );
         },
         loadingBuilder: (context, child, loadingProgress) {
@@ -330,7 +341,7 @@ class _ProfilePageState extends State<ProfilePage> {
             return child;
           }
           return Container(
-            color: AppColors.lightRose,
+            color: AppTheme.isDark ? AppColors.blue : AppColors.lightRose,
           );
         },
         fit: BoxFit.cover,

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:salons_adminka/navigation/routes.dart';
 import 'package:salons_adminka/prezentation/auth_page/auth_bloc.dart';
+import 'package:salons_adminka/utils/app_theme.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 import '../utils/app_colors.dart';
@@ -43,7 +44,7 @@ class HomeContainer extends StatelessWidget {
       height: double.infinity,
       padding: const EdgeInsets.only(bottom: 12, top: 42),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary,
+        color: AppTheme.isDark ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.primary,
         borderRadius: const BorderRadius.only(
           topRight: Radius.circular(25),
           bottomRight: Radius.circular(25),
@@ -146,7 +147,9 @@ class HomeContainer extends StatelessWidget {
             children: [
               SvgPicture.asset(
                 icon,
-                color: selectedMenuIndex == index && Theme.of(context).brightness == Brightness.light ? AppColors.darkRose : AppColors.lightRose,
+                color: selectedMenuIndex == index && Theme.of(context).brightness == Brightness.light
+                    ? AppColors.darkRose
+                    : AppColors.lightRose,
               ),
               if (isDesktop) const SizedBox(width: 20),
               if (isDesktop)

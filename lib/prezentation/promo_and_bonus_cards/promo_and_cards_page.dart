@@ -16,6 +16,7 @@ import 'package:salons_adminka/prezentation/widgets/search_pannel.dart';
 import 'package:salons_adminka/utils/alert_builder.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_adminka/utils/app_images.dart';
+import 'package:salons_adminka/utils/app_theme.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class PromosPage extends StatefulWidget {
@@ -179,10 +180,10 @@ class _PromosPageState extends State<PromosPage> {
       padding: const EdgeInsets.only(left: 20, right: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: Colors.white,
+        color: AppTheme.isDark ? AppColors.darkBlue : Colors.white,
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFFC4C4C4).withOpacity(0.25),
+            color: Colors.black.withOpacity(0.25),
             blurRadius: 5,
             offset: const Offset(2, 2),
           ),
@@ -321,12 +322,14 @@ class _PromosPageState extends State<PromosPage> {
           PopupMenuItem<int>(
             value: 0,
             height: 32,
-            child: Text(AppLocalizations.of(context)!.view, style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 12)),
+            child: Text(AppLocalizations.of(context)!.view,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 12)),
           ),
           PopupMenuItem<int>(
             value: 1,
             height: 32,
-            child: Text(AppLocalizations.of(context)!.edit, style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 12)),
+            child: Text(AppLocalizations.of(context)!.edit,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 12)),
           ),
           PopupMenuItem<int>(
             value: 2,
@@ -435,7 +438,7 @@ class _PromosPageState extends State<PromosPage> {
       height: 303,
       padding: const EdgeInsets.only(top: 49, bottom: 36, left: 10, right: 10),
       decoration: BoxDecoration(
-        color: AppColors.lightBackground,
+        color: AppTheme.isDark ? AppColors.darkBlue : AppColors.lightBackground,
         borderRadius: BorderRadius.circular(12.0),
       ),
       child: Column(
@@ -461,8 +464,8 @@ class _PromosPageState extends State<PromosPage> {
             child: Text(
               AppLocalizations.of(context)!.add,
               style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                color: AppColors.darkRose,
-              ),
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
             ),
           ),
         ],

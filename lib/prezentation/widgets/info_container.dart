@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
+import 'package:salons_adminka/utils/app_theme.dart';
 
 enum InfoAction { view, edit, add, delete }
 
@@ -30,7 +31,9 @@ class InfoContainer extends StatelessWidget {
               valueListenable: showInfoNotifier,
               builder: (context, value, child) {
                 return FloatingActionButton(
-                  backgroundColor: value == null ? AppColors.darkRose : AppColors.darkTurquoise,
+                  backgroundColor: AppTheme.isDark || value == null
+                      ? Theme.of(context).colorScheme.primary
+                      : AppColors.darkTurquoise,
                   child: Icon(value == null ? Icons.add : Icons.close, color: Colors.white),
                   onPressed: () {
                     if (value == null) {
@@ -84,7 +87,7 @@ class InfoContainer extends StatelessWidget {
                     width: value != null ? 360 : 0,
                     height: MediaQuery.of(context).size.height,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: AppTheme.isDark ? AppColors.darkBlue : Colors.white,
                       boxShadow: [
                         BoxShadow(
                           color: AppColors.blurColor.withOpacity(0.25),

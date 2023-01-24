@@ -201,7 +201,7 @@ class _MasterInfoViewState extends State<MasterInfoView> {
                 duration: const Duration(milliseconds: 200),
                 child: RoundedButton(
                   text: AppLocalizations.of(context)!.save,
-                  buttonColor: value ? AppColors.darkRose : AppColors.disabledColor,
+                  isEnabled: value,
                   onPressed: () {
                     Master masterToUpdate;
                     if (_infoAction == InfoAction.add) {

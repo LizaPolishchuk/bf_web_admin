@@ -8,6 +8,7 @@ import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/prezentation/auth_page/auth_bloc.dart';
 import 'package:salons_adminka/utils/app_images.dart';
 import 'package:salons_adminka/utils/app_text_style.dart';
+import 'package:salons_adminka/utils/app_theme.dart';
 
 import '../../utils/app_colors.dart';
 import '../widgets/rounded_button.dart';
@@ -131,7 +132,7 @@ class _AuthPageState extends State<AuthPage> {
                     Text(
                       "Be Beautiful & Be Free",
                       style: TextStyle(
-                          color: Theme.of(context).brightness == Brightness.dark ? Colors.white : AppColors.textColor,
+                          color: AppTheme.isDark ? Colors.white : AppColors.textColor,
                           fontSize: 40,
                           fontWeight: FontWeight.w600),
                     ),
@@ -192,7 +193,7 @@ class _AuthPageState extends State<AuthPage> {
                               Text(
                                 "B&F",
                                 style: TextStyle(
-                                    color: Theme.of(context).brightness == Brightness.dark
+                                    color: AppTheme.isDark
                                         ? Colors.white
                                         : AppColors.textColor,
                                     fontSize: 50,
@@ -202,7 +203,7 @@ class _AuthPageState extends State<AuthPage> {
                               Text(
                                 "Be Beautiful & Be Free",
                                 style: TextStyle(
-                                    color: Theme.of(context).brightness == Brightness.dark
+                                    color: AppTheme.isDark
                                         ? Colors.white
                                         : AppColors.textColor,
                                     fontSize: 20,
@@ -222,7 +223,7 @@ class _AuthPageState extends State<AuthPage> {
                 child: Text(
                   _registrationMode ? AppLocalizations.of(context)!.registration : AppLocalizations.of(context)!.login,
                   style: TextStyle(
-                      color: Theme.of(context).brightness == Brightness.dark ? Colors.white : AppColors.textColor,
+                      color: AppTheme.isDark ? Colors.white : AppColors.textColor,
                       fontSize: 36,
                       fontWeight: FontWeight.w700),
                 ),
@@ -327,7 +328,7 @@ class _AuthPageState extends State<AuthPage> {
     return RoundedButton(
         text: _registrationMode ? AppLocalizations.of(context)!.registration : AppLocalizations.of(context)!.login,
         // width: 230,
-        buttonColor: Theme.of(context).brightness == Brightness.dark ? AppColors.textInputBgDarkGrey : AppColors.rose,
+        buttonColor: AppTheme.isDark ? AppColors.textInputBgDarkGrey : AppColors.rose,
         textColor: AppColors.textColor,
         onPressed: () {
           _errorText = "";
@@ -390,7 +391,7 @@ class _AuthPageState extends State<AuthPage> {
             decoration: InputDecoration(
               counterText: "",
               hintText: hint,
-              fillColor: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.white.withAlpha(50),
+              fillColor: AppTheme.isDark ? Colors.white : Colors.white.withAlpha(50),
               suffixIconConstraints: const BoxConstraints(maxHeight: 24, maxWidth: 30),
               suffixIcon: isPassword
                   ? InkWell(

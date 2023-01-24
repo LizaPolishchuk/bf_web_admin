@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
+import 'package:salons_adminka/utils/app_theme.dart';
 
 const LinearGradient rightGradientDark = LinearGradient(
   begin: Alignment.topRight,
@@ -58,8 +59,8 @@ Widget desktopBackground(BuildContext context) {
           width: double.infinity,
           height: double.infinity,
           decoration: BoxDecoration(
-            gradient: Theme.of(context).brightness == Brightness.dark ? null : leftGradientLight,
-            color: Theme.of(context).brightness == Brightness.dark ? leftGradientDark : null,
+            gradient: AppTheme.isDark ? null : leftGradientLight,
+            color: AppTheme.isDark ? leftGradientDark : null,
           ),
         ),
       ),
@@ -73,7 +74,7 @@ Widget mobileBackground(BuildContext context) {
     width: double.infinity,
     height: double.infinity,
     decoration: BoxDecoration(
-      gradient: Theme.of(context).brightness == Brightness.dark ? rightGradientDark : rightGradientLight,
+      gradient: AppTheme.isDark ? rightGradientDark : rightGradientLight,
       borderRadius: const BorderRadius.only(
         topRight: Radius.circular(40),
         bottomRight: Radius.circular(40),

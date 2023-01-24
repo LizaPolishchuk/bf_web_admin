@@ -48,7 +48,10 @@ class _BaseItemsSelectorState extends State<BaseItemsSelector> {
         margin: const EdgeInsets.only(right: 8),
         decoration: BoxDecoration(
           border: Border(
-            bottom: BorderSide(color: _selectedItem == item ? AppColors.darkRose : AppColors.hintColor),
+            bottom: BorderSide(
+                color: _selectedItem == item
+                    ? Theme.of(context).colorScheme.primary
+                    : AppColors.hintColor),
           ),
         ),
         child: Row(
@@ -58,7 +61,10 @@ class _BaseItemsSelectorState extends State<BaseItemsSelector> {
               ColoredCircle(color: item.color != null ? Color(item.color!) : Colors.grey),
             Text(
               item != null ? item.name : AppLocalizations.of(context)!.allServices,
-              style: Theme.of(context).textTheme.displaySmall?.copyWith(color: _selectedItem == item ? AppColors.darkRose : AppColors.hintColor),
+              style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                  color: _selectedItem == item
+                      ? Theme.of(context).colorScheme.primary
+                      : AppColors.hintColor),
             ),
           ],
         ),

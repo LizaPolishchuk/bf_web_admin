@@ -4,6 +4,7 @@ import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/navigation/routes.dart';
 import 'package:salons_adminka/prezentation/widgets/custom_app_bar.dart';
 import 'package:salons_adminka/prezentation/widgets/info_container.dart';
+import 'package:salons_adminka/utils/app_theme.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class HomePage extends StatefulWidget {
@@ -53,7 +54,7 @@ class _HomePageState extends State<HomePage> {
             ),
             IconButton(
                 onPressed: () async => SwitchThemeModeUseCase(getItWeb()).call(),
-                icon: Icon(Theme.of(context).brightness == Brightness.dark ? Icons.nightlight : Icons.sunny))
+                icon: Icon(AppTheme.isDark ? Icons.nightlight : Icons.sunny))
           ],
         ),
       ],
