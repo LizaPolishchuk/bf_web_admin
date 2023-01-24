@@ -8,6 +8,8 @@ import 'package:salons_adminka/prezentation/calendar_page/orders_bloc.dart';
 import 'package:salons_adminka/prezentation/widgets/custom_app_bar.dart';
 import 'package:salons_adminka/prezentation/widgets/info_container.dart';
 import 'package:salons_adminka/utils/alert_builder.dart';
+import 'package:salons_adminka/utils/app_colors.dart';
+import 'package:salons_adminka/utils/app_theme.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class CalendarPage extends StatefulWidget {
@@ -76,7 +78,7 @@ class _CalendarPageState extends State<CalendarPage> {
                 Flexible(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: AppTheme.isDark ? AppColors.darkBlue : Colors.white,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: StreamBuilder<List<OrderEntity>>(
