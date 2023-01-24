@@ -55,7 +55,7 @@ class _AuthPageState extends State<AuthPage> {
           error = AppLocalizations.of(context)!.wrongPassword;
         }
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          backgroundColor: Colors.red,
+          backgroundColor: AppColors.errorColorLight,
           content: Text(error),
         ));
       }),
@@ -97,7 +97,7 @@ class _AuthPageState extends State<AuthPage> {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          mobileBackground(),
+          mobileBackground(context),
           Expanded(
             child: _buildContent(),
           ),
@@ -107,34 +107,39 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   Widget _desktopView(BuildContext context) {
-    final theme = Theme.of(context);
+    // final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Stack(
         alignment: Alignment.center,
         children: [
-          desktopBackground(),
+          desktopBackground(context),
           Row(
             mainAxisSize: MainAxisSize.max,
             children: [
-              Expanded(
+              Flexible(
+                fit: FlexFit.tight,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       "B&F",
-                      style: TextStyle(color: theme.colorScheme.primary, fontSize: 80, fontWeight: FontWeight.w700),
+                      style: TextStyle(color: Colors.white, fontSize: 80, fontWeight: FontWeight.w700),
                     ),
-                    SizedBox(height: 22),
+                    const SizedBox(height: 22),
                     Text(
                       "Be Beautiful & Be Free",
-                      style: TextStyle(color: AppColors.textColor, fontSize: 40, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark ? Colors.white : AppColors.textColor,
+                          fontSize: 40,
+                          fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),
               ),
-              Expanded(
+              Flexible(
+                fit: FlexFit.tight,
                 child: _buildContent(),
               ),
             ],
@@ -148,92 +153,108 @@ class _AuthPageState extends State<AuthPage> {
     return FractionallySizedBox(
         widthFactor: 0.7,
         heightFactor: 0.9,
-        child: ListView(
-          children: [
-            Stack(
-              alignment: Alignment.topLeft,
-              children: [
-                if (_registrationMode)
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        _registrationMode = false;
-                      });
-                    },
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SvgPicture.asset(
-                          AppIcons.icCircleArrowLeft,
-                          color: AppColors.hintColor,
-                        ),
-                        const SizedBox(width: 5),
-                        Text(
-                          AppLocalizations.of(context)!.back,
-                          style: AppTextStyle.hintText,
-                        )
-                      ],
-                    ),
-                  ),
-                Center(
-                  child: ResponsiveBuilder(builder: (context, size) {
-                    if (!size.isDesktop) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        child: Column(
-                          children: const [
-                            Text(
-                              "B&F",
-                              style: TextStyle(color: AppColors.textColor, fontSize: 50, fontWeight: FontWeight.w700),
-                            ),
-                            SizedBox(height: 10),
-                            Text(
-                              "Be Beautiful & Be Free",
-                              style: TextStyle(color: AppColors.textColor, fontSize: 20, fontWeight: FontWeight.w600),
-                            ),
-                          ],
-                        ),
-                      );
-                    } else {
-                      return const SizedBox.shrink();
-                    }
-                  }),
-                )
-              ],
-            ),
-            Center(
-              child: Text(
-                _registrationMode ? AppLocalizations.of(context)!.registration : AppLocalizations.of(context)!.login,
-                style: const TextStyle(color: AppColors.textColor, fontSize: 36, fontWeight: FontWeight.w700),
-              ),
-            ),
-            const SizedBox(height: 24),
-            InkWell(
-              onTap: () {
-                _authBloc.loginViaGoogle();
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+        child: Center(
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              Stack(
+                alignment: Alignment.topLeft,
                 children: [
-                  SvgPicture.asset(AppIcons.icGoogle),
-                  const SizedBox(width: 12),
-                  Flexible(
-                    child: Text(
-                      AppLocalizations.of(context)!.loginViaGoogle,
-                      style: AppTextStyle.bodyText,
+                  if (_registrationMode)
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          _registrationMode = false;
+                        });
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SvgPicture.asset(
+                            AppIcons.icCircleArrowLeft,
+                            color: AppColors.hintColor,
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            AppLocalizations.of(context)!.back,
+                            style: Theme.of(context).textTheme.displaySmall,
+                          )
+                        ],
+                      ),
                     ),
-                  ),
+                  Center(
+                    child: ResponsiveBuilder(builder: (context, size) {
+                      if (!size.isDesktop) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          child: Column(
+                            children: [
+                              Text(
+                                "B&F",
+                                style: TextStyle(
+                                    color: Theme.of(context).brightness == Brightness.dark
+                                        ? Colors.white
+                                        : AppColors.textColor,
+                                    fontSize: 50,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                "Be Beautiful & Be Free",
+                                style: TextStyle(
+                                    color: Theme.of(context).brightness == Brightness.dark
+                                        ? Colors.white
+                                        : AppColors.textColor,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        return const SizedBox.shrink();
+                      }
+                    }),
+                  )
                 ],
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 24),
-              child: _registrationMode ? _buildRegistrationInput() : _buildLoginInput(),
-            ),
-            _buildLoginButton(),
-            const SizedBox(height: 24),
-            if (!_registrationMode) _buildForgotPassword(),
-          ],
+              Center(
+                child: Text(
+                  _registrationMode ? AppLocalizations.of(context)!.registration : AppLocalizations.of(context)!.login,
+                  style: TextStyle(
+                      color: Theme.of(context).brightness == Brightness.dark ? Colors.white : AppColors.textColor,
+                      fontSize: 36,
+                      fontWeight: FontWeight.w700),
+                ),
+              ),
+              const SizedBox(height: 24),
+              InkWell(
+                onTap: () {
+                  _authBloc.loginViaGoogle();
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(AppIcons.icGoogle),
+                    const SizedBox(width: 12),
+                    Flexible(
+                      child: Text(
+                        AppLocalizations.of(context)!.loginViaGoogle,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 24),
+                child: _registrationMode ? _buildRegistrationInput() : _buildLoginInput(),
+              ),
+              _buildLoginButton(),
+              const SizedBox(height: 24),
+              if (!_registrationMode) _buildForgotPassword(),
+            ],
+          ),
         ));
   }
 
@@ -274,14 +295,14 @@ class _AuthPageState extends State<AuthPage> {
     return Column(
       children: [
         InkWell(
-          child: Text(AppLocalizations.of(context)!.forgotPassword, style: AppTextStyle.bodyText),
+          child: Text(AppLocalizations.of(context)!.forgotPassword, style: Theme.of(context).textTheme.bodyMedium),
           onTap: () {},
         ),
         const SizedBox(height: 58),
         Row(
           children: [
             Text(AppLocalizations.of(context)!.noAccount,
-                style: AppTextStyle.bodyText, overflow: TextOverflow.ellipsis),
+                style: Theme.of(context).textTheme.bodyMedium, overflow: TextOverflow.ellipsis),
             const Spacer(),
             InkWell(
               onTap: () {
@@ -290,10 +311,10 @@ class _AuthPageState extends State<AuthPage> {
                 });
               },
               child: Text(AppLocalizations.of(context)!.register,
-                  style: AppTextStyle.bodyText.copyWith(
-                    decoration: TextDecoration.underline,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        decoration: TextDecoration.underline,
+                        fontWeight: FontWeight.w600,
+                      ),
                   overflow: TextOverflow.ellipsis),
             ),
           ],
@@ -305,8 +326,8 @@ class _AuthPageState extends State<AuthPage> {
   Widget _buildLoginButton() {
     return RoundedButton(
         text: _registrationMode ? AppLocalizations.of(context)!.registration : AppLocalizations.of(context)!.login,
-        width: 230,
-        buttonColor: AppColors.rose,
+        // width: 230,
+        buttonColor: Theme.of(context).brightness == Brightness.dark ? AppColors.textInputBgDarkGrey : AppColors.rose,
         textColor: AppColors.textColor,
         onPressed: () {
           _errorText = "";
@@ -332,7 +353,7 @@ class _AuthPageState extends State<AuthPage> {
       children: [
         Text(
           label,
-          style: AppTextStyle.bodyText,
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
         const SizedBox(height: 6),
         Form(
@@ -364,15 +385,12 @@ class _AuthPageState extends State<AuthPage> {
             },
             controller: controller,
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            style: AppTextStyle.bodyText,
+            style: AppTextStyle.bodyMediumText,
             obscureText: ((controller == _passwordController) ? _hidePassword : _hideRepeatedPassword) && isPassword,
             decoration: InputDecoration(
               counterText: "",
-              contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              fillColor: Colors.white.withAlpha(50),
               hintText: hint,
-              hintStyle: AppTextStyle.hintText,
-              floatingLabelBehavior: FloatingLabelBehavior.never,
+              fillColor: Theme.of(context).brightness == Brightness.dark ? Colors.white : Colors.white.withAlpha(50),
               suffixIconConstraints: const BoxConstraints(maxHeight: 24, maxWidth: 30),
               suffixIcon: isPassword
                   ? InkWell(
@@ -395,7 +413,7 @@ class _AuthPageState extends State<AuthPage> {
                       ),
                     )
                   : null,
-            ),
+            ).applyDefaults(Theme.of(context).inputDecorationTheme),
           ),
         ),
       ],

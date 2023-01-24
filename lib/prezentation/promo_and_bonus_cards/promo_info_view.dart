@@ -7,7 +7,6 @@ import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/prezentation/widgets/info_container.dart';
 import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
-import 'package:salons_adminka/utils/app_text_style.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class PromoInfoView extends StatefulWidget {
@@ -78,7 +77,7 @@ class _PromoInfoViewState extends State<PromoInfoView> {
                 : _infoAction == InfoAction.edit
                     ? AppLocalizations.of(context)!.redact
                     : AppLocalizations.of(context)!.addPromo,
-            style: AppTextStyle.titleText),
+            style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 35),
         _infoAction == InfoAction.view ? _buildForViewMode() : _buildForEditMode(),
       ],
@@ -94,12 +93,11 @@ class _PromoInfoViewState extends State<PromoInfoView> {
       maxLines: lines,
       minLines: lines,
       enabled: _infoAction != InfoAction.view,
-      style: AppTextStyle.bodyText,
+      style: Theme.of(context).textTheme.bodyMedium,
       decoration: InputDecoration(
-        hintStyle: AppTextStyle.hintText,
         counterText: "",
         hintText: hint,
-      ),
+      ).applyDefaults(Theme.of(context).inputDecorationTheme),
     );
   }
 
@@ -107,7 +105,7 @@ class _PromoInfoViewState extends State<PromoInfoView> {
     return Column(children: [
       Text(
         _nameController.text,
-        style: AppTextStyle.bodyText,
+        style: Theme.of(context).textTheme.bodyMedium,
       ),
       const SizedBox(height: 15),
       SizedBox(
@@ -137,7 +135,7 @@ class _PromoInfoViewState extends State<PromoInfoView> {
           "${_descriptionController.text}\n\n\n\n\n",
           maxLines: 6,
           textAlign: TextAlign.center,
-          style: AppTextStyle.bodyText.copyWith(color: AppColors.hintColor),
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.hintColor),
         ),
       ),
       const SizedBox(height: 15),
@@ -145,7 +143,7 @@ class _PromoInfoViewState extends State<PromoInfoView> {
         _expiredDateNotifier.value != null
             ? "${AppLocalizations.of(context)!.validUntil}: ${DateFormat('dd-MMM-yyyy').format(_expiredDateNotifier.value!)}"
             : AppLocalizations.of(context)!.noExpirationDate,
-        style: AppTextStyle.hintText,
+        style: Theme.of(context).textTheme.displaySmall,
       ),
       const SizedBox(height: 120),
       Row(
@@ -159,7 +157,7 @@ class _PromoInfoViewState extends State<PromoInfoView> {
             },
             child: Text(
               AppLocalizations.of(context)!.edit,
-              style: AppTextStyle.bodyText.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: AppColors.hintColor,
                 decoration: TextDecoration.underline,
               ),
@@ -171,7 +169,7 @@ class _PromoInfoViewState extends State<PromoInfoView> {
             },
             child: Text(
               AppLocalizations.of(context)!.delete,
-              style: AppTextStyle.bodyText.copyWith(
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: AppColors.red,
               ),
             ),
@@ -237,7 +235,7 @@ class _PromoInfoViewState extends State<PromoInfoView> {
                         pickedPhoto == null
                             ? AppLocalizations.of(context)!.attachImage
                             : AppLocalizations.of(context)!.deleteImage,
-                        style: AppTextStyle.hintText,
+                        style: Theme.of(context).textTheme.displaySmall,
                       ),
                       if (pickedPhoto != null)
                         const Padding(
@@ -278,7 +276,7 @@ class _PromoInfoViewState extends State<PromoInfoView> {
                     expiredDate != null
                         ? DateFormat('dd-MMM-yyyy').format(expiredDate)
                         : AppLocalizations.of(context)!.validity,
-                    style: expiredDate != null ? AppTextStyle.bodyText : AppTextStyle.hintText,
+                    style: expiredDate != null ? Theme.of(context).textTheme.bodyMedium : Theme.of(context).textTheme.displaySmall,
                   ),
                 ),
               );

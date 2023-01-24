@@ -3,7 +3,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_adminka/utils/app_images.dart';
-import 'package:salons_adminka/utils/app_text_style.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class FeedbackInfoView extends StatefulWidget {
@@ -42,7 +41,7 @@ class _FeedbackInfoViewState extends State<FeedbackInfoView> {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(AppLocalizations.of(context)!.view, style: AppTextStyle.titleText),
+        Text(AppLocalizations.of(context)!.view, style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 35),
         CircleAvatar(
           radius: 40,
@@ -50,7 +49,7 @@ class _FeedbackInfoViewState extends State<FeedbackInfoView> {
           backgroundColor: AppColors.rose,
         ),
         const SizedBox(height: 20),
-        Text(_feedbackEntity.authorName, style: AppTextStyle.titleText),
+        Text(_feedbackEntity.authorName, style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 20),
         SizedBox(
           height: 16,
@@ -73,7 +72,7 @@ class _FeedbackInfoViewState extends State<FeedbackInfoView> {
             child: Text(
               _feedbackEntity.feedbackText,
               textAlign: TextAlign.center,
-              style: AppTextStyle.hintText.copyWith(
+              style: Theme.of(context).textTheme.displaySmall?.copyWith(
                 color: AppColors.textColor,
               ),
             ),
@@ -100,7 +99,7 @@ class _FeedbackInfoViewState extends State<FeedbackInfoView> {
                   color: AppColors.hintColor,
                 ),
                 const SizedBox(width: 5),
-                Text(AppLocalizations.of(context)!.close, style: AppTextStyle.hintText),
+                Text(AppLocalizations.of(context)!.close, style: Theme.of(context).textTheme.displaySmall),
               ],
             ),
           ),
@@ -117,7 +116,7 @@ class _FeedbackInfoViewState extends State<FeedbackInfoView> {
             child: Row(
               children: [
                 Text(AppLocalizations.of(context)!.nextFeedback,
-                    style: AppTextStyle.hintText.copyWith(color: AppColors.textColor)),
+                    style: Theme.of(context).textTheme.displaySmall?.copyWith(color: AppColors.textColor)),
                 const SizedBox(width: 5),
                 SvgPicture.asset(
                   AppIcons.icCircleArrowRight,

@@ -4,7 +4,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:salons_adminka/prezentation/widgets/info_container.dart';
 import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
-import 'package:salons_adminka/utils/app_text_style.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 enum MasterStatus { active, onHoliday, isIll }
@@ -78,7 +77,7 @@ class _MasterInfoViewState extends State<MasterInfoView> {
                 : _infoAction == InfoAction.edit
                     ? AppLocalizations.of(context)!.redact
                     : AppLocalizations.of(context)!.addMaster,
-            style: AppTextStyle.titleText),
+            style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 35),
         _buildTextField(_nameController, AppLocalizations.of(context)!.masterName),
         const SizedBox(height: 15),
@@ -98,7 +97,7 @@ class _MasterInfoViewState extends State<MasterInfoView> {
                 alignment: Alignment.centerLeft,
                 child: Text(
                   AppLocalizations.of(context)!.service,
-                  style: AppTextStyle.hintText,
+                  style: Theme.of(context).textTheme.displaySmall,
                 ),
               ),
               items: widget.services.map((service) {
@@ -131,7 +130,7 @@ class _MasterInfoViewState extends State<MasterInfoView> {
                             const SizedBox(width: 16),
                             Text(
                               service.name,
-                              style: AppTextStyle.hintText.copyWith(fontSize: 16),
+                              style: Theme.of(context).textTheme.displaySmall?.copyWith(fontSize: 16),
                             ),
                           ],
                         ),
@@ -152,7 +151,7 @@ class _MasterInfoViewState extends State<MasterInfoView> {
                       child: Text(
                         _selectedServices.values.join(', '),
                         overflow: TextOverflow.ellipsis,
-                        style: AppTextStyle.bodyText.copyWith(fontSize: 14),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 14),
                         maxLines: 1,
                       ),
                     );
@@ -175,7 +174,7 @@ class _MasterInfoViewState extends State<MasterInfoView> {
                 },
                 child: Text(
                   AppLocalizations.of(context)!.edit,
-                  style: AppTextStyle.bodyText.copyWith(
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AppColors.hintColor,
                     decoration: TextDecoration.underline,
                   ),
@@ -187,7 +186,7 @@ class _MasterInfoViewState extends State<MasterInfoView> {
                 },
                 child: Text(
                   AppLocalizations.of(context)!.delete,
-                  style: AppTextStyle.bodyText.copyWith(
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AppColors.red,
                   ),
                 ),
@@ -238,12 +237,11 @@ class _MasterInfoViewState extends State<MasterInfoView> {
       },
       maxLines: 1,
       enabled: _infoAction != InfoAction.view,
-      style: AppTextStyle.bodyText,
+      style: Theme.of(context).textTheme.bodyMedium,
       decoration: InputDecoration(
-        hintStyle: AppTextStyle.hintText,
         counterText: "",
         hintText: hint,
-      ),
+      ).applyDefaults(Theme.of(context).inputDecorationTheme),
     );
   }
 

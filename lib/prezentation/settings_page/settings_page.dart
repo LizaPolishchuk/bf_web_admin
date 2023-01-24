@@ -10,7 +10,6 @@ import 'package:salons_adminka/prezentation/widgets/custom_app_bar.dart';
 import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_adminka/utils/app_images.dart';
-import 'package:salons_adminka/utils/app_text_style.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -111,7 +110,7 @@ class _SettingsPageState extends State<SettingsPage> {
             const SizedBox(width: 4),
             Text(
               AppLocalizations.of(context)!.deleteAccount,
-              style: AppTextStyle.buttonText.copyWith(color: AppColors.red),
+              style: Theme.of(context).textTheme.labelMedium?.copyWith(color: AppColors.red),
             ),
           ],
         ),
@@ -123,7 +122,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return [
       Text(
         AppLocalizations.of(context)!.subscription,
-        style: AppTextStyle.bodyText,
+        style: Theme.of(context).textTheme.bodyMedium,
       ),
       const SizedBox(height: 8),
       Container(
@@ -162,7 +161,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     children: [
                       Text(
                         AppLocalizations.of(context)!.yourCurrentSubscription,
-                        style: AppTextStyle.bodyText.copyWith(
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
                         maxLines: 2,
@@ -170,7 +169,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       const SizedBox(height: 6),
                       Text(
                         "${AppLocalizations.of(context)!.subscriptionEndDate} 12.03.2022",
-                        style: AppTextStyle.hintText,
+                        style: Theme.of(context).textTheme.displaySmall,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -195,7 +194,7 @@ class _SettingsPageState extends State<SettingsPage> {
       const SizedBox(height: 28),
       Text(
         AppLocalizations.of(context)!.syncDataWithYClients,
-        style: AppTextStyle.bodyText,
+        style: Theme.of(context).textTheme.bodyMedium,
       ),
       const SizedBox(height: 8),
       isDesktop
@@ -259,7 +258,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           alignment: Alignment.center,
           child: Text(AppLocalizations.of(context)!.connect,
-              style: AppTextStyle.buttonText.copyWith(color: AppColors.textColor)),
+              style: Theme.of(context).textTheme.labelMedium?.copyWith(color: AppColors.textColor)),
         ),
       ),
     ];
@@ -272,23 +271,19 @@ class _SettingsPageState extends State<SettingsPage> {
       children: [
         Text(
           label,
-          style: AppTextStyle.bodyText,
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
         const SizedBox(height: 8),
         TextField(
           maxLines: 1,
           controller: controller,
-          style: AppTextStyle.bodyText,
+          style: Theme.of(context).textTheme.bodyMedium,
           enabled: isEnable,
           obscureText: isPassword,
           decoration: InputDecoration(
             counterText: "",
-            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-            fillColor: Colors.white,
             hintText: hint,
-            hintStyle: AppTextStyle.hintText,
-            floatingLabelBehavior: FloatingLabelBehavior.never,
-          ),
+          ).applyDefaults(Theme.of(context).inputDecorationTheme),
         ),
       ],
     );

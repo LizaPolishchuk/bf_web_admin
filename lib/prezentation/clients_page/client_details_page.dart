@@ -16,7 +16,6 @@ import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
 import 'package:salons_adminka/utils/alert_builder.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_adminka/utils/app_images.dart';
-import 'package:salons_adminka/utils/app_text_style.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class ClientDetailsPage extends StatefulWidget {
@@ -98,7 +97,7 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
                 const SizedBox(width: 5),
                 Text(
                   AppLocalizations.of(context)!.back,
-                  style: AppTextStyle.hintText,
+                  style: Theme.of(context).textTheme.displaySmall,
                 )
               ],
             ),
@@ -236,7 +235,7 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
       children: [
         Text(
           _client!.name,
-          style: AppTextStyle.titleText,
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 10),
         if (clientStatus != null)
@@ -247,7 +246,7 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
               const SizedBox(width: 6),
               Text(
                 clientStatus.localizedName(context),
-                style: AppTextStyle.bodyText,
+                style: Theme.of(context).textTheme.bodyMedium,
               )
             ],
           ),
@@ -277,7 +276,7 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
               const SizedBox(width: 4),
               Text(
                 AppLocalizations.of(context)!.deleteProfile,
-                style: AppTextStyle.hintText,
+                style: Theme.of(context).textTheme.displaySmall,
               )
             ],
           ),
@@ -306,7 +305,7 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
               child: DropdownButton2(
                 hint: Text(
                   AppLocalizations.of(context)!.status,
-                  style: AppTextStyle.hintText,
+                  style: Theme.of(context).textTheme.displaySmall,
                 ),
                 items: ClientStatus.values
                     .map(
@@ -319,7 +318,7 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
                             const SizedBox(width: 6),
                             Text(
                               status.localizedName(context),
-                              style: AppTextStyle.bodyText,
+                              style: Theme.of(context).textTheme.bodyMedium,
                             )
                           ],
                         ),
@@ -332,7 +331,7 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
                       value: null,
                       child: Text(
                         AppLocalizations.of(context)!.withoutStatus,
-                        style: AppTextStyle.bodyText.copyWith(color: AppColors.hintColor),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: AppColors.hintColor),
                       ),
                     ),
                   ),
@@ -398,15 +397,14 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
         }
       },
       maxLines: 1,
-      style: AppTextStyle.bodyText,
+      style: Theme.of(context).textTheme.bodyMedium,
       inputFormatters: [
         if (isPhone) FilteringTextInputFormatter.digitsOnly,
       ],
       decoration: InputDecoration(
-        hintStyle: AppTextStyle.hintText,
         counterText: "",
         hintText: hint,
-      ),
+      ).applyDefaults(Theme.of(context).inputDecorationTheme),
     );
   }
 
@@ -442,12 +440,12 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
           children: [
             Text(
               title,
-              style: AppTextStyle.hintText.copyWith(fontSize: 12),
+              style: Theme.of(context).textTheme.displaySmall?.copyWith(fontSize: 12),
             ),
             const SizedBox(height: 5),
             Text(
               value,
-              style: AppTextStyle.hintText.copyWith(color: AppColors.textColor),
+              style: Theme.of(context).textTheme.displaySmall?.copyWith(color: AppColors.textColor),
             ),
           ],
         )

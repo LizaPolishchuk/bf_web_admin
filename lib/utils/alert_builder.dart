@@ -3,7 +3,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
 import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
-import 'package:salons_adminka/utils/app_text_style.dart';
 
 class AlertBuilder {
   void showAlertForDelete(BuildContext context, String itemType, String itemName, VoidCallback onConfirm) {
@@ -45,13 +44,13 @@ class AlertBuilder {
                               overflow: TextOverflow.ellipsis,
                               maxLines: 3,
                               textAlign: TextAlign.center,
-                              style: AppTextStyle.titleText,
+                              style: Theme.of(context).textTheme.titleMedium,
                             ),
                           ),
                           const SizedBox(height: 16),
                           Text(
                             itemName,
-                            style: AppTextStyle.bodyText.copyWith(
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w600,
                             ),
                           ),

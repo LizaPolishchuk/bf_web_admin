@@ -7,7 +7,6 @@ import 'package:salons_adminka/prezentation/clients_page/clients_page.dart';
 import 'package:salons_adminka/prezentation/widgets/colored_circle.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_adminka/utils/app_images.dart';
-import 'package:salons_adminka/utils/app_text_style.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class TableWidget extends StatefulWidget {
@@ -68,7 +67,7 @@ class _TableWidgetState extends State<TableWidget> {
                 index,
                 _buildTableRow(index, [
                   _buildRowText(service.name,
-                      style: AppTextStyle.bodyText.copyWith(fontSize: 14, fontWeight: FontWeight.w500)),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 14, fontWeight: FontWeight.w500)),
                   _buildRowText(service.price.toString()),
                   _buildRowText((service.duration ?? 0).toString()),
                   _buildRowText(service.categoryName ?? "", categoryColor: service.categoryColor),
@@ -87,7 +86,7 @@ class _TableWidgetState extends State<TableWidget> {
                 index,
                 _buildTableRow(index, [
                   _buildRowText(master.name,
-                      style: AppTextStyle.bodyText.copyWith(fontSize: 14, fontWeight: FontWeight.w500),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 14, fontWeight: FontWeight.w500),
                       photoUrl: master.avatar),
                   _buildRowText(master.phoneNumber ?? ""),
                   _buildRowText(master.providedServices?.values.join(", ") ?? ""),
@@ -112,7 +111,7 @@ class _TableWidgetState extends State<TableWidget> {
                 index,
                 _buildTableRow(index, [
                   _buildRowText(client.name,
-                      style: AppTextStyle.bodyText.copyWith(fontSize: 14, fontWeight: FontWeight.w500),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 14, fontWeight: FontWeight.w500),
                       photoUrl: client.photoUrl),
                   _buildRowText(client.city ?? ""),
                   _buildRowText(clientStatus?.localizedName(context) ?? "", iconPath: clientStatus?.iconPath()),
@@ -133,7 +132,7 @@ class _TableWidgetState extends State<TableWidget> {
                 index,
                 _buildTableRow(index, [
                   _buildRowText(feedback.authorName,
-                      style: AppTextStyle.bodyText.copyWith(fontSize: 14, fontWeight: FontWeight.w500),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 14, fontWeight: FontWeight.w500),
                       photoUrl: feedback.authorAvatar),
                   _buildRowText(DateFormat("dd.MM.yyyy").format(feedback.date)),
                   _buildPointStars(feedback.points),
@@ -204,7 +203,7 @@ class _TableWidgetState extends State<TableWidget> {
           Flexible(
             child: Text(
               text,
-              style: style ?? AppTextStyle.bodyText.copyWith(fontSize: 14),
+              style: style ?? Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 14),
             ),
           ),
         ],
@@ -262,7 +261,7 @@ class _TableWidgetState extends State<TableWidget> {
       padding: const EdgeInsets.only(bottom: 32),
       child: Text(
         title,
-        style: AppTextStyle.hintText,
+        style: Theme.of(context).textTheme.displaySmall,
       ),
     );
   }

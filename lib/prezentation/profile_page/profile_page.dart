@@ -12,7 +12,6 @@ import 'package:salons_adminka/prezentation/widgets/custom_app_bar.dart';
 import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_adminka/utils/app_images.dart';
-import 'package:salons_adminka/utils/app_text_style.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -360,7 +359,7 @@ class _ProfilePageState extends State<ProfilePage> {
               maxLines: formKey == _descriptionFormKey ? 3 : 1,
               minLines: formKey == _descriptionFormKey ? 3 : 1,
               controller: controller,
-              style: AppTextStyle.bodyText,
+              style: Theme.of(context).textTheme.bodyMedium,
               textAlignVertical: TextAlignVertical.center,
               readOnly: formKey == _scheduleFormKey,
               onTap: () {
@@ -394,11 +393,7 @@ class _ProfilePageState extends State<ProfilePage> {
               decoration: InputDecoration(
                 counterText: "",
                 hintText: hint ?? title,
-                hintStyle: AppTextStyle.hintText,
-                fillColor: Colors.white,
-                floatingLabelBehavior: FloatingLabelBehavior.never,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-              ),
+              ).applyDefaults(Theme.of(context).inputDecorationTheme),
             ),
           ),
         )
@@ -413,7 +408,7 @@ class _ProfilePageState extends State<ProfilePage> {
       child: Text(
         title,
         maxLines: 1,
-        style: AppTextStyle.appBarText.copyWith(fontSize: 18),
+        style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 18),
       ),
     );
   }

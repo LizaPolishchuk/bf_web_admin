@@ -23,6 +23,8 @@ import 'navigation/routes.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  Paint.enableDithering = true;
+
   await Firebase.initializeApp(
     options: const FirebaseOptions(
         apiKey: "AIzaSyD1iuXsP1pCry9jNdG0l-5Meyu7dJUp3CI",
@@ -73,7 +75,8 @@ class MyApp extends StatelessWidget {
             routerDelegate: Get.rootDelegate,
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,
-            themeMode: isLight ? ThemeMode.light : ThemeMode.dark,
+            // themeMode: isLight ? ThemeMode.light : ThemeMode.dark,
+            themeMode: ThemeMode.dark,
             title: 'B&F Admin Panel',
             builder: (context, child) => MediaQuery(
               data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
