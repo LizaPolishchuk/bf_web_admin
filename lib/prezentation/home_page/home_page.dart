@@ -8,6 +8,7 @@ import 'package:salons_adminka/prezentation/widgets/info_container.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_adminka/utils/app_images.dart';
 import 'package:salons_adminka/utils/app_text_style.dart';
+import 'package:salons_adminka/utils/app_theme.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
@@ -198,6 +199,14 @@ class _HomePageState extends State<HomePage> {
                 AppIcons.icEye,
                 color: accentColor,
               ),
+              onTap: () {
+                Get.rootDelegate.toNamed(Routes.calendar);
+              },
+            ),
+            IconButton(
+                onPressed: () async => SwitchThemeModeUseCase(getItWeb()).call(),
+                icon: Icon(AppTheme.isDark ? Icons.nightlight : Icons.sunny))
+          ],
               const SizedBox(height: 7),
               Row(
                 children: [

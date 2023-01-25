@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:salons_adminka/prezentation/widgets/info_container.dart';
 import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
-import 'package:salons_adminka/utils/app_text_style.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 enum OrderStatus { active, reserved, cancelled }
@@ -85,7 +84,7 @@ class _OrderInfoViewState extends State<OrderInfoView> {
                 : _infoAction == InfoAction.edit
                     ? AppLocalizations.of(context)!.redact
                     : AppLocalizations.of(context)!.addOrder,
-            style: AppTextStyle.titleText),
+            style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 35),
         _buildTextField(_clientNameController, AppLocalizations.of(context)!.clientName),
         const SizedBox(height: 15),
@@ -111,7 +110,7 @@ class _OrderInfoViewState extends State<OrderInfoView> {
                 },
                 child: Text(
                   AppLocalizations.of(context)!.edit,
-                  style: AppTextStyle.bodyText.copyWith(
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AppColors.hintColor,
                     decoration: TextDecoration.underline,
                   ),
@@ -123,7 +122,7 @@ class _OrderInfoViewState extends State<OrderInfoView> {
                 },
                 child: Text(
                   AppLocalizations.of(context)!.delete,
-                  style: AppTextStyle.bodyText.copyWith(
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AppColors.red,
                   ),
                 ),
@@ -138,7 +137,6 @@ class _OrderInfoViewState extends State<OrderInfoView> {
                 duration: const Duration(milliseconds: 200),
                 child: RoundedButton(
                   text: AppLocalizations.of(context)!.save,
-                  buttonColor: value ? AppColors.darkRose : AppColors.disabledColor,
                   onPressed: () {
                     var selectedDate = _orderDateNotifier.value!;
                     var selectedTime = _orderTimeNotifier.value!;
@@ -215,7 +213,7 @@ class _OrderInfoViewState extends State<OrderInfoView> {
               ),
               child: Text(
                 date != null ? DateFormat('dd-MMM-yyyy').format(date) : AppLocalizations.of(context)!.orderDate,
-                style: date != null ? AppTextStyle.bodyText : AppTextStyle.hintText,
+                style: date != null ? Theme.of(context).textTheme.bodyMedium : Theme.of(context).textTheme.displaySmall,
               ),
             ),
           );
@@ -224,7 +222,7 @@ class _OrderInfoViewState extends State<OrderInfoView> {
     //   _orderDateNotifier.value != null
     //       ? "${AppLocalizations.of(context)!.validUntil}: ${DateFormat('dd-MMM-yyyy').format(_orderDateNotifier.value!)}"
     //       : AppLocalizations.of(context)!.noExpirationDate,
-    //   style: AppTextStyle.hintText,
+    //   style: Theme.of(context).textTheme.displaySmall,
     // ),
   }
 
@@ -247,7 +245,7 @@ class _OrderInfoViewState extends State<OrderInfoView> {
               ),
               child: Text(
                 time != null ? time.format(context) : AppLocalizations.of(context)!.orderTime,
-                style: time != null ? AppTextStyle.bodyText : AppTextStyle.hintText,
+                style: time != null ? Theme.of(context).textTheme.bodyMedium : Theme.of(context).textTheme.displaySmall,
               ),
             ),
           );
@@ -256,7 +254,7 @@ class _OrderInfoViewState extends State<OrderInfoView> {
     //   _orderDateNotifier.value != null
     //       ? "${AppLocalizations.of(context)!.validUntil}: ${DateFormat('dd-MMM-yyyy').format(_orderDateNotifier.value!)}"
     //       : AppLocalizations.of(context)!.noExpirationDate,
-    //   style: AppTextStyle.hintText,
+    //   style: Theme.of(context).textTheme.displaySmall,
     // ),
   }
 
@@ -272,12 +270,11 @@ class _OrderInfoViewState extends State<OrderInfoView> {
       ],
       maxLines: 1,
       enabled: _infoAction != InfoAction.view,
-      style: AppTextStyle.bodyText,
+      style: Theme.of(context).textTheme.bodyMedium,
       decoration: InputDecoration(
-        hintStyle: AppTextStyle.hintText,
         counterText: "",
         hintText: hint,
-      ),
+      ).applyDefaults(Theme.of(context).inputDecorationTheme)
     );
   }
 
@@ -295,7 +292,7 @@ class _OrderInfoViewState extends State<OrderInfoView> {
             alignment: Alignment.centerLeft,
             child: Text(
               title,
-              style: AppTextStyle.hintText,
+              style: Theme.of(context).textTheme.displaySmall,
             ),
           ),
           items: items.map((item) {
@@ -303,7 +300,7 @@ class _OrderInfoViewState extends State<OrderInfoView> {
               value: item,
               child: Text(
                 item.name,
-                style: AppTextStyle.hintText.copyWith(fontSize: 16),
+                style: Theme.of(context).textTheme.displaySmall?.copyWith(fontSize: 16),
               ),
             );
           }).toList(),
@@ -330,7 +327,7 @@ class _OrderInfoViewState extends State<OrderInfoView> {
                   child: Text(
                     selectedItem?.name ?? "",
                     overflow: TextOverflow.ellipsis,
-                    style: AppTextStyle.bodyText.copyWith(fontSize: 14),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 14),
                     maxLines: 1,
                   ),
                 );

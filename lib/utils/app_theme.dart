@@ -15,35 +15,23 @@ abstract class AppTheme {
     primaryColor: AppColors.darkRose,
     colorScheme: const ColorScheme.light(
       primary: AppColors.darkRose,
-      // onPrimary: Color(0xffF02E65), // <-- SEE HERE
-      // onSurface: Color.fromARGB(255, 66, 125, 145), // <-- SEE HERE
+      secondary: AppColors.darkTurquoise,
     ),
-    // primarySwatch: MaterialColor(AppColors.darkRose.value, ),
-    // colorScheme: const ColorScheme.light(primary: AppColors.colorRose), //for date picker
     visualDensity: VisualDensity.adaptivePlatformDensity,
     scaffoldBackgroundColor: AppColors.lightBackground,
-    // canvasColor: AppColors.colorMainText,
-    // iconTheme: const IconThemeData(color: AppColors.colorSecondText),
-    // textTheme: const TextTheme(
-    //   bodyText2: TextStyle(color: AppColors.colorMainText),
-    // ),
-    inputDecorationTheme: const InputDecorationTheme(
-      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-      filled: true,
-      fillColor: AppColors.textInputBgGrey,
-      enabledBorder: UnderlineInputBorder(
-        borderSide: BorderSide(style: BorderStyle.none),
-        borderRadius: BorderRadius.all(Radius.circular(25)),
-      ),
-      disabledBorder: UnderlineInputBorder(
-        borderSide: BorderSide(style: BorderStyle.none),
-        borderRadius: BorderRadius.all(Radius.circular(25)),
-      ),
-      focusedBorder: UnderlineInputBorder(
-        borderSide: BorderSide(style: BorderStyle.none),
-        borderRadius: BorderRadius.all(Radius.circular(25)),
-      ),
+    textTheme: const TextTheme(
+      //bodies
+      bodySmall: AppTextStyle.bodySmallText,
+      bodyMedium: AppTextStyle.bodyMediumText,
+      //buttons
+      labelMedium: AppTextStyle.buttonText,
+      //titles
+      titleMedium: AppTextStyle.titleMediumText,
+      titleLarge: AppTextStyle.appBarText,
+      //hints
+      displaySmall: AppTextStyle.hintText,
     ),
+    inputDecorationTheme: getInputDecorationTheme(isDark: false),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
         elevation: MaterialStateProperty.all(0),
@@ -61,30 +49,31 @@ abstract class AppTheme {
   );
 
   static final dark = ThemeData(
-    // colorScheme: const ColorScheme.light(primary: AppColors.colorRose), //for date picker
-    visualDensity: VisualDensity.adaptivePlatformDensity,
-    scaffoldBackgroundColor: AppColors.darkBackground,
-    // canvasColor: AppColors.colorMainText,
-    // iconTheme: const IconThemeData(color: AppColors.colorSecondText),
-    // textTheme: const TextTheme(
-    //   bodyText2: TextStyle(color: AppColors.colorMainText),
-    // ),
-    inputDecorationTheme: const InputDecorationTheme(
-      filled: true,
-      fillColor: AppColors.textInputBgGrey,
-      enabledBorder: UnderlineInputBorder(
-        borderSide: BorderSide(style: BorderStyle.none),
-        borderRadius: BorderRadius.all(Radius.circular(25)),
-      ),
-      focusedBorder: UnderlineInputBorder(
-        borderSide: BorderSide(style: BorderStyle.none),
-        borderRadius: BorderRadius.all(Radius.circular(25)),
-      ),
+    colorScheme: const ColorScheme.dark(
+      primary: AppColors.blue,
+      secondary: AppColors.darkBlue,
     ),
+    primaryColor: AppColors.blue,
+    visualDensity: VisualDensity.adaptivePlatformDensity,
+    hintColor: AppColors.hintColor,
+    scaffoldBackgroundColor: AppColors.darkBackground,
+    textTheme: TextTheme(
+      //bodies
+      bodySmall: AppTextStyle.bodySmallText.copyWith(color: Colors.white),
+      bodyMedium: AppTextStyle.bodyMediumText.copyWith(color: Colors.white),
+      //buttons
+      labelMedium: AppTextStyle.buttonText.copyWith(color: Colors.white),
+      //titles
+      titleMedium: AppTextStyle.titleMediumText.copyWith(color: Colors.white),
+      titleLarge: AppTextStyle.appBarText.copyWith(color: Colors.white),
+      //hints
+      displaySmall: AppTextStyle.hintText,
+    ),
+    inputDecorationTheme: getInputDecorationTheme(isDark: true),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ButtonStyle(
         elevation: MaterialStateProperty.all(0),
-        textStyle: MaterialStateProperty.all(AppTextStyle.buttonText),
+        textStyle: MaterialStateProperty.all(AppTextStyle.buttonText.copyWith(color: Colors.white)),
         foregroundColor: MaterialStateProperty.all(AppColors.hintColor),
         backgroundColor: MaterialStateProperty.all(AppColors.darkBackground),
         minimumSize: MaterialStateProperty.all(const Size(228, 50)),
@@ -97,3 +86,36 @@ abstract class AppTheme {
     ),
   );
 }
+
+getInputDecorationTheme({required bool isDark}) {
+  return InputDecorationTheme(
+    filled: true,
+    fillColor: isDark ? AppColors.textInputBgGrey : AppColors.hintColor,
+    // labelStyle: AppTextStyle.bodyMediumText.copyWith(color: Colors.white) ,
+    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+    hintStyle: AppTextStyle.hintText,
+    errorStyle: AppTextStyle.hintText.copyWith(color: isDark ? AppColors.errorColorDark : AppColors.errorColorLight),
+    errorMaxLines: 1,
+    floatingLabelBehavior: FloatingLabelBehavior.never,
+    enabledBorder: const UnderlineInputBorder(
+      borderSide: BorderSide(style: BorderStyle.none),
+      borderRadius: BorderRadius.all(Radius.circular(25)),
+    ),
+    focusedBorder: const UnderlineInputBorder(
+      borderSide: BorderSide(style: BorderStyle.none),
+      borderRadius: BorderRadius.all(Radius.circular(25)),
+    ),
+    errorBorder: const UnderlineInputBorder(
+      borderSide: BorderSide(style: BorderStyle.none),
+      borderRadius: BorderRadius.all(Radius.circular(25)),
+    ),
+    disabledBorder: const UnderlineInputBorder(
+      borderSide: BorderSide(style: BorderStyle.none),
+      borderRadius: BorderRadius.all(Radius.circular(25)),
+    ),
+  );
+}
+
+// static ThemeData getTheme(bool isDark, BuildContext context) {
+//   return
+// }

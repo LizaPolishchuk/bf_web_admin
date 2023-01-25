@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:salons_adminka/utils/app_images.dart';
-import 'package:salons_adminka/utils/app_text_style.dart';
 
 class PaginationCounter extends StatelessWidget {
   const PaginationCounter({Key? key}) : super(key: key);
@@ -16,11 +15,11 @@ class PaginationCounter extends StatelessWidget {
         children: [
           SvgPicture.asset(AppIcons.icCircleArrowLeft),
           RichText(
-            text: const TextSpan(
+            text: TextSpan(
               text: '1',
-              style: AppTextStyle.bodyText,
+              style: Theme.of(context).textTheme.bodyMedium,
               children: <TextSpan>[
-                TextSpan(text: '-25', style: AppTextStyle.hintText),
+                TextSpan(text: '-25', style: Theme.of(context).textTheme.displaySmall),
               ],
             ),
           ),

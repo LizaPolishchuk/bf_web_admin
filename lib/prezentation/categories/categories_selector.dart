@@ -7,7 +7,6 @@ import 'package:salons_adminka/prezentation/widgets/base_items_selector.dart';
 import 'package:salons_adminka/prezentation/widgets/colored_circle.dart';
 import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
-import 'package:salons_adminka/utils/app_text_style.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class CategoriesSelector extends StatefulWidget {
@@ -78,7 +77,7 @@ class _CategoriesSelectorState extends State<CategoriesSelector> {
             padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
             child: Text(
               "${AppLocalizations.of(context)!.add} +",
-              style: AppTextStyle.hintText,
+              style: Theme.of(context).textTheme.displaySmall,
             ),
           ),
         ),
@@ -117,7 +116,7 @@ class _CategoriesSelectorState extends State<CategoriesSelector> {
                     ),
                     Text(
                       AppLocalizations.of(context)!.addNewCategory,
-                      style: AppTextStyle.bodyText,
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     const SizedBox(height: 21),
                     Flexible(
@@ -139,16 +138,12 @@ class _CategoriesSelectorState extends State<CategoriesSelector> {
                                   ],
                                 ),
                                 child: TextField(
-                                  style: AppTextStyle.bodyText,
+                                  style: Theme.of(context).textTheme.bodyMedium,
                                   controller: categoryNameController,
                                   decoration: InputDecoration(
                                     hintText: AppLocalizations.of(context)!.categoryName,
                                     counterText: "",
-                                    contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-                                    hintStyle: AppTextStyle.hintText,
-                                    fillColor: Colors.white,
-                                    floatingLabelBehavior: FloatingLabelBehavior.never,
-                                  ),
+                                  ).applyDefaults(Theme.of(context).inputDecorationTheme),
                                 ),
                               ),
                             ),

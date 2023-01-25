@@ -23,6 +23,8 @@ import 'navigation/routes.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  Paint.enableDithering = true;
+
   await Firebase.initializeApp(
     options: const FirebaseOptions(
         apiKey: "AIzaSyD1iuXsP1pCry9jNdG0l-5Meyu7dJUp3CI",
@@ -62,27 +64,33 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      defaultTransition: Transition.noTransition,
-      getPages: AppPages.pages,
-      routerDelegate: Get.rootDelegate,
-      theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.light,
-      title: 'B&F Admin Panel',
-      builder: (context, child) => MediaQuery(
-        data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-        child: child!,
-      ),
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: L10n.all,
-    );
+    return ValueListenableBuilder(
+        valueListenable: Hive.box(LocalStorage.preferencesBox).listenable(),
+        builder: (BuildContext context, Box<dynamic> box, Widget? child) {
+          final isLight = box.get(LocalStorage.themeMode, defaultValue: true);
+          return GetMaterialApp.router(
+            debugShowCheckedModeBanner: false,
+            defaultTransition: Transition.noTransition,
+            getPages: AppPages.pages,
+            routerDelegate: Get.rootDelegate,
+            theme: AppTheme.light,
+            darkTheme: AppTheme.dark,
+            // themeMode: isLight ? ThemeMode.light : ThemeMode.dark,
+            themeMode: ThemeMode.dark,
+            title: 'B&F Admin Panel',
+            builder: (context, child) => MediaQuery(
+              data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+              child: child!,
+            ),
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: L10n.all,
+          );
+        });
   }
 }
 

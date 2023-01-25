@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
-import 'package:salons_adminka/utils/app_text_style.dart';
+import 'package:salons_adminka/utils/app_theme.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
@@ -68,8 +68,11 @@ class _CustomCalendarState extends State<CustomCalendar> {
       showNavigationArrow: true,
       timeSlotViewSettings: const TimeSlotViewSettings(
           timeInterval: Duration(minutes: 30), timeIntervalHeight: 92, timeFormat: 'HH:mm', timeRulerSize: 70),
-      cellBorderColor: AppColors.disabledColor.withOpacity(0.3),
-      todayHighlightColor: AppColors.darkRose,
+      cellBorderColor: AppColors.disabledColor.withOpacity(0.1),
+      onTap: (calendarTapDetails) {
+        debugPrint("on tap ${calendarTapDetails.appointments?.first}");
+      },
+      todayHighlightColor: Theme.of(context).colorScheme.primary,
       allowedViews: const <CalendarView>[
         CalendarView.day,
         CalendarView.week,
@@ -116,9 +119,11 @@ class _CustomCalendarState extends State<CustomCalendar> {
         padding: const EdgeInsets.symmetric(vertical: 4),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: order.categoryColor != null
-              ? Color(order.categoryColor!).withOpacity(0.1)
-              : AppColors.darkRose.withOpacity(0.5),
+          color: AppTheme.isDark
+              ? AppColors.textInputBgDarkGrey
+              : order.categoryColor != null
+                  ? Color(order.categoryColor!).withOpacity(0.1)
+                  : Theme.of(context).colorScheme.primary.withOpacity(0.5),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -129,7 +134,8 @@ class _CustomCalendarState extends State<CustomCalendar> {
                 width: 2,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: order.categoryColor != null ? Color(order.categoryColor!) : AppColors.darkRose,
+                  color:
+                      order.categoryColor != null ? Color(order.categoryColor!) : Theme.of(context).colorScheme.primary,
                 ),
               ),
             ),
@@ -163,25 +169,27 @@ class _CustomCalendarState extends State<CustomCalendar> {
                     Text(
                       order.serviceName,
                       style: TextStyle(
-                          color: order.categoryColor != null ? Color(order.categoryColor!) : AppColors.darkRose,
+                          color: order.categoryColor != null
+                              ? Color(order.categoryColor!)
+                              : Theme.of(context).colorScheme.primary,
                           fontSize: 14,
                           fontWeight: FontWeight.w500),
                     ),
-                    const SizedBox(width: 5),
+                    const SizedBox(height: 15),
                     Text(
                       order.clientName ?? AppLocalizations.of(context)!.client,
-                      style: AppTextStyle.bodyText1,
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
-                    const SizedBox(width: 5),
+                    const SizedBox(height: 10),
                     Text(
                       "${AppLocalizations.of(context)!.master}: ${order.masterName}",
                       maxLines: 3,
-                      style: AppTextStyle.bodyText1,
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
-                    const SizedBox(width: 5),
+                    const SizedBox(height: 5),
                     Text(
                       DateFormat('HH:mm').format(order.date),
-                      style: AppTextStyle.bodyText1.copyWith(color: AppColors.hintColor),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.hintColor),
                     ),
                   ],
                 ),

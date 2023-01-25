@@ -14,6 +14,7 @@ class AppIcons {
   static const String icEyePassword = 'assets/icons/ic_eye_password.svg';
   static const String icEyeClosed = 'assets/icons/ic_eye_closed.svg';
   static const String icEditCircle = 'assets/icons/ic_edit_circle.svg';
+  static const String icEditCircleBlue = 'assets/icons/ic_edit_circle_blue.svg';
   static const String icEdit = 'assets/icons/ic_edit.svg';
   static const String icDeleteCircle = 'assets/icons/ic_delete_circle.svg';
   static const String icEye = 'assets/icons/ic_eye.svg';

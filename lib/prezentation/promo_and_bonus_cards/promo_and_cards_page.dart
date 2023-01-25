@@ -16,7 +16,7 @@ import 'package:salons_adminka/prezentation/widgets/search_pannel.dart';
 import 'package:salons_adminka/utils/alert_builder.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_adminka/utils/app_images.dart';
-import 'package:salons_adminka/utils/app_text_style.dart';
+import 'package:salons_adminka/utils/app_theme.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class PromosPage extends StatefulWidget {
@@ -125,8 +125,12 @@ class _PromosPageState extends State<PromosPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(AppLocalizations.of(context)!.promos,
-            style: AppTextStyle.bodyText.copyWith(fontWeight: FontWeight.w500, fontSize: 18)),
+        Row(
+          children: [
+            Text(AppLocalizations.of(context)!.promos,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500, fontSize: 18)),
+          ],
+        ),
         const SizedBox(height: 30),
         Flexible(
           child: SizedBox(
@@ -159,10 +163,10 @@ class _PromosPageState extends State<PromosPage> {
       padding: const EdgeInsets.only(left: 20, right: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
-        color: Colors.white,
+        color: AppTheme.isDark ? AppColors.darkBlue : Colors.white,
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFFC4C4C4).withOpacity(0.25),
+            color: Colors.black.withOpacity(0.25),
             blurRadius: 5,
             offset: const Offset(2, 2),
           ),
@@ -192,14 +196,14 @@ class _PromosPageState extends State<PromosPage> {
           const SizedBox(height: 15),
           Text(
             promo.name,
-            style: AppTextStyle.bodyText,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(height: 8),
           Text(
             promo.description ?? "",
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
-            style: AppTextStyle.bodyText.copyWith(fontSize: 12),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 12),
           ),
         ],
       ),
@@ -212,7 +216,7 @@ class _PromosPageState extends State<PromosPage> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(AppLocalizations.of(context)!.bonusCards,
-            style: AppTextStyle.bodyText.copyWith(fontWeight: FontWeight.w500, fontSize: 18)),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500, fontSize: 18)),
         const SizedBox(height: 30),
         Flexible(
           child: StreamBuilder<List<BonusCard>>(
@@ -267,7 +271,7 @@ class _PromosPageState extends State<PromosPage> {
                   fit: FlexFit.tight,
                   child: Text(
                     bonusCard.name,
-                    style: AppTextStyle.bodyText.copyWith(color: Colors.white),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white),
                   ),
                 ),
                 const SizedBox(width: 6),
@@ -299,18 +303,20 @@ class _PromosPageState extends State<PromosPage> {
           PopupMenuItem<int>(
             value: 0,
             height: 32,
-            child: Text(AppLocalizations.of(context)!.view, style: AppTextStyle.bodyText.copyWith(fontSize: 12)),
+            child: Text(AppLocalizations.of(context)!.view,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 12)),
           ),
           PopupMenuItem<int>(
             value: 1,
             height: 32,
-            child: Text(AppLocalizations.of(context)!.edit, style: AppTextStyle.bodyText.copyWith(fontSize: 12)),
+            child: Text(AppLocalizations.of(context)!.edit,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 12)),
           ),
           PopupMenuItem<int>(
             value: 2,
             height: 32,
             child: Text(AppLocalizations.of(context)!.delete,
-                style: AppTextStyle.bodyText.copyWith(fontSize: 12, color: AppColors.red)),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 12, color: AppColors.red)),
           ),
         ];
       },
@@ -413,12 +419,12 @@ class _PromosPageState extends State<PromosPage> {
       height: 303,
       padding: const EdgeInsets.only(top: 49, bottom: 36, left: 10, right: 10),
       decoration: BoxDecoration(
-        color: AppColors.lightBackground,
+        color: AppTheme.isDark ? AppColors.darkBlue : AppColors.lightBackground,
         borderRadius: BorderRadius.circular(12.0),
       ),
       child: Column(
         children: [
-          Text(title.toUpperCase(), style: AppTextStyle.bodyText),
+          Text(title.toUpperCase(), style: Theme.of(context).textTheme.bodyMedium),
           Flexible(
             child: Center(
               child: SizedBox(
@@ -438,9 +444,9 @@ class _PromosPageState extends State<PromosPage> {
             },
             child: Text(
               AppLocalizations.of(context)!.add,
-              style: AppTextStyle.buttonText.copyWith(
-                color: AppColors.darkRose,
-              ),
+              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
             ),
           ),
         ],

@@ -6,7 +6,6 @@ import 'package:salons_adminka/prezentation/widgets/colored_circle.dart';
 import 'package:salons_adminka/prezentation/widgets/info_container.dart';
 import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
-import 'package:salons_adminka/utils/app_text_style.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class ServiceInfoView extends StatefulWidget {
@@ -78,7 +77,7 @@ class _ServiceInfoViewState extends State<ServiceInfoView> {
                 : _infoAction == InfoAction.edit
                     ? AppLocalizations.of(context)!.redact
                     : AppLocalizations.of(context)!.addService,
-            style: AppTextStyle.titleText),
+            style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 35),
         _buildTextField(_nameController, AppLocalizations.of(context)!.serviceName),
         const SizedBox(height: 15),
@@ -93,7 +92,7 @@ class _ServiceInfoViewState extends State<ServiceInfoView> {
             child: DropdownButton2(
               hint: Text(
                 AppLocalizations.of(context)!.category,
-                style: AppTextStyle.hintText,
+                style: Theme.of(context).textTheme.displaySmall,
               ),
               items: widget.categories
                   .map(
@@ -107,8 +106,8 @@ class _ServiceInfoViewState extends State<ServiceInfoView> {
                             child: Text(
                               category.name,
                               style: _selectedCategory == category
-                                  ? AppTextStyle.bodyText
-                                  : AppTextStyle.hintText.copyWith(fontSize: 16),
+                                  ? Theme.of(context).textTheme.bodyMedium
+                                  : Theme.of(context).textTheme.displaySmall?.copyWith(fontSize: 16),
                             ),
                           ),
                         ],
@@ -152,7 +151,7 @@ class _ServiceInfoViewState extends State<ServiceInfoView> {
                 },
                 child: Text(
                   AppLocalizations.of(context)!.edit,
-                  style: AppTextStyle.bodyText.copyWith(
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AppColors.hintColor,
                     decoration: TextDecoration.underline,
                   ),
@@ -164,7 +163,7 @@ class _ServiceInfoViewState extends State<ServiceInfoView> {
                 },
                 child: Text(
                   AppLocalizations.of(context)!.delete,
-                  style: AppTextStyle.bodyText.copyWith(
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AppColors.red,
                   ),
                 ),
@@ -179,7 +178,7 @@ class _ServiceInfoViewState extends State<ServiceInfoView> {
                 duration: const Duration(milliseconds: 200),
                 child: RoundedButton(
                   text: AppLocalizations.of(context)!.save,
-                  buttonColor: value ? AppColors.darkRose : AppColors.disabledColor,
+                  isEnabled: value,
                   onPressed: () {
                     Service serviceToUpdate;
                     if (_infoAction == InfoAction.add) {
@@ -227,18 +226,17 @@ class _ServiceInfoViewState extends State<ServiceInfoView> {
       maxLines: 1,
       maxLength: isPrice || isDuration ? 5 : null,
       enabled: _infoAction != InfoAction.view,
-      style: AppTextStyle.bodyText,
+      style: Theme.of(context).textTheme.bodyMedium,
       inputFormatters: [
         if (isPrice) FilteringTextInputFormatter.digitsOnly,
         if (isDuration) FilteringTextInputFormatter.digitsOnly,
         //TimeTextInputFormatter(),
       ],
       decoration: InputDecoration(
-        hintStyle: AppTextStyle.hintText,
         counterText: "",
         hintText: hint,
         suffixText: isPrice ? AppLocalizations.of(context)!.uah : null,
-      ),
+      ).applyDefaults(Theme.of(context).inputDecorationTheme),
     );
   }
 

@@ -3,7 +3,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:salons_adminka/prezentation/widgets/colored_circle.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
-import 'package:salons_adminka/utils/app_text_style.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class AdditionalClientDetails extends StatefulWidget {
@@ -101,7 +100,7 @@ class _AdditionalClientDetailsState extends State<AdditionalClientDetails> {
         Flexible(
           child: Text(
             name,
-            style: AppTextStyle.bodyText,
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
         ),
       ]),
@@ -133,15 +132,15 @@ class _AdditionalClientDetailsState extends State<AdditionalClientDetails> {
                 children: [
                   Text(
                     DateFormat('dd-MMM-yyyy').format(order.date),
-                    style: AppTextStyle.bodyText.copyWith(fontSize: 12),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 12),
                   ),
                   Text(
                     order.serviceName,
-                    style: AppTextStyle.bodyText.copyWith(fontSize: 12),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 12),
                   ),
                   Text(
                     order.masterName,
-                    style: AppTextStyle.bodyText.copyWith(fontSize: 12),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 12),
                   ),
                 ],
               );
@@ -164,7 +163,7 @@ class _AdditionalClientDetailsState extends State<AdditionalClientDetails> {
   Widget _buildSectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 25),
-      child: Text(title, style: AppTextStyle.titleText),
+      child: Text(title, style: Theme.of(context).textTheme.titleMedium),
     );
   }
 

@@ -1,11 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../utils/app_colors.dart';
-import '../../utils/app_text_style.dart';
 
 class EventAlertDialog extends StatelessWidget {
   const EventAlertDialog({
@@ -65,18 +64,18 @@ class EventAlertDialog extends StatelessWidget {
                   const SizedBox(width: 5),
                   Text(
                     order.clientName ?? AppLocalizations.of(context)!.client,
-                    style: AppTextStyle.bodyText1,
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                   const SizedBox(width: 5),
                   Text(
                     "${AppLocalizations.of(context)!.master}: ${order.masterName}",
                     maxLines: 3,
-                    style: AppTextStyle.bodyText1,
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                   const SizedBox(width: 5),
                   Text(
                     DateFormat('HH:mm').format(order.date),
-                    style: AppTextStyle.bodyText1.copyWith(color: AppColors.hintColor),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.hintColor),
                   ),
                 ],
               ),

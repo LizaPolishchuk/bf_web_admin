@@ -7,7 +7,7 @@ import 'package:salons_adminka/prezentation/clients_page/clients_page.dart';
 import 'package:salons_adminka/prezentation/widgets/colored_circle.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_adminka/utils/app_images.dart';
-import 'package:salons_adminka/utils/app_text_style.dart';
+import 'package:salons_adminka/utils/app_theme.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class TableWidget extends StatefulWidget {
@@ -39,7 +39,7 @@ class _TableWidgetState extends State<TableWidget> {
         // margin: const EdgeInsets.only(right: 38),
         padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 60),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppTheme.isDark ? AppColors.darkBlue : Colors.white,
           borderRadius: BorderRadius.circular(20),
         ),
         child: SingleChildScrollView(
@@ -68,7 +68,8 @@ class _TableWidgetState extends State<TableWidget> {
                 index,
                 _buildTableRow(index, [
                   _buildRowText(service.name,
-                      style: AppTextStyle.bodyText.copyWith(fontSize: 14, fontWeight: FontWeight.w500)),
+                      style:
+                          Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 14, fontWeight: FontWeight.w500)),
                   _buildRowText(service.price.toString()),
                   _buildRowText((service.duration ?? 0).toString()),
                   _buildRowText(service.categoryName ?? "", categoryColor: service.categoryColor),
@@ -87,7 +88,8 @@ class _TableWidgetState extends State<TableWidget> {
                 index,
                 _buildTableRow(index, [
                   _buildRowText(master.name,
-                      style: AppTextStyle.bodyText.copyWith(fontSize: 14, fontWeight: FontWeight.w500),
+                      style:
+                          Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 14, fontWeight: FontWeight.w500),
                       photoUrl: master.avatar),
                   _buildRowText(master.phoneNumber ?? ""),
                   _buildRowText(master.providedServices?.values.join(", ") ?? ""),
@@ -112,7 +114,8 @@ class _TableWidgetState extends State<TableWidget> {
                 index,
                 _buildTableRow(index, [
                   _buildRowText(client.name,
-                      style: AppTextStyle.bodyText.copyWith(fontSize: 14, fontWeight: FontWeight.w500),
+                      style:
+                          Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 14, fontWeight: FontWeight.w500),
                       photoUrl: client.photoUrl),
                   _buildRowText(client.city ?? ""),
                   _buildRowText(clientStatus?.localizedName(context) ?? "", iconPath: clientStatus?.iconPath()),
@@ -133,7 +136,8 @@ class _TableWidgetState extends State<TableWidget> {
                 index,
                 _buildTableRow(index, [
                   _buildRowText(feedback.authorName,
-                      style: AppTextStyle.bodyText.copyWith(fontSize: 14, fontWeight: FontWeight.w500),
+                      style:
+                          Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 14, fontWeight: FontWeight.w500),
                       photoUrl: feedback.authorAvatar),
                   _buildRowText(DateFormat("dd.MM.yyyy").format(feedback.date)),
                   _buildPointStars(feedback.points),
@@ -192,10 +196,10 @@ class _TableWidgetState extends State<TableWidget> {
                     if (loadingProgress == null) {
                       return child;
                     }
-                    return Container(color: AppColors.rose);
+                    return Container(color: Theme.of(context).colorScheme.primary);
                   },
                   errorBuilder: (context, error, stackTrace) {
-                    return Container(color: AppColors.rose);
+                    return Container(color: Theme.of(context).colorScheme.primary);
                   },
                 ),
               ),
@@ -204,7 +208,7 @@ class _TableWidgetState extends State<TableWidget> {
           Flexible(
             child: Text(
               text,
-              style: style ?? AppTextStyle.bodyText.copyWith(fontSize: 14),
+              style: style ?? Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 14),
             ),
           ),
         ],
@@ -226,7 +230,10 @@ class _TableWidgetState extends State<TableWidget> {
                 widget.onClickLook!(item, index);
               }
             },
-            child: SvgPicture.asset(AppIcons.icEye),
+            child: SvgPicture.asset(
+              AppIcons.icEye,
+              color: AppTheme.isDark ? Colors.white : AppColors.textColor,
+            ),
           ),
           if (!isOnlyView)
             Padding(
@@ -237,7 +244,10 @@ class _TableWidgetState extends State<TableWidget> {
                     widget.onClickEdit!(item, index);
                   }
                 },
-                child: SvgPicture.asset(AppIcons.icEdit),
+                child: SvgPicture.asset(
+                  AppIcons.icEdit,
+                  color: AppTheme.isDark ? Colors.white : AppColors.textColor,
+                ),
               ),
             ),
           if (!isOnlyView)
@@ -249,7 +259,10 @@ class _TableWidgetState extends State<TableWidget> {
                     widget.onClickDelete!(item, index);
                   }
                 },
-                child: SvgPicture.asset(AppIcons.icDelete),
+                child: SvgPicture.asset(
+                  AppIcons.icDelete,
+                  color: AppTheme.isDark ? Colors.white : AppColors.textColor,
+                ),
               ),
             )
         ],
@@ -262,7 +275,7 @@ class _TableWidgetState extends State<TableWidget> {
       padding: const EdgeInsets.only(bottom: 32),
       child: Text(
         title,
-        style: AppTextStyle.hintText,
+        style: Theme.of(context).textTheme.displaySmall,
       ),
     );
   }

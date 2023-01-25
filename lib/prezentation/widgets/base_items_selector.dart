@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:salons_adminka/prezentation/widgets/colored_circle.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
-import 'package:salons_adminka/utils/app_text_style.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class BaseItemsSelector extends StatefulWidget {
@@ -49,7 +48,10 @@ class _BaseItemsSelectorState extends State<BaseItemsSelector> {
         margin: const EdgeInsets.only(right: 8),
         decoration: BoxDecoration(
           border: Border(
-            bottom: BorderSide(color: _selectedItem == item ? AppColors.darkRose : AppColors.hintColor),
+            bottom: BorderSide(
+                color: _selectedItem == item
+                    ? Theme.of(context).colorScheme.primary
+                    : AppColors.hintColor),
           ),
         ),
         child: Row(
@@ -59,8 +61,10 @@ class _BaseItemsSelectorState extends State<BaseItemsSelector> {
               ColoredCircle(color: item.color != null ? Color(item.color!) : Colors.grey),
             Text(
               item != null ? item.name : AppLocalizations.of(context)!.allServices,
-              style: AppTextStyle.hintText
-                  .copyWith(color: _selectedItem == item ? AppColors.darkRose : AppColors.hintColor),
+              style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                  color: _selectedItem == item
+                      ? Theme.of(context).colorScheme.primary
+                      : AppColors.hintColor),
             ),
           ],
         ),

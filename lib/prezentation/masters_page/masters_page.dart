@@ -91,7 +91,7 @@ class _MastersPageState extends State<MastersPage> {
           const SizedBox(height: 20),
           Flexible(
             fit: FlexFit.tight,
-            child: _buildServicesTable(),
+            child: _buildMastersTable(),
           ),
           const SizedBox(height: 20),
           // PaginationCounter(),
@@ -100,7 +100,7 @@ class _MastersPageState extends State<MastersPage> {
     );
   }
 
-  Widget _buildServicesTable() {
+  Widget _buildMastersTable() {
     return StreamBuilder<List<Master>>(
         stream: _mastersBloc.mastersLoaded,
         builder: (context, snapshot) {

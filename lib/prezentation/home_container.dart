@@ -5,11 +5,11 @@ import 'package:get/get.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:salons_adminka/navigation/routes.dart';
 import 'package:salons_adminka/prezentation/auth_page/auth_bloc.dart';
+import 'package:salons_adminka/utils/app_theme.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 import '../utils/app_colors.dart';
 import '../utils/app_images.dart';
-import '../utils/app_text_style.dart';
 
 class HomeContainer extends StatelessWidget {
   final Widget child;
@@ -43,9 +43,9 @@ class HomeContainer extends StatelessWidget {
       width: _getDrawerWidth(size),
       height: double.infinity,
       padding: const EdgeInsets.only(bottom: 12, top: 42),
-      decoration: const BoxDecoration(
-        color: AppColors.darkRose,
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: AppTheme.isDark ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.primary,
+        borderRadius: const BorderRadius.only(
           topRight: Radius.circular(25),
           bottomRight: Radius.circular(25),
         ),
@@ -64,7 +64,7 @@ class HomeContainer extends StatelessWidget {
                       children: [
                         const Text(
                           "B&F",
-                          style: TextStyle(color: AppColors.lightRose, fontSize: 18, fontWeight: FontWeight.w700),
+                          style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w700),
                         ),
                         if (isDesktop) const SizedBox(width: 16),
                         if (isDesktop)
@@ -73,11 +73,11 @@ class HomeContainer extends StatelessWidget {
                             children: const [
                               Text(
                                 "Be Beautiful & Be Free",
-                                style: TextStyle(color: AppColors.lightRose, fontSize: 14, fontWeight: FontWeight.w600),
+                                style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w600),
                               ),
                               Text(
                                 "WorkPlace",
-                                style: TextStyle(color: AppColors.lightRose, fontSize: 12, fontWeight: FontWeight.w500),
+                                style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w500),
                               ),
                             ],
                           ),
@@ -86,30 +86,31 @@ class HomeContainer extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 54),
-                _buildDrawerItem(0, AppLocalizations.of(context)!.main, AppIcons.icHome,
+                _buildDrawerItem(context, 0, AppLocalizations.of(context)!.main, AppIcons.icHome,
                     routeToGo: Routes.initial, isDesktop: isDesktop),
-                _buildDrawerItem(1, AppLocalizations.of(context)!.services, AppIcons.icServices,
+                _buildDrawerItem(context, 1, AppLocalizations.of(context)!.services, AppIcons.icServices,
                     routeToGo: Routes.services, isDesktop: isDesktop),
-                _buildDrawerItem(2, AppLocalizations.of(context)!.masters, AppIcons.icMasters,
+                _buildDrawerItem(context, 2, AppLocalizations.of(context)!.masters, AppIcons.icMasters,
                     routeToGo: Routes.masters, isDesktop: isDesktop),
-                _buildDrawerItem(3, AppLocalizations.of(context)!.clients, AppIcons.icClients,
+                _buildDrawerItem(context, 3, AppLocalizations.of(context)!.clients, AppIcons.icClients,
                     routeToGo: Routes.clients, isDesktop: isDesktop),
                 _buildDrawerItem(
+                    context,
                     4,
                     "${AppLocalizations.of(context)!.promos}/${AppLocalizations.of(context)!.bonusCards}",
                     AppIcons.icPromos,
                     routeToGo: Routes.promos,
                     isDesktop: isDesktop),
-                _buildDrawerItem(5, AppLocalizations.of(context)!.feedbacks, AppIcons.icFeedbacks,
+                _buildDrawerItem(context, 5, AppLocalizations.of(context)!.feedbacks, AppIcons.icFeedbacks,
                     routeToGo: Routes.feedbacks, isDesktop: isDesktop),
                 const Spacer(),
-                _buildDrawerItem(6, AppLocalizations.of(context)!.profile, AppIcons.icProfile,
+                _buildDrawerItem(context, 6, AppLocalizations.of(context)!.profile, AppIcons.icProfile,
                     routeToGo: Routes.profile, isDesktop: isDesktop),
-                _buildDrawerItem(7, AppLocalizations.of(context)!.support, AppIcons.icSupport,
+                _buildDrawerItem(context, 7, AppLocalizations.of(context)!.support, AppIcons.icSupport,
                     routeToGo: Routes.support, isDesktop: isDesktop),
-                _buildDrawerItem(8, AppLocalizations.of(context)!.settings, AppIcons.icSettings,
+                _buildDrawerItem(context, 8, AppLocalizations.of(context)!.settings, AppIcons.icSettings,
                     routeToGo: Routes.settings, isDesktop: isDesktop),
-                _buildDrawerItem(9, AppLocalizations.of(context)!.logout, AppIcons.icLogout,
+                _buildDrawerItem(context, 9, AppLocalizations.of(context)!.logout, AppIcons.icLogout,
                     onClick: getIt<AuthBloc>().logout, isDesktop: isDesktop),
               ],
             ),
@@ -119,7 +120,7 @@ class HomeContainer extends StatelessWidget {
     );
   }
 
-  Widget _buildDrawerItem(int index, String title, String icon,
+  Widget _buildDrawerItem(BuildContext context, int index, String title, String icon,
       {VoidCallback? onClick, String? routeToGo, required bool isDesktop}) {
     return InkWell(
       onTap: () {
@@ -134,7 +135,11 @@ class HomeContainer extends StatelessWidget {
         // value ? state?.onHover(menuItem.route) : state?.onHover('not hovering');
       },
       child: ColoredBox(
-        color: index == selectedMenuIndex ? AppColors.lightRose : Colors.transparent,
+        color: index == selectedMenuIndex
+            ? Theme.of(context).brightness == Brightness.light
+                ? AppColors.lightRose
+                : AppColors.darkBackground
+            : Colors.transparent,
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 22),
           child: Row(
@@ -142,15 +147,19 @@ class HomeContainer extends StatelessWidget {
             children: [
               SvgPicture.asset(
                 icon,
-                color: selectedMenuIndex == index ? AppColors.darkRose : AppColors.lightRose,
+                color: selectedMenuIndex == index && Theme.of(context).brightness == Brightness.light
+                    ? AppColors.darkRose
+                    : AppColors.lightRose,
               ),
               if (isDesktop) const SizedBox(width: 20),
               if (isDesktop)
                 Flexible(
                   child: Text(
                     title,
-                    style: AppTextStyle.buttonText
-                        .copyWith(color: selectedMenuIndex == index ? AppColors.darkRose : AppColors.lightRose),
+                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                        color: selectedMenuIndex == index && Theme.of(context).brightness == Brightness.light
+                            ? AppColors.darkRose
+                            : Colors.white),
                   ),
                 )
             ],

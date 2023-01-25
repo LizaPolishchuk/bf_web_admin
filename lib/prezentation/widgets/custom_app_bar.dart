@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../../utils/app_text_style.dart';
-
 class CustomAppBar extends StatelessWidget {
   final String title;
 
@@ -13,7 +11,7 @@ class CustomAppBar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 50),
       child: Text(
         title,
-        style: AppTextStyle.appBarText,
+        style: Theme.of(context).textTheme.titleLarge,
         overflow: TextOverflow.ellipsis,
       ),
     );

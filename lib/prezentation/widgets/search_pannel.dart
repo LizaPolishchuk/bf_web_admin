@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_adminka/utils/app_text_style.dart';
+import 'package:salons_adminka/utils/app_theme.dart';
 
 class SearchPanel extends StatefulWidget {
   final String hintText;
@@ -29,17 +31,20 @@ class _SearchPanelState extends State<SearchPanel> {
       width: 360,
       child: TextField(
         controller: _searchController,
-        style: AppTextStyle.bodyText,
+        style: AppTextStyle.bodyMediumText,
         decoration: InputDecoration(
           counterText: "",
           isDense: true,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-          hintStyle: AppTextStyle.hintText,
-          fillColor: Colors.white,
-          floatingLabelBehavior: FloatingLabelBehavior.never,
+          fillColor: AppTheme.isDark ? Colors.white : null,
           hintText: widget.hintText,
-          prefixIcon: const Align(widthFactor: 1.0, heightFactor: 1.0, child: Icon(Icons.search)),
-        ),
+          prefixIcon: const Align(
+              widthFactor: 1.0,
+              heightFactor: 1.0,
+              child: Icon(
+                Icons.search,
+                color: AppColors.textColor,
+              )),
+        ).applyDefaults(Theme.of(context).inputDecorationTheme),
       ),
     );
   }
