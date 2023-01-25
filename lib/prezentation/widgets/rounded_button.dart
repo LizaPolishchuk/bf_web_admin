@@ -3,7 +3,8 @@ import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_adminka/utils/app_theme.dart';
 
 class RoundedButton extends StatelessWidget {
-  final String text;
+  final String? text;
+  final Widget? child;
   final VoidCallback onPressed;
   final bool isEnabled;
   final bool isLoading;
@@ -13,18 +14,19 @@ class RoundedButton extends StatelessWidget {
   final TextStyle? textStyle;
   final double? height;
 
-  const RoundedButton(
-      {Key? key,
-      required this.text,
-      required this.onPressed,
-      this.isEnabled = true,
-      this.isLoading = false,
-      this.width,
-      this.buttonColor,
-      this.textStyle,
-      this.textColor,
-      this.height})
-      : super(key: key);
+  const RoundedButton({
+    Key? key,
+    required this.text,
+    required this.onPressed,
+    this.isEnabled = true,
+    this.isLoading = false,
+    this.width,
+    this.buttonColor,
+    this.textStyle,
+    this.textColor,
+    this.height,
+    this.child,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -43,9 +45,7 @@ class RoundedButton extends StatelessWidget {
           alignment: Alignment.center,
           padding: const EdgeInsets.symmetric(horizontal: 44),
           decoration: BoxDecoration(
-            color: isEnabled
-                ? buttonColor ?? Theme.of(context).colorScheme.primary
-                : AppColors.disabledColor,
+            color: isEnabled ? buttonColor ?? Theme.of(context).colorScheme.primary : AppColors.disabledColor,
             borderRadius: BorderRadius.circular(52),
           ),
           child: child ??
@@ -56,8 +56,7 @@ class RoundedButton extends StatelessWidget {
                 style: textStyle ??
                     Theme.of(context).textTheme.labelMedium?.copyWith(
                           color: isEnabled
-                              ? (AppTheme.isDark ? Colors.white : textColor) ??
-                                  AppColors.lightBackground
+                              ? (AppTheme.isDark ? Colors.white : textColor) ?? AppColors.lightBackground
                               : Colors.white,
                         ),
               ),

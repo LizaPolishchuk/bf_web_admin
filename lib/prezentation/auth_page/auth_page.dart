@@ -46,6 +46,8 @@ class _AuthPageState extends State<AuthPage> {
   void initState() {
     super.initState();
 
+    print("isDark: ${AppTheme.isDark},brightness: ${AppTheme.brightness}");
+
     _authBloc = getItWeb<AuthBloc>();
     _subscriptions.addAll([
       _authBloc.errorMessage.listen((event) {
@@ -74,6 +76,8 @@ class _AuthPageState extends State<AuthPage> {
 
   @override
   Widget build(BuildContext context) {
+    print("isDarkTheme: ${Theme.of(context).brightness}");
+
     return WillPopScope(
       onWillPop: () async {
         if (_registrationMode) {

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
+import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 import 'app_colors.dart';
 import 'app_text_style.dart';
 
 abstract class AppTheme {
-  static Brightness get brightness => SchedulerBinding.instance.window.platformBrightness;
+  static Brightness get brightness {
+    final isLight = getIt<LocalStorage>().getThemeMode;
+    return isLight ? Brightness.light : Brightness.dark;
+  }
 
   static ThemeData get theme => brightness == Brightness.dark ? dark : light;
 
@@ -26,6 +29,7 @@ abstract class AppTheme {
       //buttons
       labelMedium: AppTextStyle.buttonText,
       //titles
+      titleSmall: AppTextStyle.titleSmallText,
       titleMedium: AppTextStyle.titleMediumText,
       titleLarge: AppTextStyle.appBarText,
       //hints
@@ -64,6 +68,7 @@ abstract class AppTheme {
       //buttons
       labelMedium: AppTextStyle.buttonText.copyWith(color: Colors.white),
       //titles
+      titleSmall: AppTextStyle.titleSmallText.copyWith(color: Colors.white),
       titleMedium: AppTextStyle.titleMediumText.copyWith(color: Colors.white),
       titleLarge: AppTextStyle.appBarText.copyWith(color: Colors.white),
       //hints

@@ -68,6 +68,7 @@ class MyApp extends StatelessWidget {
         valueListenable: Hive.box(LocalStorage.preferencesBox).listenable(),
         builder: (BuildContext context, Box<dynamic> box, Widget? child) {
           final isLight = box.get(LocalStorage.themeMode, defaultValue: true);
+          print("isLight: $isLight");
           return GetMaterialApp.router(
             debugShowCheckedModeBanner: false,
             defaultTransition: Transition.noTransition,
@@ -75,8 +76,7 @@ class MyApp extends StatelessWidget {
             routerDelegate: Get.rootDelegate,
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,
-            // themeMode: isLight ? ThemeMode.light : ThemeMode.dark,
-            themeMode: ThemeMode.dark,
+            themeMode: isLight ? ThemeMode.light : ThemeMode.dark,
             title: 'B&F Admin Panel',
             builder: (context, child) => MediaQuery(
               data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),

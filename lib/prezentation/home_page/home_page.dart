@@ -65,9 +65,9 @@ class _HomePageState extends State<HomePage> {
         Flexible(
           flex: 1,
           child: Container(
-            margin: EdgeInsets.all(10),
+            margin: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppTheme.isDark ? AppColors.darkBlue : Colors.white,
               borderRadius: BorderRadius.circular(10),
             ),
             child: StreamBuilder<List<OrderEntity>>(
@@ -101,46 +101,59 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildWelcomeWidget() {
-    return Stack(
-      children: [
-        Container(
-          constraints: const BoxConstraints(minWidth: double.infinity, minHeight: 130),
-          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 24),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.blurColor.withOpacity(0.25),
-                blurRadius: 2,
-                offset: const Offset(1, 1),
-              ),
-            ],
+    return Container(
+      // constraints: const BoxConstraints(minWidth: double.infinity, minHeight: 130),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: AppTheme.isDark ? AppColors.darkBlue : Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.blurColor.withOpacity(0.25),
+            blurRadius: 2,
+            offset: const Offset(1, 1),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "Welcome",
-                style: AppTextStyle.titleText2,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Flexible(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 24),
+              constraints: const BoxConstraints(minWidth: double.infinity, minHeight: 130),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Welcome",
+                    style: Theme.of(context).textTheme.titleSmall,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 6),
+                  Text(
+                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(color: AppColors.hintColor, fontWeight: FontWeight.w300),
+                    maxLines: 8,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ),
-              const SizedBox(height: 6),
-              Text(
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
-                style: AppTextStyle.bodyText.copyWith(color: AppColors.hintColor, fontWeight: FontWeight.w300),
-                maxLines: 8,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
+            ),
           ),
-        ),
-        Align(
-          alignment: Alignment.centerRight,
-          child: SvgPicture.asset(AppIcons.icEye),
-        ),
-      ],
+          Align(
+            alignment: Alignment.centerRight,
+            child: Image.asset(
+              AppIcons.welcomePlaceholder,
+              height: 173,
+              width: 285,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -150,7 +163,7 @@ class _HomePageState extends State<HomePage> {
       children: [
         _buildStatsItem(
             title: "Всего записей на сегодня",
-            icon: AppIcons.icEye,
+            icon: AppIcons.icCalendar,
             count: 25,
             accentColor: AppColors.darkRose,
             bgColor: AppColors.lightRose,
@@ -158,7 +171,7 @@ class _HomePageState extends State<HomePage> {
         const SizedBox(width: 8),
         _buildStatsItem(
             title: "Новые записи",
-            icon: AppIcons.icEye,
+            icon: AppIcons.icBall,
             count: 4,
             accentColor: AppColors.darkTurquoise,
             bgColor: AppColors.lightTurquoise,
@@ -166,7 +179,7 @@ class _HomePageState extends State<HomePage> {
         const SizedBox(width: 8),
         _buildStatsItem(
             title: "Наши клиенты",
-            icon: AppIcons.icEye,
+            icon: AppIcons.icUserWithHeart,
             count: 136,
             accentColor: AppColors.darkPurple,
             bgColor: AppColors.lightPurple,
@@ -183,30 +196,23 @@ class _HomePageState extends State<HomePage> {
     required int count,
     required VoidCallback onTap,
   }) {
-    return InkWell(
-      onTap: onTap,
-      child: Flexible(
+    return Flexible(
+      child: InkWell(
+        onTap: onTap,
         child: Container(
           height: 144,
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: bgColor,
+            color:  AppTheme.isDark ? AppColors.darkBlue : bgColor,
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SvgPicture.asset(
-                AppIcons.icEye,
-                color: accentColor,
+                icon,
+                color: AppTheme.isDark ? Colors.white : accentColor,
               ),
-              onTap: () {
-                Get.rootDelegate.toNamed(Routes.calendar);
-              },
-            ),
-            IconButton(
-                onPressed: () async => SwitchThemeModeUseCase(getItWeb()).call(),
-                icon: Icon(AppTheme.isDark ? Icons.nightlight : Icons.sunny))
-          ],
               const SizedBox(height: 7),
               Row(
                 children: [
@@ -225,7 +231,7 @@ class _HomePageState extends State<HomePage> {
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w700,
-                      color: accentColor,
+                      color: AppTheme.isDark ? Colors.white : accentColor,
                     ),
                   ),
                 ],
@@ -239,3 +245,4 @@ class _HomePageState extends State<HomePage> {
 
   void _showInfoView(InfoAction infoAction, BaseEntity? item, int? index) {}
 }
+

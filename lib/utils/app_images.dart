@@ -26,6 +26,11 @@ class AppIcons {
   static const String icGallery = 'assets/icons/ic_gallery.svg';
   static const String icYclientsLogo = 'assets/icons/ic_yclients_logo.svg';
   static const String icStar = 'assets/icons/ic_star.svg';
+  static const String icBall = 'assets/icons/ic_ball.svg';
+  static const String icCalendar = 'assets/icons/ic_calendar.svg';
+  static const String icUserWithHeart = 'assets/icons/ic_user_with_heart.svg';
+  static const String icMoon = 'assets/icons/ic_moon.svg';
+  static const String icSun = 'assets/icons/ic_sun.svg';
 
   ///Images
   static const String loginBackground = 'assets/images/login_background.png';
@@ -33,4 +38,5 @@ class AppIcons {
   static const String bonusCardPlaceholder = 'assets/images/ic_bonus_card_placeholder.png';
   static const String promoPlaceholder = 'assets/images/ic_promo_placeholder.png';
   static const String subscriptionPlaceholder = 'assets/images/ic_subscription_placeholder.png';
+  static const String welcomePlaceholder = 'assets/images/welcome_placeholder.png';
 }

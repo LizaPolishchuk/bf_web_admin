@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/prezentation/settings_page/settings_bloc.dart';
 import 'package:salons_adminka/prezentation/widgets/custom_app_bar.dart';
@@ -10,7 +11,6 @@ import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_adminka/utils/app_images.dart';
 import 'package:salons_adminka/utils/app_theme.dart';
-import 'package:salons_adminka/utils/app_text_style.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -164,8 +164,8 @@ class _SettingsPageState extends State<SettingsPage> {
                       Text(
                         AppLocalizations.of(context)!.yourCurrentSubscription,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
+                              fontWeight: FontWeight.w600,
+                            ),
                         maxLines: 2,
                       ),
                       const SizedBox(height: 6),
@@ -263,7 +263,7 @@ class _SettingsPageState extends State<SettingsPage> {
               style: Theme.of(context).textTheme.labelMedium?.copyWith(color: AppColors.textColor)),
         ),
       ),
-    );
+    ];
   }
 
   Widget _buildInputTextField(String label, String hint, TextEditingController controller, bool isEnable,

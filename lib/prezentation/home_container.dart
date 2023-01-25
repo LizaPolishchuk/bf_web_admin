@@ -44,7 +44,7 @@ class HomeContainer extends StatelessWidget {
       height: double.infinity,
       padding: const EdgeInsets.only(bottom: 12, top: 42),
       decoration: BoxDecoration(
-        color: AppTheme.isDark ? Theme.of(context).colorScheme.secondary : Theme.of(context).colorScheme.primary,
+        color: AppTheme.isDark ? AppColors.darkBlue : AppColors.darkRose,
         borderRadius: const BorderRadius.only(
           topRight: Radius.circular(25),
           bottomRight: Radius.circular(25),
