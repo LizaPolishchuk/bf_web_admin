@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:salons_adminka/injection_container_web.dart';
+import 'package:salons_adminka/navigation/routes.dart';
 import 'package:salons_adminka/prezentation/calendar_page/calendar_widget.dart';
 import 'package:salons_adminka/prezentation/calendar_page/orders_bloc.dart';
 import 'package:salons_adminka/prezentation/widgets/custom_app_bar.dart';
@@ -167,7 +169,9 @@ class _HomePageState extends State<HomePage> {
             count: 25,
             accentColor: AppColors.darkRose,
             bgColor: AppColors.lightRose,
-            onTap: () {}),
+            onTap: () {
+              Get.rootDelegate.toNamed(Routes.calendar);
+            }),
         const SizedBox(width: 8),
         _buildStatsItem(
             title: "Новые записи",

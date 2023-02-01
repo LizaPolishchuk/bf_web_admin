@@ -68,7 +68,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
       showNavigationArrow: true,
       timeSlotViewSettings: const TimeSlotViewSettings(
           timeInterval: Duration(minutes: 30), timeIntervalHeight: 92, timeFormat: 'HH:mm', timeRulerSize: 70),
-      cellBorderColor: AppColors.disabledColor.withOpacity(0.1),
+      cellBorderColor: AppColors.disabledColor.withOpacity(AppTheme.isDark ? 0.1 : 0.3),
       onTap: (calendarTapDetails) {
         debugPrint("on tap ${calendarTapDetails.appointments?.first}");
       },

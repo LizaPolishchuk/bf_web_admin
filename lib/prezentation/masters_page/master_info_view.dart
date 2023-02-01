@@ -85,7 +85,7 @@ class _MasterInfoViewState extends State<MasterInfoView> {
         const SizedBox(height: 15),
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 20),
+          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(25),
             color: AppColors.textInputBgGrey,

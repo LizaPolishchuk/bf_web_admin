@@ -95,7 +95,7 @@ abstract class AppTheme {
 getInputDecorationTheme({required bool isDark}) {
   return InputDecorationTheme(
     filled: true,
-    fillColor: isDark ? AppColors.textInputBgGrey : AppColors.hintColor,
+    fillColor: AppColors.textInputBgGrey ,
     // labelStyle: AppTextStyle.bodyMediumText.copyWith(color: Colors.white) ,
     contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
     hintStyle: AppTextStyle.hintText,
