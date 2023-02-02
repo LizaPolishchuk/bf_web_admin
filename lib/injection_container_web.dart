@@ -6,6 +6,7 @@ import 'package:salons_adminka/prezentation/clients_page/clients_bloc.dart';
 import 'package:salons_adminka/prezentation/feedbacks_page/feedbacks_bloc.dart';
 import 'package:salons_adminka/prezentation/masters_page/masters_bloc.dart';
 import 'package:salons_adminka/prezentation/profile_page/profile_bloc.dart';
+import 'package:salons_adminka/prezentation/profile_page/search_places/places_bloc.dart';
 import 'package:salons_adminka/prezentation/promo_and_bonus_cards/bonus_cards_bloc.dart';
 import 'package:salons_adminka/prezentation/promo_and_bonus_cards/promos_bloc.dart';
 import 'package:salons_adminka/prezentation/services_page/services_bloc.dart';
@@ -26,4 +27,5 @@ Future<void> init() async {
   getItWeb.registerFactory(() => SettingsBloc(getItWeb()));
   getItWeb.registerFactory(() => FeedbacksBloc());
   getItWeb.registerFactory(() => OrdersBloc(getItWeb(), getItWeb(), getItWeb(), getItWeb()));
+  getItWeb.registerFactory(() => PlacesBloc(getItWeb(), getItWeb()));
 }

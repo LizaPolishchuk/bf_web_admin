@@ -6,8 +6,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_picker_for_web/image_picker_for_web.dart';
 import 'package:responsive_builder/responsive_builder.dart';
+import 'package:salons_adminka/address_search.dart';
 import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/prezentation/profile_page/profile_bloc.dart';
+import 'package:salons_adminka/prezentation/profile_page/search_places/places_bloc.dart';
 import 'package:salons_adminka/prezentation/widgets/custom_app_bar.dart';
 import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
@@ -39,6 +41,7 @@ class _ProfilePageState extends State<ProfilePage> {
   final List<TextEditingController> _controllersList = [];
 
   late ProfileBloc _profileBloc;
+  late PlacesBloc _placesBloc;
   final List<StreamSubscription> _subscriptions = [];
 
   final ImagePickerPlugin _picker = ImagePickerPlugin();
@@ -56,6 +59,8 @@ class _ProfilePageState extends State<ProfilePage> {
     _profileBloc = getItWeb<ProfileBloc>();
     _profileBloc.loadSalon(salonId ?? "");
 
+    _placesBloc = getItWeb<PlacesBloc>();
+
     _subscriptions.addAll([
       _profileBloc.salonUpdated.listen((event) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Salon updated success")));
@@ -66,6 +71,17 @@ class _ProfilePageState extends State<ProfilePage> {
           content: Text(error),
         ));
       }),
+      _placesBloc.placeDetailsLoaded.listen((place) {
+        _addressController.text = place.name;
+      }),
+      _placesBloc.errorMessage.listen((error) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          backgroundColor: Colors.red,
+          content: Text(error),
+        ));
+      }),
+
+
     ]);
 
     _controllersList
@@ -354,9 +370,11 @@ class _ProfilePageState extends State<ProfilePage> {
     String? text,
     TextEditingController controller,
     GlobalKey<FormState> formKey, {
-    String? hint,
+    String? hint
   }) {
     controller.text = text ?? "";
+
+    // print("isSearchAddressField: $isSearchAddressField");
 
     return Row(
       children: [
@@ -372,9 +390,23 @@ class _ProfilePageState extends State<ProfilePage> {
               controller: controller,
               style: Theme.of(context).textTheme.bodyMedium,
               textAlignVertical: TextAlignVertical.center,
-              readOnly: formKey == _scheduleFormKey,
-              onTap: () {
-                debugPrint("on tap");
+              readOnly: controller == _addressController || formKey == _scheduleFormKey,
+              onTap: () async {
+                if (controller ==_addressController) {
+                  final SuggestionPlace? clickedPlace = await showSearch<SuggestionPlace?>(
+                    context: context,
+                    delegate: AddressSearch(_placesBloc),
+                  );
+
+                  if (clickedPlace != null) {
+                    _placesBloc.getPlaceDetails(clickedPlace.placeId);
+                    // final placeDetails = await PlaceApiProvider(sessionToken).getPlaceDetailFromId(result.placeId);
+                    // setState(() {
+                    //   _searchPlaceController.text =
+                    //       "place: ${placeDetails.lat}, ${placeDetails.lng}, ${result.description}";
+                    // });
+                  }
+                }
               },
               validator: (text) {
                 if (_errorText == null) {
