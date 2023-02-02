@@ -334,7 +334,6 @@ class _SettingsPageState extends State<SettingsPage> {
                     _currentLocale = locale;
                   });
                   getItWeb<SwitchLanguageUseCase>().call(locale.languageCode);
-                  // MyApp.setLocale(context, locale);
                 }
               },
               itemHeight: 40,

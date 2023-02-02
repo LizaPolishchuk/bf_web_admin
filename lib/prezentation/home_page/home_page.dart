@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:salons_adminka/injection_container_web.dart';
@@ -127,14 +128,14 @@ class _HomePageState extends State<HomePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Welcome",
+                    AppLocalizations.of(context)!.welcome,
                     style: Theme.of(context).textTheme.titleSmall,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+                    AppLocalizations.of(context)!.welcomeSpeech,
                     style: Theme.of(context)
                         .textTheme
                         .bodyMedium
@@ -164,7 +165,7 @@ class _HomePageState extends State<HomePage> {
       mainAxisSize: MainAxisSize.min,
       children: [
         _buildStatsItem(
-            title: "Всего записей на сегодня",
+            title: AppLocalizations.of(context)!.totalAppointmentsForToday,
             icon: AppIcons.icCalendar,
             count: 25,
             accentColor: AppColors.darkRose,
@@ -174,7 +175,7 @@ class _HomePageState extends State<HomePage> {
             }),
         const SizedBox(width: 8),
         _buildStatsItem(
-            title: "Новые записи",
+            title: AppLocalizations.of(context)!.newAppointments,
             icon: AppIcons.icBall,
             count: 4,
             accentColor: AppColors.darkTurquoise,
@@ -182,7 +183,7 @@ class _HomePageState extends State<HomePage> {
             onTap: () {}),
         const SizedBox(width: 8),
         _buildStatsItem(
-            title: "Наши клиенты",
+            title: AppLocalizations.of(context)!.ourClients,
             icon: AppIcons.icUserWithHeart,
             count: 136,
             accentColor: AppColors.darkPurple,
