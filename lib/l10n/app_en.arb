@@ -106,5 +106,6 @@
   "orderDate": "Date of order",
   "orderTime": "Time of order",
   "order1": "Order",
-  "doYouReallyWantToDelete": "Do you really want to delete"
+  "doYouReallyWantToDelete": "Do you really want to delete",
+  "language": "Language"
 }

@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:get/get.dart';
 // ignore_for_file: depend_on_referenced_packages
 import 'package:hive_flutter/hive_flutter.dart';
@@ -14,6 +15,7 @@ import 'package:salons_adminka/prezentation/home_page/home_page.dart';
 import 'package:salons_adminka/utils/app_theme.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart' as di;
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
+import 'package:universal_io/io.dart';
 
 import 'event_bus_events/event_bus.dart';
 import 'event_bus_events/user_logout_event.dart';
@@ -57,10 +59,29 @@ Future<void> initHive() async {
   await getIt<LocalStorage>().openBox();
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
+  static void setLocale(BuildContext context, Locale newLocale) async {
+    _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
+    state?.changeLanguage(newLocale);
+  }
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   // Get.changeTheme(Get.isDarkMode? ThemeData.light(): ThemeData.dark());
+  // Locale? _currentLocale;
+
+  changeLanguage(Locale locale) {
+    // print("newLocale : $locale");
+    //
+    // setState(() {
+    //   _currentLocale = locale;
+    // });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +89,14 @@ class MyApp extends StatelessWidget {
         valueListenable: Hive.box(LocalStorage.preferencesBox).listenable(),
         builder: (BuildContext context, Box<dynamic> box, Widget? child) {
           final isLight = box.get(LocalStorage.themeMode, defaultValue: true);
-          print("isLight: $isLight");
+          debugPrint("isLight: $isLight");
+
+          final String defaultSystemLocale = Platform.localeName;
+          var locale = Locale(box.get(LocalStorage.currentLanguage, defaultValue: defaultSystemLocale));
+          debugPrint("defaultSystemLocale: $defaultSystemLocale, currentLanguage: $locale");
+
+          Get.locale = locale;
+
           return GetMaterialApp.router(
             debugShowCheckedModeBanner: false,
             defaultTransition: Transition.noTransition,
@@ -76,6 +104,7 @@ class MyApp extends StatelessWidget {
             routerDelegate: Get.rootDelegate,
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,
+            // locale: _locale,
             themeMode: isLight ? ThemeMode.light : ThemeMode.dark,
             title: 'B&F Admin Panel',
             builder: (context, child) => MediaQuery(
@@ -84,11 +113,12 @@ class MyApp extends StatelessWidget {
             ),
             localizationsDelegates: const [
               AppLocalizations.delegate,
+              LocaleNamesLocalizationsDelegate(),
               GlobalMaterialLocalizations.delegate,
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            supportedLocales: L10n.all,
+            supportedLocales: L10n.supportedLocales,
           );
         });
   }

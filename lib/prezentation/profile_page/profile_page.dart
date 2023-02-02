@@ -404,6 +404,7 @@ class _ProfilePageState extends State<ProfilePage> {
               decoration: InputDecoration(
                 counterText: "",
                 hintText: hint ?? title,
+                fillColor: Colors.white,
               ).applyDefaults(Theme.of(context).inputDecorationTheme),
             ),
           ),

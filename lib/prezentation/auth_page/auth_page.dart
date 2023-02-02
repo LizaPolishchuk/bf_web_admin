@@ -103,9 +103,7 @@ class _AuthPageState extends State<AuthPage> {
         alignment: Alignment.center,
         children: [
           mobileBackground(context),
-          Expanded(
-            child: _buildContent(),
-          ),
+          _buildContent(),
         ],
       ),
     );

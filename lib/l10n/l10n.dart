@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 class L10n {
-  static final all = [
-    const Locale("uk"),
+  static final supportedLocales = [
     const Locale("en"),
+    const Locale("uk"),
   ];
+
+  static const defaultLocale = Locale("en");
 
   // const [
   // Locale("af"),

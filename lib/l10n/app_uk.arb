@@ -106,5 +106,6 @@
   "orderDate": "Дата запису",
   "orderTime": "Час запису",
   "order1": "Запис",
-  "doYouReallyWantToDelete": "Ви дійсно хочете видалити"
+  "doYouReallyWantToDelete": "Ви дійсно хочете видалити",
+  "language": "Мова"
 }

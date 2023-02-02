@@ -1,10 +1,14 @@
 import 'dart:async';
 
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:salons_adminka/injection_container_web.dart';
+import 'package:salons_adminka/l10n/l10n.dart';
 import 'package:salons_adminka/prezentation/settings_page/settings_bloc.dart';
 import 'package:salons_adminka/prezentation/widgets/custom_app_bar.dart';
 import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
@@ -12,6 +16,7 @@ import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_adminka/utils/app_images.dart';
 import 'package:salons_adminka/utils/app_theme.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
+import 'package:universal_io/io.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -100,6 +105,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
   List<Widget> _firstColumnContent() {
     return [
+      _buildLanguagesSelector(),
+      const SizedBox(height: 22),
       _buildInputTextField(AppLocalizations.of(context)!.email, "", _emailController, false),
       const SizedBox(height: 22),
       _buildInputTextField(AppLocalizations.of(context)!.password, "", _emailController, false),
@@ -266,6 +273,97 @@ class _SettingsPageState extends State<SettingsPage> {
     ];
   }
 
+  Locale? _currentLocale;
+
+  Widget _buildLanguagesSelector() {
+    var currentLocaleName = getIt<LocalStorage>().getLanguage();
+    if (currentLocaleName == null) {
+      var localName = Platform.localeName;
+      if (localName.contains("-")) {
+        localName = localName.split("-").first;
+      }
+      currentLocaleName = localName;
+    }
+    _currentLocale = Locale(currentLocaleName);
+
+    if (!L10n.supportedLocales.contains(_currentLocale)) {
+      _currentLocale = L10n.defaultLocale;
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          AppLocalizations.of(context)!.language,
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+        const SizedBox(height: 8),
+        Container(
+          width: double.infinity,
+          // height: 50,
+          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(25),
+            color: Colors.white,
+          ),
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton2(
+             buttonDecoration: BoxDecoration(
+               borderRadius: BorderRadius.circular(25),
+             ),
+              hint: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  AppLocalizations.of(context)!.language,
+                  style: Theme.of(context).textTheme.displaySmall,
+                ),
+              ),
+              items: L10n.supportedLocales.map((locale) {
+                return DropdownMenuItem<Locale>(
+                  value: locale,
+                  child: Text(
+                    LocaleNames.of(context)!.nameOf(locale.languageCode)?.capitalize ?? locale.languageCode,
+                    style: Theme.of(context).textTheme.displaySmall?.copyWith(fontSize: 16),
+                  ),
+                );
+              }).toList(),
+              value: _currentLocale,
+              onChanged: (Locale? locale) {
+                if (locale != null && _currentLocale != locale) {
+                  setState(() {
+                    _currentLocale = locale;
+                  });
+                  getItWeb<SwitchLanguageUseCase>().call(locale.languageCode);
+                  // MyApp.setLocale(context, locale);
+                }
+              },
+              itemHeight: 40,
+              selectedItemBuilder: (context) {
+                return L10n.supportedLocales.map(
+                  (locale) {
+                    return Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        LocaleNames.of(context)!.nameOf(locale.languageCode)?.capitalize ?? locale.languageCode,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 14),
+                        maxLines: 1,
+                      ),
+                    );
+                  },
+                ).toList();
+              },
+            ),
+          ),
+          // Text(
+          //   LocaleNames.of(context)!.nameOf(locale.languageCode) ?? "",
+          //   style: Theme.of(context).textTheme.displaySmall,
+          // ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildInputTextField(String label, String hint, TextEditingController controller, bool isEnable,
       {bool isPassword = false}) {
     return Column(
@@ -282,10 +380,8 @@ class _SettingsPageState extends State<SettingsPage> {
           style: Theme.of(context).textTheme.bodyMedium,
           enabled: isEnable,
           obscureText: isPassword,
-          decoration: InputDecoration(
-            counterText: "",
-            hintText: hint,
-          ).applyDefaults(Theme.of(context).inputDecorationTheme),
+          decoration: InputDecoration(counterText: "", hintText: hint, fillColor: Colors.white)
+              .applyDefaults(Theme.of(context).inputDecorationTheme),
         ),
       ],
     );
