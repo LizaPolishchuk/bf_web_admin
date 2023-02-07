@@ -5,6 +5,7 @@ import 'package:salons_adminka/prezentation/calendar_page/calendar_page.dart';
 import 'package:salons_adminka/prezentation/clients_page/clients_page.dart';
 import 'package:salons_adminka/prezentation/feedbacks_page/feedbacks_page.dart';
 import 'package:salons_adminka/prezentation/home_container.dart';
+import 'package:salons_adminka/prezentation/loader_page.dart';
 import 'package:salons_adminka/prezentation/masters_page/masters_page.dart';
 import 'package:salons_adminka/prezentation/profile_page/profile_page.dart';
 import 'package:salons_adminka/prezentation/promo_and_bonus_cards/promo_and_cards_page.dart';
@@ -35,6 +36,7 @@ class Routes {
   static const support = '/support';
   static const settings = '/settings';
   static const calendar = '/calendar';
+  static const loader = '/loader';
 }
 
 abstract class AppPages {
@@ -112,6 +114,11 @@ abstract class AppPages {
         selectedMenuIndex: homeIndex,
         child: CalendarPage(),
       ),
+    ),
+    GetPage(
+      name: Routes.loader,
+      opaque: false,
+      page: () => const LoaderPage(),
     ),
   ];
 }

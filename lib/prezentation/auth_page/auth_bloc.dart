@@ -30,8 +30,12 @@ class AuthBloc {
   Stream<bool> get isLoading => _isLoadingSubject.stream;
 
   login(String email, String password) async {
-    // print()
+    _isLoadingSubject.add(true);
+
     var response = await _loginWithEmailAndPasswordUseCase(email, password);
+
+    _isLoadingSubject.add(false);
+
     if (response.isLeft) {
       _errorSubject.add(response.left.message);
     } else {

@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:salons_adminka/injection_container_web.dart';
+import 'package:salons_adminka/navigation/routes.dart';
 import 'package:salons_adminka/prezentation/auth_page/auth_bloc.dart';
 import 'package:salons_adminka/utils/app_images.dart';
 import 'package:salons_adminka/utils/app_text_style.dart';
@@ -46,8 +48,6 @@ class _AuthPageState extends State<AuthPage> {
   void initState() {
     super.initState();
 
-    print("isDark: ${AppTheme.isDark},brightness: ${AppTheme.brightness}");
-
     _authBloc = getItWeb<AuthBloc>();
     _subscriptions.addAll([
       _authBloc.errorMessage.listen((event) {
@@ -61,6 +61,13 @@ class _AuthPageState extends State<AuthPage> {
           backgroundColor: AppColors.errorColorLight,
           content: Text(error),
         ));
+      }),
+      _authBloc.isLoading.listen((isLoading) {
+        if (isLoading) {
+          Get.rootDelegate.toNamed(Routes.loader);
+        } else {
+          Get.back();
+        }
       }),
     ]);
 
@@ -76,8 +83,6 @@ class _AuthPageState extends State<AuthPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("isDarkTheme: ${Theme.of(context).brightness}");
-
     return WillPopScope(
       onWillPop: () async {
         if (_registrationMode) {
@@ -110,7 +115,6 @@ class _AuthPageState extends State<AuthPage> {
   }
 
   Widget _desktopView(BuildContext context) {
-    // final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Stack(
@@ -195,9 +199,7 @@ class _AuthPageState extends State<AuthPage> {
                               Text(
                                 "B&F",
                                 style: TextStyle(
-                                    color: AppTheme.isDark
-                                        ? Colors.white
-                                        : AppColors.textColor,
+                                    color: AppTheme.isDark ? Colors.white : AppColors.textColor,
                                     fontSize: 50,
                                     fontWeight: FontWeight.w700),
                               ),
@@ -205,9 +207,7 @@ class _AuthPageState extends State<AuthPage> {
                               Text(
                                 "Be Beautiful & Be Free",
                                 style: TextStyle(
-                                    color: AppTheme.isDark
-                                        ? Colors.white
-                                        : AppColors.textColor,
+                                    color: AppTheme.isDark ? Colors.white : AppColors.textColor,
                                     fontSize: 20,
                                     fontWeight: FontWeight.w600),
                               ),

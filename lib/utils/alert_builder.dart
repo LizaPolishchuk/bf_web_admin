@@ -44,13 +44,20 @@ class AlertBuilder {
                               overflow: TextOverflow.ellipsis,
                               maxLines: 3,
                               textAlign: TextAlign.center,
-                              style: Theme.of(context).textTheme.titleMedium,
+                              style: Theme
+                                  .of(context)
+                                  .textTheme
+                                  .titleMedium,
                             ),
                           ),
                           const SizedBox(height: 16),
                           Text(
                             itemName,
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            style: Theme
+                                .of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
                               fontWeight: FontWeight.w600,
                             ),
                           ),
