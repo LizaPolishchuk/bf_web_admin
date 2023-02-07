@@ -1,4 +1,5 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:duration_picker/duration_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -152,9 +153,9 @@ class _ServiceInfoViewState extends State<ServiceInfoView> {
                 child: Text(
                   AppLocalizations.of(context)!.edit,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.hintColor,
-                    decoration: TextDecoration.underline,
-                  ),
+                        color: AppColors.hintColor,
+                        decoration: TextDecoration.underline,
+                      ),
                 ),
               ),
               TextButton(
@@ -164,8 +165,8 @@ class _ServiceInfoViewState extends State<ServiceInfoView> {
                 child: Text(
                   AppLocalizations.of(context)!.delete,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.red,
-                  ),
+                        color: AppColors.red,
+                      ),
                 ),
               ),
             ],
@@ -223,19 +224,35 @@ class _ServiceInfoViewState extends State<ServiceInfoView> {
       onChanged: (text) {
         _checkIfEnableButton();
       },
+      readOnly: isDuration,
+      onTap: () async {
+        if (isDuration) {
+          var duration = await showDurationPicker(
+            context: context,
+            initialTime: const Duration(minutes: 30),
+          );
+          if (duration != null) {
+            setState(() {
+              _durationController.text = duration.inMinutes.toString();
+            });
+          }
+        }
+      },
       maxLines: 1,
-      maxLength: isPrice || isDuration ? 5 : null,
+      maxLength: isPrice ? 5 : null,
       enabled: _infoAction != InfoAction.view,
       style: Theme.of(context).textTheme.bodyMedium,
       inputFormatters: [
         if (isPrice) FilteringTextInputFormatter.digitsOnly,
-        if (isDuration) FilteringTextInputFormatter.digitsOnly,
-        //TimeTextInputFormatter(),
       ],
       decoration: InputDecoration(
         counterText: "",
         hintText: hint,
-        suffixText: isPrice ? AppLocalizations.of(context)!.uah : null,
+        suffixText: isPrice
+            ? AppLocalizations.of(context)!.uah
+            : isDuration
+                ? AppLocalizations.of(context)!.min
+                : null,
       ).applyDefaults(Theme.of(context).inputDecorationTheme),
     );
   }
