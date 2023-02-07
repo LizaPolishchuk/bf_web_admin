@@ -1,8 +1,11 @@
+import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:salons_adminka/prezentation/widgets/colored_circle.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
+import 'package:salons_adminka/utils/app_images.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class AdditionalClientDetails extends StatefulWidget {
@@ -180,16 +183,38 @@ class _AdditionalClientDetailsState extends State<AdditionalClientDetails> {
             childAspectRatio: 1.5,
             crossAxisCount: 2,
             children: [
-              Container(
-                color: Colors.blueAccent,
-              ),
-              Container(
-                color: Colors.green,
-              )
+              _buildBonusCard(),
+              _buildBonusCard(),
             ],
           ),
         )
       ],
+    );
+  }
+
+  Widget _buildBonusCard() {
+    return FlipCard(
+      direction: FlipDirection.HORIZONTAL,
+      side: CardSide.FRONT,
+      front: Container(
+        padding: const EdgeInsets.all(12),
+        color: Colors.blueAccent,
+        alignment: Alignment.center,
+        child: Text(
+          "Card for 20% discount",
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white),
+        ),
+      ),
+      back: Container(
+        color: Colors.grey,
+        alignment: Alignment.center,
+        child: InkWell(
+            onTap: (){
+              print("do delete");
+            },
+            child: SvgPicture.asset(AppIcons.icDelete)),
+      ),
     );
   }
 
