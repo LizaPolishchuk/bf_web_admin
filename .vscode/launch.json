@@ -1,0 +1,25 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Production",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": [
+        "--dart-define=host=prod_host",
+        "--dart-define=port=prod_port"
+      ]
+    },
+    {
+      "name": "Development",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
+      "args": [
+        "--dart-define=host=dev_host",
+        "--dart-define=port=dev_port"
+      ]
+    }
+  ]
+}
