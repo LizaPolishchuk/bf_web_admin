@@ -58,7 +58,7 @@ class _CategoriesSelectorState extends State<CategoriesSelector> {
                 return BaseItemsSelector(
                   items: snapshot.data ?? [],
                   onSelectedItem: (item) {
-                    widget.onSelectedCategory(item as Category);
+                    widget.onSelectedCategory(item as Category?);
                   },
                 );
               }),

@@ -35,6 +35,7 @@ class ServicesBloc {
   Stream<bool> get isLoading => _isLoadingSubject.stream;
 
   getServices(String salonId, String? categoryId) async {
+    print("getServices: ");
     var response = await _getServicesListUseCase(salonId, categoryId);
     if (response.isLeft) {
       _errorSubject.add(response.left.message);

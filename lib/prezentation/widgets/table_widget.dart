@@ -8,6 +8,7 @@ import 'package:salons_adminka/prezentation/widgets/colored_circle.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_adminka/utils/app_images.dart';
 import 'package:salons_adminka/utils/app_theme.dart';
+import 'package:salons_adminka/utils/mobile_table_widget.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class TableWidget extends StatefulWidget {
@@ -33,27 +34,54 @@ class TableWidget extends StatefulWidget {
 }
 
 class _TableWidgetState extends State<TableWidget> {
+  bool _isDesktop = true;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-        // margin: const EdgeInsets.only(right: 38),
-        padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 60),
-        decoration: BoxDecoration(
-          color: AppTheme.isDark ? AppColors.darkBlue : Colors.white,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: SingleChildScrollView(
-          child: Table(
-            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-            children: _getTableRows(),
-            columnWidths: (widget.items.isNotEmpty && widget.items.first is FeedbackEntity)
-                ? {
-                    0: const FlexColumnWidth(2),
-                    3: const FlexColumnWidth(4),
-                  }
-                : {},
-          ),
-        ));
+    return ResponsiveBuilder(
+        breakpoints: const ScreenBreakpoints(tablet: 400, desktop: 750, watch: 300),
+        builder: (context, SizingInformation size) {
+          if (size.isDesktop != _isDesktop) {
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              setState(() {
+                _isDesktop = size.isDesktop;
+              });
+            });
+          }
+
+          return Container(
+            padding: EdgeInsets.symmetric(vertical: _isDesktop ? 30 : 0, horizontal: _isDesktop ? 60 : 0),
+            decoration: BoxDecoration(
+              color: AppTheme.isDark ? AppColors.darkBlue : Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: SingleChildScrollView(
+              child: ScreenTypeLayout.builder(
+                breakpoints: const ScreenBreakpoints(tablet: 400, desktop: 750, watch: 300),
+                mobile: (_) {
+                  return MobileTableWidget(rows: _getTableRows(), columnTitles: widget.columnTitles);
+                },
+                desktop: _buildTable,
+                tablet: (_) {
+                  return MobileTableWidget(rows: _getTableRows(), columnTitles: widget.columnTitles);
+                },
+              ),
+            ),
+          );
+        });
+  }
+
+  Widget _buildTable(BuildContext context) {
+    return Table(
+      defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+      children: _getTableRows(),
+      columnWidths: (widget.items.isNotEmpty && widget.items.first is FeedbackEntity)
+          ? {
+              0: const FlexColumnWidth(2),
+              3: const FlexColumnWidth(4),
+            }
+          : {},
+    );
   }
 
   List<TableRow> _getTableRows() {
@@ -69,7 +97,8 @@ class _TableWidgetState extends State<TableWidget> {
                 _buildTableRow(index, [
                   _buildRowText(service.name,
                       style:
-                          Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 14, fontWeight: FontWeight.w500)),
+                          Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 14, fontWeight: FontWeight.w500),
+                      isFirstColumn: true),
                   _buildRowText(service.price.toString()),
                   _buildRowText((service.duration ?? 0).toString()),
                   _buildRowText(service.categoryName ?? "", categoryColor: service.categoryColor),
@@ -90,7 +119,8 @@ class _TableWidgetState extends State<TableWidget> {
                   _buildRowText(master.name,
                       style:
                           Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 14, fontWeight: FontWeight.w500),
-                      photoUrl: master.avatar),
+                      photoUrl: master.avatar,
+                      isFirstColumn: true),
                   _buildRowText(master.phoneNumber ?? ""),
                   _buildRowText(master.providedServices?.values.join(", ") ?? ""),
                   _buildRowText(master.status ?? ""),
@@ -116,7 +146,8 @@ class _TableWidgetState extends State<TableWidget> {
                   _buildRowText(client.name,
                       style:
                           Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 14, fontWeight: FontWeight.w500),
-                      photoUrl: client.photoUrl),
+                      photoUrl: client.photoUrl,
+                      isFirstColumn: true),
                   _buildRowText(client.city ?? ""),
                   _buildRowText(clientStatus?.localizedName(context) ?? "", iconPath: clientStatus?.iconPath()),
                   _buildRowText(client.services?.values.join(", ") ?? ""),
@@ -138,7 +169,8 @@ class _TableWidgetState extends State<TableWidget> {
                   _buildRowText(feedback.authorName,
                       style:
                           Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 14, fontWeight: FontWeight.w500),
-                      photoUrl: feedback.authorAvatar),
+                      photoUrl: feedback.authorAvatar,
+                      isFirstColumn: true),
                   _buildRowText(DateFormat("dd.MM.yyyy").format(feedback.date)),
                   _buildPointStars(feedback.points),
                   _buildRowText(feedback.feedbackText),
@@ -168,15 +200,25 @@ class _TableWidgetState extends State<TableWidget> {
   }
 
   TableRow _buildHeader() {
-    var titleWidgets = widget.columnTitles.map((e) => _buildTitle(e)).toList();
+    var titleWidgets = widget.columnTitles
+        .map(
+          (title) => Container(
+            alignment: _isDesktop ? Alignment.centerLeft : Alignment.center,
+            padding: const EdgeInsets.only(bottom: 32),
+            child: Text(title, style: Theme.of(context).textTheme.displaySmall),
+          ),
+        )
+        .toList();
 
     return TableRow(children: titleWidgets);
   }
 
-  Widget _buildRowText(String text, {TextStyle? style, int? categoryColor, String? photoUrl, String? iconPath}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+  Widget _buildRowText(String text,
+      {TextStyle? style, int? categoryColor, String? photoUrl, String? iconPath, bool isFirstColumn = false}) {
+    return SizedBox(
+      height: 80,
       child: Row(
+        mainAxisAlignment: _isDesktop || isFirstColumn ? MainAxisAlignment.start : MainAxisAlignment.center,
         children: [
           if (iconPath?.isNotEmpty == true)
             Padding(
@@ -217,12 +259,13 @@ class _TableWidgetState extends State<TableWidget> {
   }
 
   Widget _buildActions(BaseEntity item, int index, {bool isOnlyView = false}) {
-    return ResponsiveBuilder(builder: (context, SizingInformation size) {
-      final padding = size.isDesktop ? const EdgeInsets.only(left: 16) : const EdgeInsets.only(top: 5);
-      return Flex(
-        direction: size.isDesktop ? Axis.horizontal : Axis.vertical,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+    final padding = EdgeInsets.only(left: _isDesktop ? 16 : 6);
+
+    return SizedBox(
+      height: 80,
+      child: Row(
+        mainAxisAlignment: _isDesktop ? MainAxisAlignment.start : MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           InkWell(
             onTap: () {
@@ -266,16 +309,6 @@ class _TableWidgetState extends State<TableWidget> {
               ),
             )
         ],
-      );
-    });
-  }
-
-  Widget _buildTitle(String title) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 32),
-      child: Text(
-        title,
-        style: Theme.of(context).textTheme.displaySmall,
       ),
     );
   }
