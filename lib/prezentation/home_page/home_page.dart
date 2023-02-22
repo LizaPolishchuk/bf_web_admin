@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/navigation/routes.dart';
 import 'package:salons_adminka/prezentation/calendar_page/calendar_widget.dart';
@@ -43,63 +44,70 @@ class _HomePageState extends State<HomePage> {
     _ordersBloc.getOrders(_currentSalonId);
   }
 
+  // var CustomCalendar _calendar;
+
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Flexible(
-          flex: 2,
-          fit: FlexFit.tight,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CustomAppBar(title: _currentSalonName),
-                _buildWelcomeWidget(),
-                const SizedBox(height: 15),
-                _buildStatsItems(),
-              ],
+    return ResponsiveBuilder(
+      builder: (context, SizingInformation size) {
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(
+              flex: size.isDesktop ? 2 : 1,
+              fit: FlexFit.tight,
+              child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      CustomAppBar(title: _currentSalonName),
+                      if (size.isDesktop) _buildWelcomeWidget(),
+                      const SizedBox(height: 15),
+                      Expanded(
+                        child: _buildStatsItems(size.isDesktop),
+                      ),
+                    ],
+                  )),
             ),
-          ),
-        ),
-        Flexible(
-          flex: 1,
-          child: Container(
-            margin: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: AppTheme.isDark ? AppColors.darkBlue : Colors.white,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: StreamBuilder<List<OrderEntity>>(
-                stream: _ordersBloc.ordersLoaded,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  }
+            if (!size.isMobile)
+              Flexible(
+                flex: 1,
+                child: Container(
+                  margin: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: AppTheme.isDark ? AppColors.darkBlue : Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: StreamBuilder<List<OrderEntity>>(
+                      stream: _ordersBloc.ordersLoaded,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        }
 
-                  var orders = snapshot.data ?? [];
-                  print("orders main page: $orders");
+                        var orders = snapshot.data ?? [];
 
-                  return CustomCalendar(
-                    orders: orders,
-                    isEnabled: false,
-                    calendarView: CalendarView.day,
-                    onUpdateOrder: (order) {
-                      // _ordersBloc.updateOrder(order);
-                    },
-                    onClickOrder: (order) {
-                      // _showInfoView(InfoAction.view, order, null);
-                    },
-                  );
-                }),
-          ),
-        ),
-      ],
+                        return CustomCalendar(
+                          orders: orders,
+                          isEnabled: false,
+                          calendarView: CalendarView.day,
+                          onUpdateOrder: (order) {
+                            // _ordersBloc.updateOrder(order);
+                          },
+                          onClickOrder: (order) {
+                            // _showInfoView(InfoAction.view, order, null);
+                          },
+                        );
+                      }),
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 
@@ -160,35 +168,47 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildStatsItems() {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _buildStatsItem(
-            title: AppLocalizations.of(context)!.totalAppointmentsForToday,
-            icon: AppIcons.icCalendar,
-            count: 25,
-            accentColor: AppColors.darkRose,
-            bgColor: AppColors.lightRose,
-            onTap: () {
-              Get.rootDelegate.toNamed(Routes.calendar);
-            }),
-        const SizedBox(width: 8),
-        _buildStatsItem(
-            title: AppLocalizations.of(context)!.newAppointments,
-            icon: AppIcons.icBall,
-            count: 4,
-            accentColor: AppColors.darkTurquoise,
-            bgColor: AppColors.lightTurquoise,
-            onTap: () {}),
-        const SizedBox(width: 8),
-        _buildStatsItem(
-            title: AppLocalizations.of(context)!.ourClients,
-            icon: AppIcons.icUserWithHeart,
-            count: 136,
-            accentColor: AppColors.darkPurple,
-            bgColor: AppColors.lightPurple,
-            onTap: () {}),
+  Widget _buildStatsItems(bool isDesktop) {
+    var margin = isDesktop ? const SizedBox(width: 8) : const SizedBox(height: 8);
+    List<Widget> statsItems = [
+      _buildStatsItem(
+          title: AppLocalizations.of(context)!.totalAppointmentsForToday,
+          icon: AppIcons.icCalendar,
+          count: 25,
+          accentColor: AppColors.darkRose,
+          bgColor: AppColors.lightRose,
+          onTap: () {
+            Get.rootDelegate.toNamed(Routes.calendar);
+          }),
+      margin,
+      _buildStatsItem(
+          title: AppLocalizations.of(context)!.newAppointments,
+          icon: AppIcons.icBall,
+          count: 4,
+          accentColor: AppColors.darkTurquoise,
+          bgColor: AppColors.lightTurquoise,
+          onTap: () {}),
+      margin,
+      _buildStatsItem(
+          title: AppLocalizations.of(context)!.ourClients,
+          icon: AppIcons.icUserWithHeart,
+          count: 136,
+          accentColor: AppColors.darkPurple,
+          bgColor: AppColors.lightPurple,
+          onTap: () {}),
+    ];
+
+    return CustomScrollView(
+      slivers: [
+        SliverFillRemaining(
+          hasScrollBody: false,
+          child: Flex(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            direction: isDesktop ? Axis.horizontal : Axis.vertical,
+            children: statsItems,
+          ),
+        ),
       ],
     );
   }
@@ -201,7 +221,7 @@ class _HomePageState extends State<HomePage> {
     required int count,
     required VoidCallback onTap,
   }) {
-    return Flexible(
+    return Expanded(
       child: InkWell(
         onTap: onTap,
         child: Container(
@@ -209,7 +229,7 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color:  AppTheme.isDark ? AppColors.darkBlue : bgColor,
+            color: AppTheme.isDark ? AppColors.darkBlue : bgColor,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -219,27 +239,29 @@ class _HomePageState extends State<HomePage> {
                 color: AppTheme.isDark ? Colors.white : accentColor,
               ),
               const SizedBox(height: 7),
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      title,
-                      maxLines: 2,
+              Expanded(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        title,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyle.hintText,
+                      ),
+                    ),
+                    Text(
+                      count.toString(),
+                      maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: AppTextStyle.hintText,
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w700,
+                        color: AppTheme.isDark ? Colors.white : accentColor,
+                      ),
                     ),
-                  ),
-                  Text(
-                    count.toString(),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w700,
-                      color: AppTheme.isDark ? Colors.white : accentColor,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               )
             ],
           ),
@@ -250,4 +272,3 @@ class _HomePageState extends State<HomePage> {
 
   void _showInfoView(InfoAction infoAction, BaseEntity? item, int? index) {}
 }
-

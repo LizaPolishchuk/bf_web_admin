@@ -40,6 +40,7 @@ class BonusCardsBloc {
       _errorSubject.add(response.left.message);
     } else {
       _bonusCardsList = response.right;
+      print("getBonusCards: ${_bonusCardsList.length}");
       _bonusCardsLoadedSubject.add(_bonusCardsList);
     }
   }

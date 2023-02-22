@@ -58,13 +58,9 @@ class _TableWidgetState extends State<TableWidget> {
             child: SingleChildScrollView(
               child: ScreenTypeLayout.builder(
                 breakpoints: const ScreenBreakpoints(tablet: 400, desktop: 750, watch: 300),
-                mobile: (_) {
-                  return MobileTableWidget(rows: _getTableRows(), columnTitles: widget.columnTitles);
-                },
+                mobile: (context) => MobileTableWidget(rows: _getTableRows(), columnTitles: widget.columnTitles),
                 desktop: _buildTable,
-                tablet: (_) {
-                  return MobileTableWidget(rows: _getTableRows(), columnTitles: widget.columnTitles);
-                },
+                tablet: (context) => MobileTableWidget(rows: _getTableRows(), columnTitles: widget.columnTitles),
               ),
             ),
           );
