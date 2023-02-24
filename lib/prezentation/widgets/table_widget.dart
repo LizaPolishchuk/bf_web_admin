@@ -35,6 +35,7 @@ class TableWidget extends StatefulWidget {
 
 class _TableWidgetState extends State<TableWidget> {
   bool _isDesktop = true;
+  final double _rowHeight = 80;
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +75,9 @@ class _TableWidgetState extends State<TableWidget> {
       columnWidths: (widget.items.isNotEmpty && widget.items.first is FeedbackEntity)
           ? {
               0: const FlexColumnWidth(2),
-              3: const FlexColumnWidth(4),
+              // 2: const FlexColumnWidth(1.5),
+              3: const FlexColumnWidth(3),
+              // 4: const FlexColumnWidth(0.5),
             }
           : {},
     );
@@ -199,7 +202,7 @@ class _TableWidgetState extends State<TableWidget> {
     var titleWidgets = widget.columnTitles
         .map(
           (title) => Container(
-            alignment: _isDesktop ? Alignment.centerLeft : Alignment.center,
+            alignment: _isDesktop ? Alignment.center : Alignment.center,
             padding: const EdgeInsets.only(bottom: 32),
             child: Text(title, style: Theme.of(context).textTheme.displaySmall),
           ),
@@ -212,9 +215,9 @@ class _TableWidgetState extends State<TableWidget> {
   Widget _buildRowText(String text,
       {TextStyle? style, int? categoryColor, String? photoUrl, String? iconPath, bool isFirstColumn = false}) {
     return SizedBox(
-      height: 80,
+      height: _rowHeight,
       child: Row(
-        mainAxisAlignment: _isDesktop || isFirstColumn ? MainAxisAlignment.start : MainAxisAlignment.center,
+        mainAxisAlignment:  isFirstColumn ? MainAxisAlignment.start : MainAxisAlignment.center,
         children: [
           if (iconPath?.isNotEmpty == true)
             Padding(
@@ -258,9 +261,9 @@ class _TableWidgetState extends State<TableWidget> {
     final padding = EdgeInsets.only(left: _isDesktop ? 16 : 6);
 
     return SizedBox(
-      height: 80,
+      height: _rowHeight,
       child: Row(
-        mainAxisAlignment: _isDesktop ? MainAxisAlignment.start : MainAxisAlignment.center,
+        mainAxisAlignment:  MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           InkWell(
@@ -310,17 +313,25 @@ class _TableWidgetState extends State<TableWidget> {
   }
 
   Widget _buildPointStars(int points) {
-    return SizedBox(
-        height: 16,
-        child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          itemBuilder: (context, index) {
-            return SvgPicture.asset(AppIcons.icStar);
-          },
-          itemCount: points,
-          separatorBuilder: (BuildContext context, int index) {
-            return const SizedBox(width: 5);
-          },
-        ));
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: SizedBox(
+          height: _rowHeight,
+          child: Flex(
+            direction: Axis.horizontal,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: List.filled(5, Padding(
+              padding: const EdgeInsets.only(right: 4),
+              child: SvgPicture.asset(AppIcons.icStar),
+            )),
+            // itemBuilder: (context, index) {
+            //   return SvgPicture.asset(AppIcons.icStar);
+            // },
+            // itemCount: points,
+            // separatorBuilder: (BuildContext context, int index) {
+            //   return const SizedBox(width: 5);
+            // },
+          )),
+    );
   }
 }

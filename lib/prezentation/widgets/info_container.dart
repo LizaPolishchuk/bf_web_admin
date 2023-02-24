@@ -97,9 +97,13 @@ class InfoContainer extends StatelessWidget {
                       ],
                     ),
                     child: Center(
-                      child: SingleChildScrollView(
-                        child: Padding(padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20), child: value),
-                      ),
+                      child: CustomScrollView(slivers: [
+                        SliverFillRemaining(
+                          hasScrollBody: false,
+                          child:
+                              Padding(padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20), child: value),
+                        ),
+                      ]),
                     ),
                   ),
                 );

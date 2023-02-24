@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_picker_for_web/image_picker_for_web.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/prezentation/clients_page/additional_client_details_widget.dart';
 import 'package:salons_adminka/prezentation/clients_page/clients_bloc.dart';
@@ -17,7 +18,23 @@ import 'package:salons_adminka/utils/alert_builder.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_adminka/utils/app_images.dart';
 import 'package:salons_adminka/utils/app_theme.dart';
+import 'package:salons_adminka/utils/constants.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
+
+enum InfoType { main, additional }
+
+extension PageCategoryExtension on InfoType {
+  String localizedName(BuildContext context) {
+    switch (this) {
+      case InfoType.main:
+        return AppLocalizations.of(context)!.mainInfo;
+      case InfoType.additional:
+        return AppLocalizations.of(context)!.additionalInfo;
+      default:
+        return "";
+    }
+  }
+}
 
 class ClientDetailsPage extends StatefulWidget {
   final ClientsBloc clientsBloc;
@@ -48,6 +65,8 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
 
   late String _currentSalonId;
 
+  InfoType _currentInfoType = InfoType.main;
+
   @override
   void initState() {
     super.initState();
@@ -77,54 +96,119 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 42, right: 38, bottom: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          CustomAppBar(title: AppLocalizations.of(context)!.clients),
-          InkWell(
-            onTap: () {
-              widget.onClickBack();
-            },
-            child: Row(
+    return ResponsiveBuilder(
+        breakpoints: Constants.clientDetailsScreenBreakpoints,
+        builder: (context, SizingInformation size) {
+          return Padding(
+            padding: const EdgeInsets.only(left: 42, right: 38, bottom: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                SvgPicture.asset(
-                  AppIcons.icCircleArrowLeft,
-                  color: AppColors.hintColor,
+                CustomAppBar(title: AppLocalizations.of(context)!.clients),
+                Row(
+                  children: [
+                    InkWell(
+                      onTap: () {
+                        widget.onClickBack();
+                      },
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SvgPicture.asset(
+                            AppIcons.icCircleArrowLeft,
+                            color: AppColors.hintColor,
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            AppLocalizations.of(context)!.back,
+                            style: Theme.of(context).textTheme.displaySmall,
+                          )
+                        ],
+                      ),
+                    ),
+                    if (size.isMobile)
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 25),
+                          child: _buildSelectorForMobile(),
+                        ),
+                      ),
+                  ],
                 ),
-                const SizedBox(width: 5),
-                Text(
-                  AppLocalizations.of(context)!.back,
-                  style: Theme.of(context).textTheme.displaySmall,
-                )
+                const SizedBox(height: 10),
+                Flexible(
+                  child: ScreenTypeLayout.builder(
+                    breakpoints: Constants.clientDetailsScreenBreakpoints,
+                    desktop: _buildDesktopView,
+                    tablet: _buildTabletView,
+                    mobile: _buildMobileView,
+                  ),
+                ),
               ],
+            ),
+          );
+        });
+  }
+
+  Widget _buildDesktopView(BuildContext context) {
+    return Row(
+      children: [
+        Flexible(
+          flex: 1,
+          child: _buildCard(
+            child: _buildMainInfoContainer(),
+          ),
+        ),
+        const SizedBox(width: 67),
+        Flexible(
+          flex: 2,
+          child: _buildCard(
+            child: AdditionalClientDetails(client: _client),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTabletView(BuildContext context) {
+    return Row(
+      children: [
+        Flexible(
+          flex: 1,
+          child: _buildCard(
+            child: _buildMainInfoContainer(),
+          ),
+        ),
+        const SizedBox(width: 67),
+        Flexible(
+          flex: 1,
+          child: _buildCard(
+            child: AdditionalClientDetails(client: _client),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMobileView(BuildContext context) {
+    return Row(
+      children: [
+        if (_currentInfoType != InfoType.additional)
+          Flexible(
+            flex: 1,
+            child: _buildCard(
+              child: _buildMainInfoContainer(),
             ),
           ),
-          const SizedBox(height: 10),
+        if (_currentInfoType == InfoType.additional)
           Flexible(
-            child: Row(
-              children: [
-                Flexible(
-                  flex: 1,
-                  child: _buildCard(
-                    child: _buildMainInfoContainer(),
-                  ),
-                ),
-                const SizedBox(width: 67),
-                Flexible(
-                  flex: 2,
-                  child: _buildCard(
-                    child: AdditionalClientDetails(client: _client),
-                  ),
-                ),
-              ],
+            flex: 2,
+            child: _buildCard(
+              child: AdditionalClientDetails(client: _client),
             ),
-          )
-        ],
-      ),
+          ),
+      ],
     );
   }
 
@@ -201,9 +285,7 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
                           child: Container(
                             width: 100,
                             height: 100,
-                            color: _client?.photoUrl?.isNotEmpty == true
-                                ? Colors.black.withOpacity(0.5)
-                                : null,
+                            color: _client?.photoUrl?.isNotEmpty == true ? Colors.black.withOpacity(0.5) : null,
                             child: Center(
                               child: SvgPicture.asset(
                                 AppIcons.icGallery,
@@ -450,6 +532,44 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
           ],
         )
       ],
+    );
+  }
+
+  Widget _buildSelectorForMobile() {
+    return Container(
+      height: 32,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: Theme.of(context).colorScheme.primary),
+      ),
+      child: Row(
+        children: [
+          _buildSelectorItem(InfoType.main.localizedName(context), InfoType.main),
+          _buildSelectorItem(InfoType.additional.localizedName(context), InfoType.additional),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSelectorItem(String title, InfoType infoType) {
+    return Expanded(
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            _currentInfoType = infoType;
+          });
+        },
+        child: Container(
+          height: double.infinity,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(9),
+            color: _currentInfoType == infoType ? Theme.of(context).colorScheme.primary : null,
+          ),
+          alignment: Alignment.center,
+          child: Text(title),
+        ),
+      ),
     );
   }
 

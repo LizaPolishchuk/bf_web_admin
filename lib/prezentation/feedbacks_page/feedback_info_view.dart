@@ -37,50 +37,52 @@ class _FeedbackInfoViewState extends State<FeedbackInfoView> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(AppLocalizations.of(context)!.view, style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: 35),
-        CircleAvatar(
-          radius: 40,
-          backgroundImage: NetworkImage(_feedbackEntity.authorAvatar ?? ""),
-          backgroundColor: AppColors.rose,
-        ),
-        const SizedBox(height: 20),
-        Text(_feedbackEntity.authorName, style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: 20),
-        SizedBox(
-          height: 16,
-          child: ListView.separated(
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
-            itemBuilder: (context, index) {
-              return SvgPicture.asset(AppIcons.icStar);
-            },
-            itemCount: _feedbackEntity.points,
-            separatorBuilder: (BuildContext context, int index) {
-              return const SizedBox(width: 5);
-            },
+    return Container(
+      // height: MediaQuery.of(context).size.height,
+      padding: const EdgeInsets.symmetric(vertical: 42),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(AppLocalizations.of(context)!.view, style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 35),
+          CircleAvatar(
+            radius: 40,
+            backgroundImage: NetworkImage(_feedbackEntity.authorAvatar ?? ""),
+            backgroundColor: AppColors.rose,
           ),
-        ),
-        const SizedBox(height: 40),
-        Flexible(
-          fit: FlexFit.tight,
-          child: SingleChildScrollView(
+          const SizedBox(height: 20),
+          Text(_feedbackEntity.authorName, style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 20),
+          SizedBox(
+            height: 16,
+            child: ListView.separated(
+              shrinkWrap: true,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) {
+                return SvgPicture.asset(AppIcons.icStar);
+              },
+              itemCount: _feedbackEntity.points,
+              separatorBuilder: (BuildContext context, int index) {
+                return const SizedBox(width: 5);
+              },
+            ),
+          ),
+          const SizedBox(height: 40),
+          Flexible(
+            fit: FlexFit.tight,
             child: Text(
               _feedbackEntity.feedbackText,
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                color: AppColors.textColor,
-              ),
+                    color: AppColors.textColor,
+                  ),
             ),
           ),
-        ),
-        const SizedBox(height: 20),
-        _buildBottomButtons(),
-      ],
+          const SizedBox(height: 20),
+          _buildBottomButtons(),
+        ],
+      ),
     );
   }
 
@@ -114,6 +116,7 @@ class _FeedbackInfoViewState extends State<FeedbackInfoView> {
               });
             },
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 Text(AppLocalizations.of(context)!.nextFeedback,
                     style: Theme.of(context).textTheme.displaySmall?.copyWith(color: AppColors.textColor)),

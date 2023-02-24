@@ -112,5 +112,7 @@
   "welcomeSpeech": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt",
   "totalAppointmentsForToday": "Усього записів за сьогодні",
   "newAppointments": "Нові записи",
-  "ourClients": "Наші клієнти"
+  "ourClients": "Наші клієнти",
+  "additionalInfo": "Додаткова інформація",
+  "mainInfo": "Основна інформація"
 }

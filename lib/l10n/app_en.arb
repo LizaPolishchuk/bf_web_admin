@@ -112,5 +112,7 @@
   "welcomeSpeech": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt",
   "totalAppointmentsForToday": "Total appointments for today",
   "newAppointments": "New appointments",
-  "ourClients": "Our Clients"
+  "ourClients": "Our Clients",
+  "additionalInfo": "Additional Info",
+  "mainInfo": "Main Info"
 }
