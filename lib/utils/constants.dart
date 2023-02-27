@@ -16,4 +16,7 @@ abstract class Constants {
 
 
   static const ScreenBreakpoints clientDetailsScreenBreakpoints = ScreenBreakpoints(tablet: 600, desktop: 1200, watch: 300);
+
+  static const double drawerBigWidth = 264;
+  static const double drawerSmallWidth = 68;
 }

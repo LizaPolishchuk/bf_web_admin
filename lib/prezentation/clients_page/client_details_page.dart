@@ -567,7 +567,13 @@ class _ClientDetailsPageState extends State<ClientDetailsPage> {
             color: _currentInfoType == infoType ? Theme.of(context).colorScheme.primary : null,
           ),
           alignment: Alignment.center,
-          child: Text(title),
+          child: Text(
+            title,
+            style: Theme.of(context).textTheme.bodySmall,
+            maxLines: 2,
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.clip,
+          ),
         ),
       ),
     );

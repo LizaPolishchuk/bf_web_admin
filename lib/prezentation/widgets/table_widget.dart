@@ -202,8 +202,9 @@ class _TableWidgetState extends State<TableWidget> {
     var titleWidgets = widget.columnTitles
         .map(
           (title) => Container(
+            height: _rowHeight,
             alignment: _isDesktop ? Alignment.center : Alignment.center,
-            padding: const EdgeInsets.only(bottom: 32),
+            // padding: const EdgeInsets.only(bottom: 32),
             child: Text(title, style: Theme.of(context).textTheme.displaySmall),
           ),
         )
@@ -313,11 +314,11 @@ class _TableWidgetState extends State<TableWidget> {
   }
 
   Widget _buildPointStars(int points) {
-    return FittedBox(
-      fit: BoxFit.scaleDown,
-      child: SizedBox(
+    return  SizedBox(
           height: _rowHeight,
-          child: Flex(
+          child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child:Flex(
             direction: Axis.horizontal,
             mainAxisAlignment: MainAxisAlignment.center,
             children: List.filled(5, Padding(

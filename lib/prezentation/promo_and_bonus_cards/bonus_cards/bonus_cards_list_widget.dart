@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:responsive_builder/responsive_builder.dart';
 import 'package:salons_adminka/event_bus_events/event_bus.dart';
 import 'package:salons_adminka/event_bus_events/show_bonus_card_info_event.dart';
 import 'package:salons_adminka/injection_container_web.dart';
@@ -53,37 +54,38 @@ class _BonusCardsListWidgetState extends State<BonusCardsListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(PromoType.bonusCards.localizedName(context),
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500, fontSize: 18)),
-        const SizedBox(height: 30),
-        Flexible(
-          child: StreamBuilder<List<BonusCard>>(
-              stream: _bonusCardsBloc.bonusCardsLoaded,
-              builder: (context, snapshot) {
-                print("loaded bonus cards: ${snapshot.data}");
+    return ResponsiveBuilder(builder: (context, SizingInformation size) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(PromoType.bonusCards.localizedName(context),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500, fontSize: 18)),
+          const SizedBox(height: 30),
+          Flexible(
+            child: StreamBuilder<List<BonusCard>>(
+                stream: _bonusCardsBloc.bonusCardsLoaded,
+                builder: (context, snapshot) {
+                  print("loaded bonus cards: ${snapshot.data}");
 
-                return GridView.count(
-                  controller: ScrollController(),
-                  scrollDirection: Axis.horizontal,
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 30,
-                  mainAxisSpacing: 30,
-                  childAspectRatio: 1 / 1.5,
-                  children: snapshot.data
-                          ?.asMap()
-                          .map((index, item) => MapEntry(index, _buildBonusCardItem(context, item, index)))
-                          .values
-                          .toList() ??
-                      [],
-                );
-              }),
-        ),
-      ],
-    );
+                  return GridView.count(
+                    scrollDirection: size.isMobile ? Axis.vertical : Axis.horizontal,
+                    crossAxisCount: size.isMobile ? 1 : 2,
+                    crossAxisSpacing: 30,
+                    mainAxisSpacing: 30,
+                    childAspectRatio: size.isMobile ? 1.5 / 1 : 1 / 1.5,
+                    children: snapshot.data
+                            ?.asMap()
+                            .map((index, item) => MapEntry(index, _buildBonusCardItem(context, item, index)))
+                            .values
+                            .toList() ??
+                        [],
+                  );
+                }),
+          ),
+        ],
+      );
+    });
   }
 
   Widget _buildBonusCardItem(BuildContext context, BonusCard bonusCard, int index) {

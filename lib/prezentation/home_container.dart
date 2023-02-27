@@ -6,6 +6,7 @@ import 'package:responsive_builder/responsive_builder.dart';
 import 'package:salons_adminka/navigation/routes.dart';
 import 'package:salons_adminka/prezentation/auth_page/auth_bloc.dart';
 import 'package:salons_adminka/utils/app_theme.dart';
+import 'package:salons_adminka/utils/constants.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 import '../utils/app_colors.dart';
@@ -14,8 +15,6 @@ import '../utils/app_images.dart';
 class HomeContainer extends StatelessWidget {
   final Widget child;
   final int selectedMenuIndex;
-  final double _drawerBigWidth = 264;
-  final double _drawerSmallWidth = 68;
 
   const HomeContainer({Key? key, required this.child, this.selectedMenuIndex = -1}) : super(key: key);
 
@@ -34,7 +33,7 @@ class HomeContainer extends StatelessWidget {
   }
 
   double _getDrawerWidth(SizingInformation size) {
-    return size.isDesktop ? _drawerBigWidth : _drawerSmallWidth;
+    return size.isDesktop ? Constants.drawerBigWidth : Constants.drawerSmallWidth;
   }
 
   Widget _buildDrawer(BuildContext context, SizingInformation size) {

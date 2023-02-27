@@ -43,7 +43,6 @@ class _AdditionalClientDetailsState extends State<AdditionalClientDetails> {
     );
   }
 
-
   Widget _buildDesktopView(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(46),
@@ -106,7 +105,6 @@ class _AdditionalClientDetailsState extends State<AdditionalClientDetails> {
       ),
     );
   }
-
 
   List<Service> _serviceList = [
     Service("id", "Маникюр", "", 100, "creatorSalon", "categoryId", "categoryName", 0xffE59B9C, 60),
@@ -180,17 +178,24 @@ class _AdditionalClientDetailsState extends State<AdditionalClientDetails> {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    DateFormat('dd-MMM-yyyy').format(order.date),
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 12),
+                  Flexible(
+                    child: Text(
+                      DateFormat('dd-MMM-yyyy').format(order.date),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 12),
+
+                    ),
                   ),
-                  Text(
-                    order.serviceName,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 12),
+                  Flexible(
+                    child: Text(
+                      order.serviceName,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 12),
+                    ),
                   ),
-                  Text(
-                    order.masterName,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 12),
+                  Flexible(
+                    child: Text(
+                      order.masterName,
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 12),
+                    ),
                   ),
                 ],
               );
