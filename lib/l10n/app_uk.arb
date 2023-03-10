@@ -114,5 +114,7 @@
   "newAppointments": "Нові записи",
   "ourClients": "Наші клієнти",
   "additionalInfo": "Додаткова інформація",
-  "mainInfo": "Основна інформація"
+  "mainInfo": "Основна інформація",
+  "noInternetConnection": "Відсутнє інтернет зʼєднання",
+  "somethingWrong": "Упс.. Схоже, виникла помилка"
 }

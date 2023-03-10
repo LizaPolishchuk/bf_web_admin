@@ -1,6 +1,7 @@
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:salons_adminka/prezentation/auth_page/auth_bloc.dart';
-import 'package:salons_adminka/prezentation/calendar_page/orders_bloc.dart';
+import 'package:salons_adminka/prezentation/calendar_page/appointments_bloc.dart';
 import 'package:salons_adminka/prezentation/categories/categories_bloc.dart';
 import 'package:salons_adminka/prezentation/clients_page/clients_bloc.dart';
 import 'package:salons_adminka/prezentation/feedbacks_page/feedbacks_bloc.dart';
@@ -26,6 +27,6 @@ Future<void> init() async {
   getItWeb.registerFactory(() => BonusCardsBloc(getItWeb(), getItWeb(), getItWeb(), getItWeb()));
   getItWeb.registerFactory(() => SettingsBloc(getItWeb()));
   getItWeb.registerFactory(() => FeedbacksBloc());
-  getItWeb.registerFactory(() => OrdersBloc(getItWeb(), getItWeb(), getItWeb(), getItWeb()));
+  getItWeb.registerFactory(() => AppointmentsBloc(getItWeb(), getItWeb(), getItWeb(), getItWeb()));
   getItWeb.registerFactory(() => PlacesBloc(getItWeb(), getItWeb()));
 }

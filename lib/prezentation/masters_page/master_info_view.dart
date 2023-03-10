@@ -1,4 +1,3 @@
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:salons_adminka/prezentation/widgets/info_container.dart';
@@ -12,14 +11,15 @@ class MasterInfoView extends StatefulWidget {
   final String salonId;
   final Master? master;
   final InfoAction infoAction;
-  final List<Service> services;
+
+  // final List<Service> services;
   final Function(Master master, InfoAction action) onClickAction;
 
   const MasterInfoView({
     Key? key,
     this.master,
     required this.infoAction,
-    required this.services,
+    // required this.services,
     required this.salonId,
     required this.onClickAction,
   }) : super(key: key);
@@ -37,7 +37,7 @@ class _MasterInfoViewState extends State<MasterInfoView> {
   late InfoAction _infoAction;
   late Master? _masterForUpdate;
 
-  Map<String, String> _selectedServices = {};
+  List<Service> _selectedServices = [];
   Service? _selectedService;
 
   //todo add logic for master status
@@ -51,12 +51,12 @@ class _MasterInfoViewState extends State<MasterInfoView> {
     _masterForUpdate = widget.master;
 
     if (_masterForUpdate != null) {
-      _selectedServices = _masterForUpdate!.providedServices ?? {};
-      _selectedService = _selectedServices.isNotEmpty
-          ? widget.services.isNotEmpty
-              ? widget.services.first
-              : null
-          : null;
+      _selectedServices = _masterForUpdate!.services ?? [];
+      // _selectedService = _selectedServices.isNotEmpty
+      //     ? widget.services.isNotEmpty
+      //         ? widget.services.first
+      //         : null
+      //     : null;
       _nameController.text = _masterForUpdate!.name;
       _phoneController.text = _masterForUpdate!.phoneNumber ?? "";
 
@@ -83,84 +83,7 @@ class _MasterInfoViewState extends State<MasterInfoView> {
         const SizedBox(height: 15),
         _buildTextField(_phoneController, AppLocalizations.of(context)!.phoneNumber),
         const SizedBox(height: 15),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(25),
-            color: AppColors.textInputBgGrey,
-          ),
-          child: DropdownButtonHideUnderline(
-            child: DropdownButton2(
-              isExpanded: true,
-              hint: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  AppLocalizations.of(context)!.service,
-                  style: Theme.of(context).textTheme.displaySmall,
-                ),
-              ),
-              items: widget.services.map((service) {
-                return DropdownMenuItem<Service>(
-                  value: service,
-                  //disable default onTap to avoid closing menu when selecting an item
-                  enabled: false,
-                  child: StatefulBuilder(
-                    builder: (context, menuSetState) {
-                      final _isSelected = _selectedServices.keys.contains(service.id);
-                      return InkWell(
-                        onTap: () {
-                          _isSelected
-                              ? _selectedServices.remove(service.id)
-                              : _selectedServices[service.id] = service.name;
-
-                          _selectedService = service;
-                          //This rebuilds the StatefulWidget to update the button's text
-                          setState(() {});
-                          //This rebuilds the dropdownMenu Widget to update the check mark
-                          menuSetState(() {});
-
-                          _checkIfEnableButton();
-                        },
-                        child: Row(
-                          children: [
-                            _isSelected
-                                ? const Icon(Icons.check_box_outlined)
-                                : const Icon(Icons.check_box_outline_blank),
-                            const SizedBox(width: 16),
-                            Text(
-                              service.name,
-                              style: Theme.of(context).textTheme.displaySmall?.copyWith(fontSize: 16),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                );
-              }).toList(),
-              //Use last selected item as the current value so if we've limited menu height, it scroll to last item.
-              value: _selectedServices.isEmpty ? null : _selectedService,
-              onChanged: (value) {},
-              itemHeight: 40,
-              selectedItemBuilder: (context) {
-                return widget.services.map(
-                  (item) {
-                    return Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        _selectedServices.values.join(', '),
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 14),
-                        maxLines: 1,
-                      ),
-                    );
-                  },
-                ).toList();
-              },
-            ),
-          ),
-        ),
+        _buildServicesSelector(),
         const SizedBox(height: 120),
         if (_infoAction == InfoAction.view)
           Row(
@@ -175,9 +98,9 @@ class _MasterInfoViewState extends State<MasterInfoView> {
                 child: Text(
                   AppLocalizations.of(context)!.edit,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.hintColor,
-                    decoration: TextDecoration.underline,
-                  ),
+                        color: AppColors.hintColor,
+                        decoration: TextDecoration.underline,
+                      ),
                 ),
               ),
               TextButton(
@@ -187,8 +110,8 @@ class _MasterInfoViewState extends State<MasterInfoView> {
                 child: Text(
                   AppLocalizations.of(context)!.delete,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.red,
-                  ),
+                        color: AppColors.red,
+                      ),
                 ),
               ),
             ],
@@ -203,23 +126,32 @@ class _MasterInfoViewState extends State<MasterInfoView> {
                   text: AppLocalizations.of(context)!.save,
                   isEnabled: value,
                   onPressed: () {
-                    Master masterToUpdate;
-                    if (_infoAction == InfoAction.add) {
-                      masterToUpdate = Master("", _nameController.text, "", "", "", "", [widget.salonId],
-                          _selectedServices, "active", _phoneController.text);
-
-                      widget.onClickAction(masterToUpdate, _infoAction);
-                    } else {
-                      if (_masterForUpdate != null) {
-                        masterToUpdate = _masterForUpdate!.copy(
-                          name: _nameController.text,
-                          phoneNumber: _phoneController.text,
-                          providedServices: _selectedServices,
-                        );
-
-                        widget.onClickAction(masterToUpdate, _infoAction);
-                      }
-                    }
+                    //TODO add logic for create and update master
+                    // Master masterToUpdate;
+                    // if (_infoAction == InfoAction.add) {
+                    //   masterToUpdate = Master(
+                    //     firstname: _nameController.text,
+                    //     lastname: _nameController.text,
+                    //     locale: "UA",
+                    //     gender: "male",
+                    //     startWorkTime: startWorkTime,
+                    //     endWorkTime: endWorkTime,
+                    //     phoneNumber: phoneNumber,
+                    //
+                    //   );
+                    //
+                    //   widget.onClickAction(masterToUpdate, _infoAction);
+                    // } else {
+                    //   if (_masterForUpdate != null) {
+                    //     masterToUpdate = _masterForUpdate!.copy(
+                    //       name: _nameController.text,
+                    //       phoneNumber: _phoneController.text,
+                    //       providedServices: _selectedServices,
+                    //     );
+                    //
+                    //     widget.onClickAction(masterToUpdate, _infoAction);
+                    //   }
+                    // }
                   },
                 ),
               );
@@ -227,6 +159,86 @@ class _MasterInfoViewState extends State<MasterInfoView> {
           ),
       ],
     );
+  }
+
+  //TODO add ability to select services
+  Widget _buildServicesSelector() {
+    return SizedBox.shrink();
+
+    //   Container(
+    //   width: double.infinity,
+    //   padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+    //   decoration: BoxDecoration(
+    //     borderRadius: BorderRadius.circular(25),
+    //     color: AppColors.textInputBgGrey,
+    //   ),
+    //   child: DropdownButtonHideUnderline(
+    //     child: DropdownButton2(
+    //       isExpanded: true,
+    //       hint: Align(
+    //         alignment: Alignment.centerLeft,
+    //         child: Text(
+    //           AppLocalizations.of(context)!.service,
+    //           style: Theme.of(context).textTheme.displaySmall,
+    //         ),
+    //       ),
+    //       items: widget.services.map((service) {
+    //         return DropdownMenuItem<Service>(
+    //           value: service,
+    //           //disable default onTap to avoid closing menu when selecting an item
+    //           enabled: false,
+    //           child: StatefulBuilder(
+    //             builder: (context, menuSetState) {
+    //               final isSelected = _selectedServices.contains(service);
+    //               return InkWell(
+    //                 onTap: () {
+    //                   isSelected ? _selectedServices.remove(service) : _selectedServices.add(service);
+    //
+    //                   _selectedService = service;
+    //                   //This rebuilds the StatefulWidget to update the button's text
+    //                   setState(() {});
+    //                   //This rebuilds the dropdownMenu Widget to update the check mark
+    //                   menuSetState(() {});
+    //
+    //                   _checkIfEnableButton();
+    //                 },
+    //                 child: Row(
+    //                   children: [
+    //                     isSelected ? const Icon(Icons.check_box_outlined) : const Icon(Icons.check_box_outline_blank),
+    //                     const SizedBox(width: 16),
+    //                     Text(
+    //                       service.name,
+    //                       style: Theme.of(context).textTheme.displaySmall?.copyWith(fontSize: 16),
+    //                     ),
+    //                   ],
+    //                 ),
+    //               );
+    //             },
+    //           ),
+    //         );
+    //       }).toList(),
+    //       //Use last selected item as the current value so if we've limited menu height, it scroll to last item.
+    //       value: _selectedServices.isEmpty ? null : _selectedService,
+    //       onChanged: (value) {},
+    //       itemHeight: 40,
+    //       selectedItemBuilder: (context) {
+    //         return widget.services.map(
+    //           (item) {
+    //             return Align(
+    //               alignment: Alignment.centerLeft,
+    //               child: Text(
+    //                 _selectedServices.map((e) => e.name).toList().join(", "),
+    //                 overflow: TextOverflow.ellipsis,
+    //                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 14),
+    //                 maxLines: 1,
+    //               ),
+    //             );
+    //           },
+    //         ).toList();
+    //       },
+    //     ),
+    //   ),
+    // );
   }
 
   Widget _buildTextField(TextEditingController controller, String hint) {

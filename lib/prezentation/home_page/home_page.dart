@@ -5,10 +5,9 @@ import 'package:get/get.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/navigation/routes.dart';
+import 'package:salons_adminka/prezentation/calendar_page/appointments_bloc.dart';
 import 'package:salons_adminka/prezentation/calendar_page/calendar_widget.dart';
-import 'package:salons_adminka/prezentation/calendar_page/orders_bloc.dart';
 import 'package:salons_adminka/prezentation/widgets/custom_app_bar.dart';
-import 'package:salons_adminka/prezentation/widgets/info_container.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_adminka/utils/app_images.dart';
 import 'package:salons_adminka/utils/app_text_style.dart';
@@ -28,9 +27,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late String _currentSalonId;
   late String _currentSalonName;
-  late OrdersBloc _ordersBloc;
-
-  final ValueNotifier<Widget?> _showInfoNotifier = ValueNotifier<Widget?>(null);
+  late AppointmentsBloc _ordersBloc;
 
   @override
   void initState() {
@@ -38,10 +35,10 @@ class _HomePageState extends State<HomePage> {
 
     LocalStorage localStorage = getItWeb<LocalStorage>();
     _currentSalonId = localStorage.getSalonId() ?? "";
-    _currentSalonName = (localStorage.getSalon() as Salon?)?.name ?? "";
+    _currentSalonName = localStorage.getSalonName() as String? ?? "";
 
-    _ordersBloc = getIt<OrdersBloc>();
-    _ordersBloc.getOrders(_currentSalonId);
+    _ordersBloc = getIt<AppointmentsBloc>();
+    _ordersBloc.getAppointments(_currentSalonId, AppointmentsType.salon);
   }
 
   // var CustomCalendar _calendar;
@@ -80,8 +77,8 @@ class _HomePageState extends State<HomePage> {
                     color: AppTheme.isDark ? AppColors.darkBlue : Colors.white,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: StreamBuilder<List<OrderEntity>>(
-                      stream: _ordersBloc.ordersLoaded,
+                  child: StreamBuilder<List<AppointmentEntity>>(
+                      stream: _ordersBloc.appointmentsLoaded,
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.waiting) {
                           return const Center(
@@ -92,13 +89,10 @@ class _HomePageState extends State<HomePage> {
                         var orders = snapshot.data ?? [];
 
                         return CustomCalendar(
-                          orders: orders,
+                          appointments: orders,
                           isEnabled: false,
                           calendarView: CalendarView.day,
-                          onUpdateOrder: (order) {
-                            // _ordersBloc.updateOrder(order);
-                          },
-                          onClickOrder: (order) {
+                          onClickAppointment: (order) {
                             // _showInfoView(InfoAction.view, order, null);
                           },
                         );
@@ -269,6 +263,4 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
-  void _showInfoView(InfoAction infoAction, BaseEntity? item, int? index) {}
 }

@@ -1,19 +1,30 @@
 import 'package:flutter/material.dart';
 
-class LoaderPage extends StatelessWidget {
-  const LoaderPage({Key? key}) : super(key: key);
+class Loader {
+  static bool _isLoaderVisible = false;
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      color: Colors.grey.withOpacity(0.5),
-      child: Center(
-        child: CircularProgressIndicator(
-          color: Theme.of(context).primaryColor,
-        ),
-      ),
+  static void showLoader(BuildContext context) {
+    _isLoaderVisible = true;
+
+    showGeneralDialog(
+      context: context,
+      barrierColor: Colors.black.withOpacity(0.5),
+      barrierDismissible: false,
+      barrierLabel: 'Dialog',
+      transitionDuration: Duration(milliseconds: 400),
+      pageBuilder: (_, __, ___) {
+        return Center(
+          child: CircularProgressIndicator(
+            color: Theme.of(context).primaryColor,
+          ),
+        );
+      },
     );
+  }
+
+  static void hideLoader(BuildContext context) {
+    if(_isLoaderVisible) {
+      Navigator.of(context).pop();
+    }
   }
 }

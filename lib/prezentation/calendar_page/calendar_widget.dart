@@ -8,17 +8,17 @@ import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class CustomCalendar extends StatefulWidget {
-  final List<OrderEntity> orders;
-  final Function(OrderEntity) onClickOrder;
-  final Function(OrderEntity) onUpdateOrder;
+  final List<AppointmentEntity> appointments;
+  final Function(AppointmentEntity) onClickAppointment;
+  final Function(String appointmentId, int startTime)? onChangeAppointmentStartTime;
   final CalendarView calendarView;
   final bool isEnabled;
 
   const CustomCalendar({
     Key? key,
-    required this.onClickOrder,
-    required this.onUpdateOrder,
-    required this.orders,
+    required this.onClickAppointment,
+    this.onChangeAppointmentStartTime,
+    required this.appointments,
     this.calendarView = CalendarView.week,
     this.isEnabled = true,
   }) : super(key: key);
@@ -58,10 +58,12 @@ class _CustomCalendarState extends State<CustomCalendar> {
       onDragEnd: (appointmentDragEndDetails) {
         debugPrint("appointmentDragEndDetails: ${appointmentDragEndDetails.droppingTime}");
 
-        if (appointmentDragEndDetails.droppingTime != null && appointmentDragEndDetails.appointment is OrderEntity) {
-          var orderToUpdate = appointmentDragEndDetails.appointment as OrderEntity;
-          orderToUpdate.date = appointmentDragEndDetails.droppingTime!;
-          widget.onUpdateOrder(orderToUpdate);
+        if (appointmentDragEndDetails.droppingTime != null &&
+            appointmentDragEndDetails.appointment is AppointmentEntity) {
+          widget.onChangeAppointmentStartTime?.call(
+            (appointmentDragEndDetails.appointment as AppointmentEntity).id,
+            appointmentDragEndDetails.droppingTime!.millisecondsSinceEpoch,
+          );
         }
       },
       allowAppointmentResize: false,
@@ -78,7 +80,7 @@ class _CustomCalendarState extends State<CustomCalendar> {
         CalendarView.week,
         // CalendarView.month,
       ],
-      dataSource: OrdersDataSource(widget.orders),
+      dataSource: AppointmentsDataSource(widget.appointments),
       monthViewSettings: const MonthViewSettings(appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
     );
   }
@@ -88,14 +90,14 @@ class _CustomCalendarState extends State<CustomCalendar> {
     List<Widget> orderItems = [];
 
     for (int i = 0; i < appointments.length; i++) {
-      if (appointments[i] is OrderEntity) {
+      if (appointments[i] is AppointmentEntity) {
         orderItems.add(
           Positioned(
             left: i * 10,
             right: 0,
             top: 0,
             bottom: 0,
-            child: _buildOrderItem(appointments[i]),
+            child: _buildAppointmentItem(appointments[i]),
           ),
         );
       }
@@ -106,12 +108,12 @@ class _CustomCalendarState extends State<CustomCalendar> {
     );
   }
 
-  Widget _buildOrderItem(OrderEntity order) {
+  Widget _buildAppointmentItem(AppointmentEntity appointment) {
     return InkWell(
       onTap: () async {
         // print("onCLick index: $index");
         if (widget.isEnabled) {
-          widget.onClickOrder(order);
+          widget.onClickAppointment(appointment);
         }
       },
       child: Container(
@@ -121,8 +123,8 @@ class _CustomCalendarState extends State<CustomCalendar> {
           borderRadius: BorderRadius.circular(10),
           color: AppTheme.isDark
               ? AppColors.textInputBgDarkGrey
-              : order.categoryColor != null
-                  ? Color(order.categoryColor!).withOpacity(0.1)
+              : appointment.serviceColor != null
+                  ? Color(appointment.serviceColor!).withOpacity(0.1)
                   : Theme.of(context).colorScheme.primary.withOpacity(0.5),
         ),
         child: Row(
@@ -134,15 +136,16 @@ class _CustomCalendarState extends State<CustomCalendar> {
                 width: 2,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color:
-                      order.categoryColor != null ? Color(order.categoryColor!) : Theme.of(context).colorScheme.primary,
+                  color: appointment.serviceColor != null
+                      ? Color(appointment.serviceColor!)
+                      : Theme.of(context).colorScheme.primary,
                 ),
               ),
             ),
             ClipRRect(
               borderRadius: BorderRadius.circular(50),
               child: CachedNetworkImage(
-                imageUrl: order.masterAvatar ?? "",
+                imageUrl: appointment.masterPhoto ?? "",
                 imageBuilder: (context, imageProvider) {
                   return Padding(
                     padding: const EdgeInsets.only(left: 10, right: 6),
@@ -167,28 +170,28 @@ class _CustomCalendarState extends State<CustomCalendar> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      order.serviceName,
+                      appointment.serviceName,
                       style: TextStyle(
-                          color: order.categoryColor != null
-                              ? Color(order.categoryColor!)
+                          color: appointment.serviceColor != null
+                              ? Color(appointment.serviceColor!)
                               : Theme.of(context).colorScheme.primary,
                           fontSize: 14,
                           fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(height: 15),
                     Text(
-                      order.clientName ?? AppLocalizations.of(context)!.client,
+                      appointment.clientName ?? AppLocalizations.of(context)!.client,
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      "${AppLocalizations.of(context)!.master}: ${order.masterName}",
+                      "${AppLocalizations.of(context)!.master}: ${appointment.masterName}",
                       maxLines: 3,
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      DateFormat('HH:mm').format(order.date),
+                      DateFormat('HH:mm').format(appointment.date),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.hintColor),
                     ),
                   ],
@@ -229,17 +232,19 @@ class _CustomCalendarState extends State<CustomCalendar> {
 // }
 }
 
-class OrdersDataSource extends CalendarDataSource {
-  OrdersDataSource(List<OrderEntity> source) {
+class AppointmentsDataSource extends CalendarDataSource {
+  AppointmentsDataSource(List<AppointmentEntity> source) {
     appointments = source;
   }
 
   @override
   Object? convertAppointmentToObject(Object? customData, Appointment appointment) {
-    if (customData is OrderEntity) {
-      return customData
-        ..date = appointment.startTime
-        ..durationInMin = appointment.endTime.difference(appointment.startTime).inMinutes;
+    if (customData is AppointmentEntity) {
+      return customData.copy(
+        startTime: appointment.startTime.millisecondsSinceEpoch,
+        serviceDuration: appointment.endTime.difference(appointment.startTime).inMinutes,
+        // ..durationInMin = appointment.endTime.difference(appointment.startTime).inMinutes;
+      );
     } else {
       return null;
     }
@@ -247,37 +252,41 @@ class OrdersDataSource extends CalendarDataSource {
 
   @override
   DateTime getStartTime(int index) {
-    return _getOrderData(index).date;
+    return _getAppointmentData(index).date;
   }
 
   @override
   DateTime getEndTime(int index) {
-    OrderEntity order = _getOrderData(index);
-    return order.date.add(Duration(minutes: order.durationInMin));
+    AppointmentEntity appointment = _getAppointmentData(index);
+    return appointment.date.add(
+      Duration(minutes: appointment.serviceDuration),
+    );
   }
 
   @override
   String getSubject(int index) {
-    return _getOrderData(index).serviceName;
+    return _getAppointmentData(index).serviceName;
   }
 
   @override
   Color getColor(int index) {
-    return _getOrderData(index).categoryColor != null ? Color(_getOrderData(index).categoryColor!) : Colors.black45;
+    return _getAppointmentData(index).serviceColor != null
+        ? Color(_getAppointmentData(index).serviceColor!)
+        : Colors.black45;
   }
 
   @override
   bool isAllDay(int index) {
-    return _getOrderData(index).durationInMin > (60 * 24);
+    return _getAppointmentData(index).serviceDuration > (60 * 24);
   }
 
-  OrderEntity _getOrderData(int index) {
-    final dynamic order = appointments![index];
-    late final OrderEntity orderData;
-    if (order is OrderEntity) {
-      orderData = order;
+  AppointmentEntity _getAppointmentData(int index) {
+    final dynamic appointment = appointments![index];
+    late final AppointmentEntity appointmentData;
+    if (appointment is AppointmentEntity) {
+      appointmentData = appointment;
     }
 
-    return orderData;
+    return appointmentData;
   }
 }

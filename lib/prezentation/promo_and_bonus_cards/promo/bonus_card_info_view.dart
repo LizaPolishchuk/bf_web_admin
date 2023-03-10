@@ -9,9 +9,9 @@ import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class BonusCardInfoView extends StatefulWidget {
   final String salonId;
-  final BonusCard? bonusCard;
+  final Promo? bonusCard;
   final InfoAction infoAction;
-  final Function(BonusCard bonusCard, InfoAction action) onClickAction;
+  final Function(Promo bonusCard, InfoAction action) onClickAction;
 
   const BonusCardInfoView({
     Key? key,
@@ -34,7 +34,7 @@ class _BonusCardInfoViewState extends State<BonusCardInfoView> {
   final ValueNotifier<bool> _enableButtonNotifier = ValueNotifier<bool>(false);
 
   late InfoAction _infoAction;
-  late BonusCard? _cardForUpdate;
+  late Promo? _cardForUpdate;
 
   late String _currentSalonId;
 
@@ -151,9 +151,9 @@ class _BonusCardInfoViewState extends State<BonusCardInfoView> {
             child: Text(
               AppLocalizations.of(context)!.edit,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AppColors.hintColor,
-                decoration: TextDecoration.underline,
-              ),
+                    color: AppColors.hintColor,
+                    decoration: TextDecoration.underline,
+                  ),
             ),
           ),
           TextButton(
@@ -163,8 +163,8 @@ class _BonusCardInfoViewState extends State<BonusCardInfoView> {
             child: Text(
               AppLocalizations.of(context)!.delete,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AppColors.red,
-              ),
+                    color: AppColors.red,
+                  ),
             ),
           ),
         ],
@@ -229,10 +229,17 @@ class _BonusCardInfoViewState extends State<BonusCardInfoView> {
                 text: AppLocalizations.of(context)!.save,
                 isEnabled: value,
                 onPressed: () {
-                  BonusCard cardToUpdate;
+                  Promo cardToUpdate;
                   if (_infoAction == InfoAction.add) {
-                    cardToUpdate = BonusCard("", _nameController.text, _descriptionController.text,
-                        _cardColorNotifier.value?.value, int.tryParse(_discountController.text), _currentSalonId);
+                    cardToUpdate = Promo(
+                      name: _nameController.text,
+                      description: _descriptionController.text,
+                      promoType: PromoType.bonus_card.name,
+                      creatorSalon: _currentSalonId,
+                      discount: int.tryParse(_discountController.text),
+                      //todo add expired date
+                      // expiredDate:
+                    );
 
                     widget.onClickAction(cardToUpdate, _infoAction);
                   } else {
@@ -241,7 +248,6 @@ class _BonusCardInfoViewState extends State<BonusCardInfoView> {
                         name: _nameController.text,
                         description: _descriptionController.text,
                         discount: int.tryParse(_discountController.text),
-                        color: _cardColorNotifier.value?.value,
                         creatorSalon: _currentSalonId,
                       );
 

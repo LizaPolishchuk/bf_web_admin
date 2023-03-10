@@ -1,4 +1,3 @@
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -8,31 +7,25 @@ import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
-enum OrderStatus { active, reserved, cancelled }
+enum AppointmentStatus { active, reserved, cancelled }
 
-class OrderInfoView extends StatefulWidget {
-  final Salon? salon;
-  final OrderEntity? order;
+class AppointmentInfoView extends StatefulWidget {
+  final AppointmentEntity? appointment;
   final InfoAction infoAction;
-  final List<Service> services;
-  final List<Master> masters;
-  final Function(OrderEntity order, InfoAction action) onClickAction;
+  final Function(CreateAppointmentRequest? appointmentRequest, InfoAction action) onClickAction;
 
-  const OrderInfoView({
+  const AppointmentInfoView({
     Key? key,
-    this.order,
+    this.appointment,
     required this.infoAction,
-    required this.services,
-    required this.masters,
-    required this.salon,
     required this.onClickAction,
   }) : super(key: key);
 
   @override
-  State<OrderInfoView> createState() => _OrderInfoViewState();
+  State<AppointmentInfoView> createState() => _AppointmentInfoViewState();
 }
 
-class _OrderInfoViewState extends State<OrderInfoView> {
+class _AppointmentInfoViewState extends State<AppointmentInfoView> {
   final TextEditingController _clientNameController = TextEditingController();
   final TextEditingController _clientPhoneController = TextEditingController();
   final ValueNotifier<DateTime?> _orderDateNotifier = ValueNotifier<DateTime?>(null);
@@ -41,30 +34,34 @@ class _OrderInfoViewState extends State<OrderInfoView> {
   final ValueNotifier<bool> _enableButtonNotifier = ValueNotifier<bool>(false);
 
   late InfoAction _infoAction;
-  late OrderEntity? _orderForUpdate;
+  late AppointmentEntity? _appointmentForUpdate;
 
   Service? _selectedService;
   Master? _selectedMaster;
+
+  late String _currentUserId;
 
   @override
   void initState() {
     super.initState();
 
     _infoAction = widget.infoAction;
-    _orderForUpdate = widget.order;
+    _appointmentForUpdate = widget.appointment;
 
-    if (_orderForUpdate != null) {
-      _selectedService = widget.services.isNotEmpty && _orderForUpdate!.serviceId.isNotEmpty
-          ? widget.services.firstWhere((element) => element.id == _orderForUpdate!.serviceId)
-          : null;
-      _selectedMaster = widget.services.isNotEmpty && _orderForUpdate!.masterId.isNotEmpty
-          ? widget.masters.firstWhere((element) => element.id == _orderForUpdate!.masterId)
-          : null;
+    _currentUserId = getIt<LocalStorage>().getCurrentUserId();
 
-      _orderDateNotifier.value = _orderForUpdate!.date;
-      _orderTimeNotifier.value = TimeOfDay.fromDateTime(_orderForUpdate!.date);
+    if (_appointmentForUpdate != null) {
+      // _selectedService = widget.services.isNotEmpty && _appointmentForUpdate!.serviceId.isNotEmpty
+      //     ? widget.services.firstWhere((element) => element.id == _appointmentForUpdate!.serviceId)
+      //     : null;
+      // _selectedMaster = widget.services.isNotEmpty && _appointmentForUpdate!.masterId.isNotEmpty
+      //     ? widget.masters.firstWhere((element) => element.id == _appointmentForUpdate!.masterId)
+      //     : null;
 
-      _clientNameController.text = _orderForUpdate!.clientName ?? "";
+      _orderDateNotifier.value = _appointmentForUpdate!.date;
+      _orderTimeNotifier.value = TimeOfDay.fromDateTime(_orderDateNotifier.value!);
+
+      _clientNameController.text = _appointmentForUpdate!.clientName;
       // _clientPhoneController.text = _orderForUpdate!.cli ?? "";
 
       _enableButtonNotifier.value = true;
@@ -90,10 +87,11 @@ class _OrderInfoViewState extends State<OrderInfoView> {
         const SizedBox(height: 15),
         _buildTextField(_clientPhoneController, AppLocalizations.of(context)!.phoneNumber),
         const SizedBox(height: 15),
-        _buildDropDownSelector(AppLocalizations.of(context)!.service, widget.services, _selectedService),
-        const SizedBox(height: 15),
-        _buildDropDownSelector(AppLocalizations.of(context)!.master, widget.masters, _selectedMaster),
-        const SizedBox(height: 15),
+        //todo set up database for get services and masters list
+        // _buildDropDownSelector(AppLocalizations.of(context)!.service, widget.services, _selectedService),
+        // const SizedBox(height: 15),
+        // _buildDropDownSelector(AppLocalizations.of(context)!.master, widget.masters, _selectedMaster),
+        // const SizedBox(height: 15),
         _buildOrderDate(),
         const SizedBox(height: 15),
         _buildOrderTime(),
@@ -111,20 +109,20 @@ class _OrderInfoViewState extends State<OrderInfoView> {
                 child: Text(
                   AppLocalizations.of(context)!.edit,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.hintColor,
-                    decoration: TextDecoration.underline,
-                  ),
+                        color: AppColors.hintColor,
+                        decoration: TextDecoration.underline,
+                      ),
                 ),
               ),
               TextButton(
                 onPressed: () {
-                  widget.onClickAction(_orderForUpdate!, InfoAction.delete);
+                  widget.onClickAction(null, InfoAction.delete);
                 },
                 child: Text(
                   AppLocalizations.of(context)!.delete,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: AppColors.red,
-                  ),
+                        color: AppColors.red,
+                      ),
                 ),
               ),
             ],
@@ -147,44 +145,14 @@ class _OrderInfoViewState extends State<OrderInfoView> {
 
                     print("newDate: $newDate");
 
-                    // ..hour = _orderTimeNotifier.value!.hour
-                    OrderEntity orderToUpdate;
-                    if (_infoAction == InfoAction.add) {
-                      orderToUpdate = OrderEntity(
-                        "",
-                        "",
-                        _clientNameController.text,
-                        widget.salon?.id ?? "",
-                        widget.salon?.name ?? "",
-                        _selectedMaster?.id ?? "",
-                        _selectedMaster?.name ?? "",
-                        _selectedMaster?.avatar ?? "",
-                        _selectedService?.id ?? "",
-                        _selectedService?.name ?? "",
-                        newDate,
-                        60,
-                        _selectedService?.categoryColor,
-                      );
+                    CreateAppointmentRequest appointmentRequest = CreateAppointmentRequest(
+                      _selectedMaster!.id,
+                      _selectedService!.id,
+                      _currentUserId,
+                      newDate.toUtc().millisecondsSinceEpoch,
+                    );
 
-                      print("orderToUpdate: $orderToUpdate");
-
-                      widget.onClickAction(orderToUpdate, _infoAction);
-                    } else {
-                      if (_orderForUpdate != null) {
-                        orderToUpdate = _orderForUpdate!.copy(
-                          clientName: _clientNameController.text,
-                          masterId: _selectedMaster?.id,
-                          masterName: _selectedMaster?.name,
-                          masterAvatar: _selectedMaster?.avatar,
-                          serviceId: _selectedService?.id,
-                          serviceName: _selectedService?.name,
-                          durationInMin: 60,
-                          date: newDate,
-                        );
-
-                        widget.onClickAction(orderToUpdate, _infoAction);
-                      }
-                    }
+                    widget.onClickAction(appointmentRequest, _infoAction);
                   },
                 ),
               );
@@ -260,84 +228,83 @@ class _OrderInfoViewState extends State<OrderInfoView> {
 
   Widget _buildTextField(TextEditingController controller, String hint, {bool onlyDigits = false}) {
     return TextField(
-      controller: controller,
-      onChanged: (text) {
-        _checkIfEnableButton();
-      },
-      keyboardType: onlyDigits ? TextInputType.number : null,
-      inputFormatters: [
-        if (onlyDigits) FilteringTextInputFormatter.digitsOnly,
-      ],
-      maxLines: 1,
-      enabled: _infoAction != InfoAction.view,
-      style: Theme.of(context).textTheme.bodyMedium,
-      decoration: InputDecoration(
-        counterText: "",
-        hintText: hint,
-      ).applyDefaults(Theme.of(context).inputDecorationTheme)
-    );
+        controller: controller,
+        onChanged: (text) {
+          _checkIfEnableButton();
+        },
+        keyboardType: onlyDigits ? TextInputType.number : null,
+        inputFormatters: [
+          if (onlyDigits) FilteringTextInputFormatter.digitsOnly,
+        ],
+        maxLines: 1,
+        enabled: _infoAction != InfoAction.view,
+        style: Theme.of(context).textTheme.bodyMedium,
+        decoration: InputDecoration(
+          counterText: "",
+          hintText: hint,
+        ).applyDefaults(Theme.of(context).inputDecorationTheme));
   }
 
-  Widget _buildDropDownSelector(String title, List<BaseEntity> items, BaseEntity? selectedItem) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25),
-        color: AppColors.textInputBgGrey,
-      ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton2(
-          hint: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              title,
-              style: Theme.of(context).textTheme.displaySmall,
-            ),
-          ),
-          items: items.map((item) {
-            return DropdownMenuItem<BaseEntity>(
-              value: item,
-              child: Text(
-                item.name,
-                style: Theme.of(context).textTheme.displaySmall?.copyWith(fontSize: 16),
-              ),
-            );
-          }).toList(),
-          value: selectedItem,
-          onChanged: _infoAction != InfoAction.view
-              ? (value) {
-                  setState(() {
-                    if (value is Service) {
-                      _selectedService = value;
-                    } else if (value is Master) {
-                      _selectedMaster = value;
-                    }
-                  });
-
-                  _checkIfEnableButton();
-                }
-              : null,
-          itemHeight: 40,
-          selectedItemBuilder: (context) {
-            return items.map(
-              (item) {
-                return Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    selectedItem?.name ?? "",
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 14),
-                    maxLines: 1,
-                  ),
-                );
-              },
-            ).toList();
-          },
-        ),
-      ),
-    );
-  }
+  // Widget _buildDropDownSelector(String title, List<BaseEntity> items, BaseEntity? selectedItem) {
+  //   return Container(
+  //     width: double.infinity,
+  //     padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+  //     decoration: BoxDecoration(
+  //       borderRadius: BorderRadius.circular(25),
+  //       color: AppColors.textInputBgGrey,
+  //     ),
+  //     child: DropdownButtonHideUnderline(
+  //       child: DropdownButton2(
+  //         hint: Align(
+  //           alignment: Alignment.centerLeft,
+  //           child: Text(
+  //             title,
+  //             style: Theme.of(context).textTheme.displaySmall,
+  //           ),
+  //         ),
+  //         items: items.map((item) {
+  //           return DropdownMenuItem<BaseEntity>(
+  //             value: item,
+  //             child: Text(
+  //               item.name,
+  //               style: Theme.of(context).textTheme.displaySmall?.copyWith(fontSize: 16),
+  //             ),
+  //           );
+  //         }).toList(),
+  //         value: selectedItem,
+  //         onChanged: _infoAction != InfoAction.view
+  //             ? (value) {
+  //                 setState(() {
+  //                   if (value is Service) {
+  //                     _selectedService = value;
+  //                   } else if (value is Master) {
+  //                     _selectedMaster = value;
+  //                   }
+  //                 });
+  //
+  //                 _checkIfEnableButton();
+  //               }
+  //             : null,
+  //         itemHeight: 40,
+  //         selectedItemBuilder: (context) {
+  //           return items.map(
+  //             (item) {
+  //               return Align(
+  //                 alignment: Alignment.centerLeft,
+  //                 child: Text(
+  //                   selectedItem?.name ?? "",
+  //                   overflow: TextOverflow.ellipsis,
+  //                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 14),
+  //                   maxLines: 1,
+  //                 ),
+  //               );
+  //             },
+  //           ).toList();
+  //         },
+  //       ),
+  //     ),
+  //   );
+  // }
 
   _showOrderDatePicker(BuildContext context) async {
     final DateTime? picked = await showDatePicker(

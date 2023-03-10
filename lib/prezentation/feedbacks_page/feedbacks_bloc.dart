@@ -12,19 +12,15 @@ class FeedbacksBloc {
   // final UpdateFeedbackPhotoUseCase _updateFeedbackPhotoUseCase;
 
   FeedbacksBloc();
+
   //this._getFeedbackListUseCase, this._addFeedbackUseCase, this._updateFeedbackUseCase, this._removeFeedbackUseCase, this._updateFeedbackPhotoUseCase);
 
   List<FeedbackEntity> feedbacksList = [
-    FeedbackEntity("1", "", "", "Liza Polishchuk", "", "Lorem ipsum dolor sit amet, consectetur aaaadipis...",
-        DateTime(2022, 7, 20), 3),
-    FeedbackEntity("2", "", "", "Anna Reznik", "", "Lorem ipsum dolor sit amet, consectetur aaaadipis...",
-        DateTime(2022, 7, 15), 5),
-    FeedbackEntity("3", "", "", "Yulia Yushchuk", "", "Lorem ipsum dolor sit amet, consectetur aaaadipis...",
-        DateTime(2022, 7, 7), 1),
-    FeedbackEntity("4", "", "", "Vlad Prosianyk", "", "Lorem ipsum dolor sit amet, consectetur aaaadipis...",
-        DateTime(2022, 7, 29), 5),
-    FeedbackEntity("5", "", "", "Sofia Ambros", "", "Lorem ipsum dolor sit amet, consectetur aaaadipis...",
-        DateTime(2022, 7, 25), 4),
+    FeedbackEntity(
+        authorName: "Liza Polishchuk",
+        feedbackText: "Nice salon!",
+        date: DateTime(2023, 3, 23).millisecondsSinceEpoch,
+        points: 5)
   ];
 
   final _feedbacksLoadedSubject = PublishSubject<List<FeedbackEntity>>();
@@ -70,7 +66,7 @@ class FeedbacksBloc {
 
     List<FeedbackEntity> searchedList = [];
     for (var feedback in feedbacksList) {
-      if (feedback.name.toLowerCase().contains(searchKey.toLowerCase())) {
+      if (feedback.feedbackText.toLowerCase().contains(searchKey.toLowerCase())) {
         searchedList.add(feedback);
       }
     }

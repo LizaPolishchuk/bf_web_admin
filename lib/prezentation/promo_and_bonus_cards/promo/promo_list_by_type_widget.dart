@@ -5,26 +5,31 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:salons_adminka/event_bus_events/event_bus.dart';
 import 'package:salons_adminka/event_bus_events/show_promo_info_event.dart';
 import 'package:salons_adminka/injection_container_web.dart';
+import 'package:salons_adminka/prezentation/promo_and_bonus_cards/promo/bonus_card_info_view.dart';
+import 'package:salons_adminka/prezentation/promo_and_bonus_cards/promo/bonus_cards_list.dart';
 import 'package:salons_adminka/prezentation/promo_and_bonus_cards/promo/promo_info_view.dart';
 import 'package:salons_adminka/prezentation/promo_and_bonus_cards/promo/promos_bloc.dart';
+import 'package:salons_adminka/prezentation/promo_and_bonus_cards/promo/temporary_promo_list.dart';
 import 'package:salons_adminka/prezentation/promo_and_bonus_cards/promo_and_cards_page.dart';
 import 'package:salons_adminka/prezentation/widgets/info_container.dart';
 import 'package:salons_adminka/utils/alert_builder.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
-import 'package:salons_adminka/utils/app_theme.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
-class PromoListWidget extends StatefulWidget {
+class PromoListByTypeWidget extends StatefulWidget {
   final String currentSalonId;
   final ValueNotifier<Widget?> showInfoNotifier;
+  final PromoType promoType;
 
-  const PromoListWidget({Key? key, required this.currentSalonId, required this.showInfoNotifier}) : super(key: key);
+  const PromoListByTypeWidget(
+      {Key? key, required this.currentSalonId, required this.showInfoNotifier, required this.promoType})
+      : super(key: key);
 
   @override
-  State<PromoListWidget> createState() => _PromoListWidgetState();
+  State<PromoListByTypeWidget> createState() => _PromoListByTypeWidgetState();
 }
 
-class _PromoListWidgetState extends State<PromoListWidget> {
+class _PromoListByTypeWidgetState extends State<PromoListByTypeWidget> {
   late PromosBloc _promosBloc;
   final List<StreamSubscription> _subscriptions = [];
 
@@ -33,7 +38,7 @@ class _PromoListWidgetState extends State<PromoListWidget> {
     super.initState();
 
     _promosBloc = getItWeb<PromosBloc>();
-    _promosBloc.getPromos(widget.currentSalonId);
+    _promosBloc.getPromos(widget.currentSalonId, widget.promoType);
 
     _subscriptions.addAll([
       _promosBloc.errorMessage.listen((error) {
@@ -59,7 +64,7 @@ class _PromoListWidgetState extends State<PromoListWidget> {
       children: [
         Row(
           children: [
-            Text(PromoType.promos.localizedName(context),
+            Text(PromoType.temporary_promo.localizedName(context),
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500, fontSize: 18)),
           ],
         ),
@@ -70,75 +75,23 @@ class _PromoListWidgetState extends State<PromoListWidget> {
             child: StreamBuilder<List<Promo>>(
               stream: _promosBloc.promosLoaded,
               builder: (context, snapshot) {
-                return ListView.separated(
-                  controller: ScrollController(),
-                  itemBuilder: (context, index) {
-                    return _buildPromoItem(context, snapshot.data![index], index);
-                  },
-                  separatorBuilder: (context, index) {
-                    return const SizedBox(height: 20, width: double.infinity);
-                  },
-                  itemCount: snapshot.data?.length ?? 0,
-                );
+                switch (widget.promoType) {
+                  case PromoType.bonus_card:
+                    return BonusCardsList(
+                      bonusCardsList: snapshot.data ?? [],
+                      onClickMore: (promo, index) => _buildPopupMenu(context, promo, index),
+                    );
+                  case PromoType.temporary_promo:
+                    return TemporaryPromoList(
+                      promoList: snapshot.data ?? [],
+                      onClickMore: (promo, index) => _buildPopupMenu(context, promo, index),
+                    );
+                }
               },
             ),
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildPromoItem(BuildContext context, Promo promo, int index) {
-    return Container(
-      height: 220,
-      width: 220,
-      padding: const EdgeInsets.only(left: 20, right: 10),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: AppTheme.isDark ? AppColors.darkBlue : Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.25),
-            blurRadius: 5,
-            offset: const Offset(2, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Align(
-            alignment: Alignment.topRight,
-            child: _buildPopupMenu(context, promo, index),
-          ),
-          SizedBox(
-            width: 110,
-            height: 110,
-            child: Image.network(
-              promo.photoUrl ?? "",
-              errorBuilder: (context, obj, stackTrace) {
-                return Container(
-                  color: AppColors.lightRose,
-                );
-              },
-              fit: BoxFit.cover,
-            ),
-          ),
-          const SizedBox(height: 15),
-          Text(
-            promo.name,
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            promo.description ?? "",
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontSize: 12),
-          ),
-        ],
-      ),
     );
   }
 
@@ -178,7 +131,7 @@ class _PromoListWidgetState extends State<PromoListWidget> {
         } else if (value == 1) {
           _showPromoInfoView(InfoAction.edit, item, index);
         } else if (value == 2) {
-          AlertBuilder().showAlertForDelete(context, AppLocalizations.of(context)!.promo1, item.name, () {
+          AlertBuilder().showAlertForDelete(context, AppLocalizations.of(context)!.promo1, (item as Promo).name, () {
             _promosBloc.removePromo(item.id, index);
             widget.showInfoNotifier.value = null;
           });
@@ -188,23 +141,46 @@ class _PromoListWidgetState extends State<PromoListWidget> {
   }
 
   void _showPromoInfoView(InfoAction infoAction, BaseEntity? item, int? index) {
-    widget.showInfoNotifier.value = PromoInfoView(
-      salonId: widget.currentSalonId,
-      infoAction: infoAction,
-      promo: item as Promo?,
-      onClickAction: (promo, action, photo) {
-        if (action == InfoAction.add) {
-          _promosBloc.addPromo(promo, photo);
-        } else if (action == InfoAction.edit) {
-          _promosBloc.updatePromo(promo, index!, photo);
-        } else if (action == InfoAction.delete) {
-          AlertBuilder().showAlertForDelete(context, AppLocalizations.of(context)!.promo1, promo.name, () {
-            _promosBloc.removePromo(promo.id, index!);
-            widget.showInfoNotifier.value = null;
-          });
-        }
-      },
-    );
+    switch (widget.promoType) {
+      case PromoType.bonus_card:
+        widget.showInfoNotifier.value = BonusCardInfoView(
+          salonId: widget.currentSalonId,
+          infoAction: infoAction,
+          bonusCard: item as Promo?,
+          onClickAction: (promo, action) {
+            if (action == InfoAction.add) {
+              _promosBloc.addPromo(promo);
+            } else if (action == InfoAction.edit) {
+              _promosBloc.updatePromo(promo, index!);
+            } else if (action == InfoAction.delete) {
+              AlertBuilder().showAlertForDelete(context, AppLocalizations.of(context)!.bonusCard1, promo.name, () {
+                _promosBloc.removePromo(promo.id, index!);
+                widget.showInfoNotifier.value = null;
+              });
+            }
+          },
+        );
+        break;
+      case PromoType.temporary_promo:
+        widget.showInfoNotifier.value = PromoInfoView(
+          salonId: widget.currentSalonId,
+          infoAction: infoAction,
+          promo: item as Promo?,
+          onClickAction: (promo, action, photo) {
+            if (action == InfoAction.add) {
+              _promosBloc.addPromo(promo, photo);
+            } else if (action == InfoAction.edit) {
+              _promosBloc.updatePromo(promo, index!, photo);
+            } else if (action == InfoAction.delete) {
+              AlertBuilder().showAlertForDelete(context, AppLocalizations.of(context)!.promo1, promo.name, () {
+                _promosBloc.removePromo(promo.id, index!);
+                widget.showInfoNotifier.value = null;
+              });
+            }
+          },
+        );
+        break;
+    }
   }
 
   @override

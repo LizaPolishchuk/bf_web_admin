@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:salons_adminka/main.dart';
 import 'package:salons_adminka/prezentation/calendar_page/calendar_page.dart';
-import 'package:salons_adminka/prezentation/clients_page/clients_page.dart';
 import 'package:salons_adminka/prezentation/feedbacks_page/feedbacks_page.dart';
 import 'package:salons_adminka/prezentation/home_container.dart';
 import 'package:salons_adminka/prezentation/loader_page.dart';
@@ -118,7 +117,7 @@ abstract class AppPages {
     GetPage(
       name: Routes.loader,
       opaque: false,
-      page: () => const LoaderPage(),
+      page: () => const Loader(),
     ),
   ];
 }

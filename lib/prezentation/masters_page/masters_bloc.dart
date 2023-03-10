@@ -1,20 +1,14 @@
 import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
+import 'package:salons_adminka/utils/error_parser.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class MastersBloc {
-  final GetMastersListUseCase _getMastersListUseCase;
-  final AddMasterUseCase _addMasterUseCase;
-  final UpdateMasterUseCase _updateMasterUseCase;
-  final RemoveMasterUseCase _removeMasterUseCase;
+  final MasterRepository _masterRepository;
+  final SalonRepository _salonRepository;
 
-  MastersBloc(
-    this._getMastersListUseCase,
-    this._addMasterUseCase,
-    this._updateMasterUseCase,
-    this._removeMasterUseCase,
-  );
+  MastersBloc(this._masterRepository, this._salonRepository);
 
   List<Master> _mastersList = [];
 
@@ -39,12 +33,12 @@ class MastersBloc {
   Stream<bool> get isLoading => _isLoadingSubject.stream;
 
   getMasters(String salonId, String? categoryId) async {
-    var response = await _getMastersListUseCase(salonId, categoryId);
-    if (response.isLeft) {
-      _errorSubject.add(response.left.message);
-    } else {
-      _mastersList = response.right;
+    try {
+      var response = await _salonRepository.getSalonMasters(salonId);
+      _mastersList = response;
       _mastersLoadedSubject.add(_mastersList);
+    } catch (error) {
+      _errorSubject.add(ErrorParser.parseError(error));
     }
   }
 
@@ -64,35 +58,35 @@ class MastersBloc {
   }
 
   addMaster(Master master) async {
-    var response = await _addMasterUseCase(master);
-    if (response.isLeft) {
-      _errorSubject.add(response.left.message);
-    } else {
-      _mastersList.add(response.right);
+    try {
+      var response = await _masterRepository.createMaster(master);
+      _mastersList.add(master);
       _mastersLoadedSubject.add(_mastersList);
       _masterAddedSubject.add(true);
+    } catch (error) {
+      _errorSubject.add(ErrorParser.parseError(error));
     }
   }
 
   updateMaster(Master master, int index) async {
-    var response = await _updateMasterUseCase(master);
-    if (response.isLeft) {
-      _errorSubject.add(response.left.message);
-    } else {
-      _mastersList[index] = response.right;
+    try {
+      var response = await _masterRepository.updateMaster(master);
+      _mastersList[index] = master;
       _mastersLoadedSubject.add(_mastersList);
       _masterUpdatedSubject.add(true);
+    } catch (error) {
+      _errorSubject.add(ErrorParser.parseError(error));
     }
   }
 
   removeMaster(String masterId, int index) async {
-    var response = await _removeMasterUseCase(masterId);
-    if (response.isLeft) {
-      _errorSubject.add(response.left.message);
-    } else {
+    try {
+      var response = await _masterRepository.deleteMaster(masterId);
       _mastersList.removeAt(index);
       _mastersLoadedSubject.add(_mastersList);
       _masterRemovedSubject.add(true);
+    } catch (error) {
+      _errorSubject.add(ErrorParser.parseError(error));
     }
   }
 

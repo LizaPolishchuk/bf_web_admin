@@ -8,8 +8,7 @@ import 'package:salons_adminka/event_bus_events/event_bus.dart';
 import 'package:salons_adminka/event_bus_events/show_bonus_card_info_event.dart';
 import 'package:salons_adminka/event_bus_events/show_promo_info_event.dart';
 import 'package:salons_adminka/injection_container_web.dart';
-import 'package:salons_adminka/prezentation/promo_and_bonus_cards/bonus_cards/bonus_cards_list_widget.dart';
-import 'package:salons_adminka/prezentation/promo_and_bonus_cards/promo/promo_list_widget.dart';
+import 'package:salons_adminka/prezentation/promo_and_bonus_cards/promo/promo_list_by_type_widget.dart';
 import 'package:salons_adminka/prezentation/widgets/custom_app_bar.dart';
 import 'package:salons_adminka/prezentation/widgets/flex_list_widget.dart';
 import 'package:salons_adminka/prezentation/widgets/info_container.dart';
@@ -19,14 +18,12 @@ import 'package:salons_adminka/utils/app_images.dart';
 import 'package:salons_adminka/utils/app_theme.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
-enum PromoType { promos, bonusCards }
-
-extension PageCategoryExtension on PromoType {
+extension ParomoTypeExtension on PromoType {
   String localizedName(BuildContext context) {
     switch (this) {
-      case PromoType.promos:
+      case PromoType.temporary_promo:
         return AppLocalizations.of(context)!.promos;
-      case PromoType.bonusCards:
+      case PromoType.bonus_card:
         return AppLocalizations.of(context)!.bonusCards;
       default:
         return "";
@@ -49,8 +46,8 @@ class _PromosPageState extends State<PromosPage> {
   Timer? _searchTimer;
   final ValueNotifier<Widget?> _showInfoNotifier = ValueNotifier<Widget?>(null);
 
-  late PromoListWidget _promoListWidget;
-  late BonusCardsListWidget _bonusCardsListWidget;
+  late PromoListByTypeWidget _promoListWidget;
+  late PromoListByTypeWidget _bonusCardsListWidget;
 
   @override
   void initState() {
@@ -59,14 +56,16 @@ class _PromosPageState extends State<PromosPage> {
     LocalStorage localStorage = getItWeb<LocalStorage>();
     _currentSalonId = localStorage.getSalonId();
 
-    _promoListWidget = PromoListWidget(
+    _promoListWidget = PromoListByTypeWidget(
       currentSalonId: _currentSalonId,
       showInfoNotifier: _showInfoNotifier,
+      promoType: PromoType.temporary_promo,
     );
 
-    _bonusCardsListWidget = BonusCardsListWidget(
+    _bonusCardsListWidget = PromoListByTypeWidget(
       currentSalonId: _currentSalonId,
       showInfoNotifier: _showInfoNotifier,
+      promoType: PromoType.bonus_card,
     );
   }
 
@@ -130,10 +129,10 @@ class _PromosPageState extends State<PromosPage> {
   Widget _buildMobileView(BuildContext context) {
     Widget pageContent;
     switch (_currentPromoType) {
-      case PromoType.promos:
+      case PromoType.temporary_promo:
         pageContent = _promoListWidget;
         break;
-      case PromoType.bonusCards:
+      case PromoType.bonus_card:
         pageContent = _bonusCardsListWidget;
         break;
     }
@@ -147,7 +146,7 @@ class _PromosPageState extends State<PromosPage> {
     );
   }
 
-  PromoType _currentPromoType = PromoType.promos;
+  PromoType _currentPromoType = PromoType.temporary_promo;
 
   Widget _buildSelectorForMobile() {
     return Container(
@@ -158,19 +157,19 @@ class _PromosPageState extends State<PromosPage> {
       ),
       child: Row(
         children: [
-          _buildSelectorItem("Promo", PromoType.promos),
-          _buildSelectorItem("Bonus Cards", PromoType.bonusCards),
+          _buildSelectorItem(PromoType.temporary_promo),
+          _buildSelectorItem(PromoType.bonus_card),
         ],
       ),
     );
   }
 
-  Widget _buildSelectorItem(String title, PromoType pageCategory) {
+  Widget _buildSelectorItem(PromoType promoType) {
     return Expanded(
       child: InkWell(
         onTap: () {
           setState(() {
-            _currentPromoType = pageCategory;
+            _currentPromoType = promoType;
           });
         },
         child: Container(
@@ -178,10 +177,10 @@ class _PromosPageState extends State<PromosPage> {
           width: double.infinity,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            color: _currentPromoType == pageCategory ? Theme.of(context).colorScheme.primary : null,
+            color: _currentPromoType == promoType ? Theme.of(context).colorScheme.primary : null,
           ),
           alignment: Alignment.center,
-          child: Text(title),
+          child: Text(promoType.localizedName(context)),
         ),
       ),
     );

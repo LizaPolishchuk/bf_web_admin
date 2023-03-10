@@ -158,9 +158,9 @@ class _PromoInfoViewState extends State<PromoInfoView> {
             child: Text(
               AppLocalizations.of(context)!.edit,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AppColors.hintColor,
-                decoration: TextDecoration.underline,
-              ),
+                    color: AppColors.hintColor,
+                    decoration: TextDecoration.underline,
+                  ),
             ),
           ),
           TextButton(
@@ -170,8 +170,8 @@ class _PromoInfoViewState extends State<PromoInfoView> {
             child: Text(
               AppLocalizations.of(context)!.delete,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: AppColors.red,
-              ),
+                    color: AppColors.red,
+                  ),
             ),
           ),
         ],
@@ -276,7 +276,9 @@ class _PromoInfoViewState extends State<PromoInfoView> {
                     expiredDate != null
                         ? DateFormat('dd-MMM-yyyy').format(expiredDate)
                         : AppLocalizations.of(context)!.validity,
-                    style: expiredDate != null ? Theme.of(context).textTheme.bodyMedium : Theme.of(context).textTheme.displaySmall,
+                    style: expiredDate != null
+                        ? Theme.of(context).textTheme.bodyMedium
+                        : Theme.of(context).textTheme.displaySmall,
                   ),
                 ),
               );
@@ -293,8 +295,12 @@ class _PromoInfoViewState extends State<PromoInfoView> {
                 onPressed: () {
                   Promo? promoToUpdate;
                   if (_infoAction == InfoAction.add) {
-                    promoToUpdate = Promo("", _nameController.text, _descriptionController.text, "",
-                        _expiredDateNotifier.value, _currentSalonId);
+                    promoToUpdate = Promo(
+                      name: _nameController.text,
+                      description: _descriptionController.text,
+                      expiredDate: _expiredDateNotifier.value,
+                      creatorSalon: _currentSalonId, promoType: '',
+                    );
                   } else {
                     if (_promoForUpdate != null) {
                       promoToUpdate = _promoForUpdate!.copy(

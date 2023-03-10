@@ -39,7 +39,7 @@ class _MastersPageState extends State<MastersPage> {
 
     LocalStorage localStorage = getItWeb<LocalStorage>();
     _currentSalonId = localStorage.getSalonId();
-    _servicesList = List<Service>.from(localStorage.getServicesList() as List<dynamic>);
+    // _servicesList = List<Service>.from(localStorage.getServicesList() as List<dynamic>);
 
     _mastersBloc = getItWeb<MastersBloc>();
     _mastersBloc.getMasters(_currentSalonId, null);
@@ -120,7 +120,8 @@ class _MastersPageState extends State<MastersPage> {
               _showInfoView(InfoAction.edit, item, index);
             },
             onClickDelete: (item, index) {
-              AlertBuilder().showAlertForDelete(context, AppLocalizations.of(context)!.master1, item.name, () {
+              AlertBuilder().showAlertForDelete(context, AppLocalizations.of(context)!.master1, (item as Master).name,
+                  () {
                 _mastersBloc.removeMaster(item.id, index);
               });
             },
@@ -129,13 +130,13 @@ class _MastersPageState extends State<MastersPage> {
   }
 
   void _showInfoView(InfoAction infoAction, BaseEntity? item, int? index) {
-    List<Service>? servicesList = List<Service>.from(getItWeb<LocalStorage>().getServicesList() as List<dynamic>);
+    // List<Service>? servicesList = List<Service>.from(getItWeb<LocalStorage>().getServicesList() as List<dynamic>);
 
     _showInfoNotifier.value = MasterInfoView(
       salonId: _currentSalonId,
       infoAction: infoAction,
       master: item as Master,
-      services: servicesList,
+      // services: servicesList,
       onClickAction: (master, action) {
         if (action == InfoAction.add) {
           _mastersBloc.addMaster(master);

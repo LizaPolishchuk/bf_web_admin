@@ -13,6 +13,7 @@ import 'package:salons_adminka/prezentation/auth_page/auth_page.dart';
 import 'package:salons_adminka/prezentation/home_container.dart';
 import 'package:salons_adminka/prezentation/home_page/home_page.dart';
 import 'package:salons_adminka/utils/app_theme.dart';
+import 'package:salons_adminka/utils/error_parser.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart' as di;
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 import 'package:universal_io/io.dart';
@@ -86,7 +87,8 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
-        valueListenable: Hive.box(LocalStorage.preferencesBox).listenable(),
+        valueListenable: Hive.box(LocalStorage.preferencesBox).listenable(
+            keys: [LocalStorage.themeMode, LocalStorage.currentLanguage]),
         builder: (BuildContext context, Box<dynamic> box, Widget? child) {
           final isLight = box.get(LocalStorage.themeMode, defaultValue: true);
           debugPrint("isLight: $isLight");
@@ -95,7 +97,11 @@ class _MyAppState extends State<MyApp> {
           var locale = Locale(box.get(LocalStorage.currentLanguage, defaultValue: defaultSystemLocale));
           debugPrint("defaultSystemLocale: $defaultSystemLocale, currentLanguage: $locale");
 
-          Get.locale = locale;
+          if(Get.locale != locale) {
+            Get.locale = locale;
+            ErrorParser().updateLocale(locale);
+          }
+
 
           return GetMaterialApp.router(
             debugShowCheckedModeBanner: false,
@@ -107,10 +113,11 @@ class _MyAppState extends State<MyApp> {
             // locale: _locale,
             themeMode: isLight ? ThemeMode.light : ThemeMode.dark,
             title: 'B&F Admin Panel',
-            builder: (context, child) => MediaQuery(
-              data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-              child: child!,
-            ),
+            builder: (context, child) =>
+                MediaQuery(
+                  data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+                  child: child!,
+                ),
             localizationsDelegates: const [
               AppLocalizations.delegate,
               LocaleNamesLocalizationsDelegate(),
@@ -163,7 +170,7 @@ class _InitialPageState extends State<InitialPage> {
     });
 
     _initialPage =
-        token != null ? const HomeContainer(selectedMenuIndex: homeIndex, child: HomePage()) : const AuthPage();
+    token != null ? const HomeContainer(selectedMenuIndex: homeIndex, child: HomePage()) : const AuthPage();
 
     if (token != null && salonId == null) {
       token = null;

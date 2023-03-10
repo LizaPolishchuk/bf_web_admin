@@ -2,14 +2,13 @@ import 'dart:async';
 
 import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:salons_adminka/utils/error_parser.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class ProfileBloc {
-  final GetSalonByIdUseCase _getSalonByIdUseCase;
-  final UpdateSalonUseCase _updateSalonUseCase;
-  final UpdateSalonPhotoUseCase _updateSalonPhotoUseCase;
+  final SalonRepository _salonRepository;
 
-  ProfileBloc(this._getSalonByIdUseCase, this._updateSalonUseCase, this._updateSalonPhotoUseCase);
+  ProfileBloc(this._salonRepository);
 
   final _salonUpdatedSubject = PublishSubject<bool>();
   final _salonLoadedSubject = PublishSubject<Salon>();
@@ -26,29 +25,36 @@ class ProfileBloc {
   Stream<bool> get isLoading => _isLoadingSubject.stream;
 
   loadSalon(String id) async {
-    var response = await _getSalonByIdUseCase(id);
-    if (response.isLeft) {
-      _errorSubject.add(response.left.message);
-    } else {
-      _salonLoadedSubject.add(response.right);
+    try {
+      var response = await _salonRepository.getSalon(id);
+      _salonLoadedSubject.add(response);
+    } catch (error) {
+      _errorSubject.add(ErrorParser.parseError(error));
     }
   }
 
   updateSalon(Salon salon, PickedFile? salonPhoto) async {
-    if (salonPhoto != null) {
-      var photoResponse = await _updateSalonPhotoUseCase(salonPhoto);
-      if (photoResponse.isLeft) {
-        _errorSubject.add(photoResponse.left.message);
-      } else {
-        salon.photo = photoResponse.right;
-      }
+    try {
+      var response = await _salonRepository.updateSalon(salon);
+      _salonLoadedSubject.add(salon);
+    } catch (error) {
+      _errorSubject.add(ErrorParser.parseError(error));
     }
-    var response = await _updateSalonUseCase(salon);
-    if (response.isLeft) {
-      _errorSubject.add(response.left.message);
-    } else {
-      _salonUpdatedSubject.add(true);
-    }
+
+    // if (salonPhoto != null) {
+    //   var photoResponse = await _updateSalonPhotoUseCase(salonPhoto);
+    //   if (photoResponse.isLeft) {
+    //     _errorSubject.add(photoResponse.left.message);
+    //   } else {
+    //     salon.photo = photoResponse.right;
+    //   }
+    // }
+    // var response = await _updateSalonUseCase(salon);
+    // if (response.isLeft) {
+    //   _errorSubject.add(response.left.message);
+    // } else {
+    //   _salonUpdatedSubject.add(true);
+    // }
   }
 
   dispose() {}

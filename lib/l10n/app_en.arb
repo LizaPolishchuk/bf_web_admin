@@ -114,5 +114,7 @@
   "newAppointments": "New appointments",
   "ourClients": "Our Clients",
   "additionalInfo": "Additional Info",
-  "mainInfo": "Main Info"
+  "mainInfo": "Main Info",
+  "noInternetConnection": "No Internet Connection",
+  "somethingWrong": "Oops.. Something went wrong"
 }

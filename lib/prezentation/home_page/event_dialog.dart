@@ -9,13 +9,13 @@ import '../../utils/app_colors.dart';
 class EventAlertDialog extends StatelessWidget {
   const EventAlertDialog({
     Key? key,
-    required this.order,
+    required this.appointment,
     required this.themeData,
     required this.close,
     required this.showMore,
   }) : super(key: key);
 
-  final OrderEntity order;
+  final AppointmentEntity appointment;
   final ThemeData themeData;
   final String close;
   final String showMore;
@@ -31,7 +31,7 @@ class EventAlertDialog extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(50),
             child: CachedNetworkImage(
-              imageUrl: order.masterAvatar ?? "",
+              imageUrl: appointment.masterPhoto ?? "",
               imageBuilder: (context, imageProvider) {
                 return Padding(
                   padding: const EdgeInsets.only(left: 10, right: 6),
@@ -55,26 +55,26 @@ class EventAlertDialog extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    order.serviceName,
+                    appointment.serviceName,
                     style: TextStyle(
-                        color: order.categoryColor != null ? Color(order.categoryColor!) : AppColors.darkRose,
+                        color: appointment.serviceColor != null ? Color(appointment.serviceColor!) : AppColors.darkRose,
                         fontSize: 14,
                         fontWeight: FontWeight.w500),
                   ),
                   const SizedBox(width: 5),
                   Text(
-                    order.clientName ?? AppLocalizations.of(context)!.client,
+                    appointment.clientName,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   const SizedBox(width: 5),
                   Text(
-                    "${AppLocalizations.of(context)!.master}: ${order.masterName}",
+                    "${AppLocalizations.of(context)!.master}: ${appointment.masterName}",
                     maxLines: 3,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                   const SizedBox(width: 5),
                   Text(
-                    DateFormat('HH:mm').format(order.date),
+                    DateFormat('HH:mm').format(appointment.date),
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.hintColor),
                   ),
                 ],

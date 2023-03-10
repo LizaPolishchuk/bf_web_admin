@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
+import 'package:salons_adminka/utils/error_parser.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class PlacesBloc {
-  final SearchPlacesUseCase _searchPlacesUseCase;
-  final GetPlaceDetailsUseCase _getPlaceDetailsUseCase;
+  final GooglePlacesRepository _googlePlacesRepository;
 
-  PlacesBloc(this._searchPlacesUseCase, this._getPlaceDetailsUseCase);
+  PlacesBloc(this._googlePlacesRepository);
 
   final _suggestedPlacesFoundSubject = PublishSubject<List<SuggestionPlace>>();
   final _placeDetailsLoadedSubject = PublishSubject<Place>();
@@ -24,20 +24,20 @@ class PlacesBloc {
   Stream<bool> get isLoading => _isLoadingSubject.stream;
 
   searchPlaces(String input, String locale) async {
-    var response = await _searchPlacesUseCase(input, locale);
-    if (response.isLeft) {
-      _errorSubject.add(response.left.message);
-    } else {
-      _suggestedPlacesFoundSubject.add(response.right);
+    try {
+      var response = await _googlePlacesRepository.fetchPlaceSuggestions(input, locale);
+      _suggestedPlacesFoundSubject.add(response);
+    } catch (error) {
+      _errorSubject.add(ErrorParser.parseError(error));
     }
   }
 
   getPlaceDetails(String placeId) async {
-    var response = await _getPlaceDetailsUseCase(placeId);
-    if (response.isLeft) {
-      _errorSubject.add(response.left.message);
-    } else {
-      _placeDetailsLoadedSubject.add(response.right);
+    try {
+      var response = await _googlePlacesRepository.getPlaceDetailFromId(placeId);
+      _placeDetailsLoadedSubject.add(response);
+    } catch (error) {
+      _errorSubject.add(ErrorParser.parseError(error));
     }
   }
 
