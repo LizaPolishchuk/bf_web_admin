@@ -4,7 +4,6 @@ import 'package:salons_adminka/main.dart';
 import 'package:salons_adminka/prezentation/calendar_page/calendar_page.dart';
 import 'package:salons_adminka/prezentation/feedbacks_page/feedbacks_page.dart';
 import 'package:salons_adminka/prezentation/home_container.dart';
-import 'package:salons_adminka/prezentation/loader_page.dart';
 import 'package:salons_adminka/prezentation/masters_page/masters_page.dart';
 import 'package:salons_adminka/prezentation/profile_page/profile_page.dart';
 import 'package:salons_adminka/prezentation/promo_and_bonus_cards/promo_and_cards_page.dart';
@@ -58,13 +57,13 @@ abstract class AppPages {
         child: MastersPage(),
       ),
     ),
-    GetPage(
-      name: Routes.clients,
-      page: () => const HomeContainer(
-        selectedMenuIndex: clientsIndex,
-        child: ClientsPage(),
-      ),
-    ),
+    // GetPage(
+    //   name: Routes.clients,
+    //   page: () => const HomeContainer(
+    //     selectedMenuIndex: clientsIndex,
+    //     child: ClientsPage(),
+    //   ),
+    // ),
     // GetPage(
     //   name: Routes.clientEdit,
     //   page: () =>  HomeContainer(
@@ -114,10 +113,10 @@ abstract class AppPages {
         child: CalendarPage(),
       ),
     ),
-    GetPage(
-      name: Routes.loader,
-      opaque: false,
-      page: () => const Loader(),
-    ),
+    // GetPage(
+    //   name: Routes.loader,
+    //   opaque: false,
+    //   page: () => const Loader(),
+    // ),
   ];
 }

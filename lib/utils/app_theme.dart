@@ -7,6 +7,7 @@ import 'app_text_style.dart';
 abstract class AppTheme {
   static Brightness get brightness {
     final isLight = getIt<LocalStorage>().getThemeMode;
+    print("AppTheme isLight: ${getIt<LocalStorage>().getThemeMode}");
     return isLight ? Brightness.light : Brightness.dark;
   }
 

@@ -24,7 +24,7 @@ class CustomAppBar extends StatelessWidget {
             ),
           ),
           IconButton(
-              onPressed: () async => SwitchThemeModeUseCase(getItWeb()).call(),
+              onPressed: () async => getItWeb<UserRepository>().switchThemeMode(),
               icon: SvgPicture.asset(AppTheme.isDark ? AppIcons.icSun : AppIcons.icMoon))
         ],
       ),

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:salons_adminka/injection_container_web.dart';
-import 'package:salons_adminka/prezentation/categories/categories_selector.dart';
 import 'package:salons_adminka/prezentation/services_page/service_info_view.dart';
 import 'package:salons_adminka/prezentation/services_page/services_bloc.dart';
 import 'package:salons_adminka/prezentation/widgets/custom_app_bar.dart';
@@ -60,6 +59,7 @@ class _ServicesPageState extends State<ServicesPage> {
 
   @override
   Widget build(BuildContext context) {
+    print("${AppLocalizations.of(context)}");
     return ResponsiveBuilder(
       builder: (BuildContext context, SizingInformation size) => InfoContainer(
         onPressedAddButton: () {
@@ -72,16 +72,17 @@ class _ServicesPageState extends State<ServicesPage> {
           children: [
             CustomAppBar(title: AppLocalizations.of(context)!.services),
             FlexListWidget(children: [
-              Flexible(
-                child: CategoriesSelector(
-                  onSelectedCategory: (category) {
-                    _servicesBloc.getServices(_currentSalonId, category?.id);
-                  },
-                  onCategoriesLoaded: (categories) {
-                    _categoriesList = categories;
-                  },
-                ),
-              ),
+              //TODO return categories
+              // Flexible(
+              //   child: CategoriesSelector(
+              //     onSelectedCategory: (category) {
+              //       _servicesBloc.getServices(_currentSalonId, category?.id);
+              //     },
+              //     onCategoriesLoaded: (categories) {
+              //       _categoriesList = categories;
+              //     },
+              //   ),
+              // ),
               SearchPanel(
                 hintText: AppLocalizations.of(context)!.searchService,
                 onSearch: (text) {
@@ -92,10 +93,10 @@ class _ServicesPageState extends State<ServicesPage> {
               ),
             ]),
             const SizedBox(height: 20),
-            Flexible(
-              fit: FlexFit.tight,
-              child: _buildServicesTable(size),
-            ),
+            // Flexible(
+            //   fit: FlexFit.tight,
+            //   child: _buildServicesTable(size),
+            // ),
             const SizedBox(height: 20),
             // PaginationCounter(),
           ],
@@ -124,7 +125,7 @@ class _ServicesPageState extends State<ServicesPage> {
               _showInfoView(InfoAction.edit, item, index);
             },
             onClickDelete: (item, index) {
-              AlertBuilder().showAlertForDelete(context, AppLocalizations.of(context)!.service.toLowerCase(), item.name,
+              AlertBuilder().showAlertForDelete(context, AppLocalizations.of(context)!.service.toLowerCase(), (item as Service).name,
                   () {
                 _servicesBloc.removeService(item.id, index);
               });

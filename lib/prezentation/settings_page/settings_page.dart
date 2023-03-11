@@ -9,7 +9,6 @@ import 'package:get/get.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/l10n/l10n.dart';
-import 'package:salons_adminka/prezentation/settings_page/settings_bloc.dart';
 import 'package:salons_adminka/prezentation/widgets/custom_app_bar.dart';
 import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
@@ -33,7 +32,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   String? _errorText;
 
-  late SettingsBloc _settingsBloc;
+  // late SettingsBloc _settingsBloc;
   final List<StreamSubscription> _subscriptions = [];
 
   @override
@@ -43,18 +42,18 @@ class _SettingsPageState extends State<SettingsPage> {
     LocalStorage localStorage = getIt<LocalStorage>();
     String? salonId = localStorage.getSalonId();
 
-    _settingsBloc = getItWeb<SettingsBloc>();
+    // _settingsBloc = getItWeb<SettingsBloc>();
 
     _subscriptions.addAll([
-      _settingsBloc.passwordChanged.listen((event) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Password changed success")));
-      }),
-      _settingsBloc.errorMessage.listen((error) {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          backgroundColor: Colors.red,
-          content: Text(error),
-        ));
-      }),
+      // _settingsBloc.passwordChanged.listen((event) {
+      //   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Password changed success")));
+      // }),
+      // _settingsBloc.errorMessage.listen((error) {
+      //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      //     backgroundColor: Colors.red,
+      //     content: Text(error),
+      //   ));
+      // }),
     ]);
   }
 
@@ -333,7 +332,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   setState(() {
                     _currentLocale = locale;
                   });
-                  getItWeb<SwitchLanguageUseCase>().call(locale.languageCode);
+                  getItWeb<UserRepository>().setCurrentLanguage(locale.languageCode);
                 }
               },
               itemHeight: 40,

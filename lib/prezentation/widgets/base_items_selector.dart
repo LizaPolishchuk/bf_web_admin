@@ -60,7 +60,7 @@ class _BaseItemsSelectorState extends State<BaseItemsSelector> {
             if (item != null && item is Category)
               ColoredCircle(color: item.color != null ? Color(item.color!) : Colors.grey),
             Text(
-              item != null ? item.name : AppLocalizations.of(context)!.allServices,
+              item != null ? (item as Category).name : AppLocalizations.of(context)!.allServices,
               style: Theme.of(context).textTheme.displaySmall?.copyWith(
                   color: _selectedItem == item
                       ? Theme.of(context).colorScheme.primary

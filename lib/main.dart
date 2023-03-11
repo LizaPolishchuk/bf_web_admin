@@ -4,12 +4,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:get/get.dart';
-// ignore_for_file: depend_on_referenced_packages
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:salons_adminka/event_bus_events/user_success_logged_in_event.dart';
 import 'package:salons_adminka/l10n/l10n.dart';
-import 'package:salons_adminka/prezentation/auth_page/auth_bloc.dart';
-import 'package:salons_adminka/prezentation/auth_page/auth_page.dart';
 import 'package:salons_adminka/prezentation/home_container.dart';
 import 'package:salons_adminka/prezentation/home_page/home_page.dart';
 import 'package:salons_adminka/utils/app_theme.dart';
@@ -50,12 +47,12 @@ void main() async {
 Future<void> initHive() async {
   await Hive.initFlutter();
 
-  Hive.registerAdapter(SalonAdapter());
-  Hive.registerAdapter(MasterAdapter());
-  Hive.registerAdapter(ServiceAdapter());
-  Hive.registerAdapter(OrderEntityAdapter());
-  Hive.registerAdapter(UserEntityAdapter());
-  Hive.registerAdapter(CategoryAdapter());
+  // Hive.registerAdapter(SalonAdapter());
+  // Hive.registerAdapter(MasterAdapter());
+  // Hive.registerAdapter(ServiceAdapter());
+  // Hive.registerAdapter(OrderEntityAdapter());
+  // Hive.registerAdapter(UserEntityAdapter());
+  // Hive.registerAdapter(CategoryAdapter());
 
   await getIt<LocalStorage>().openBox();
 }
@@ -63,70 +60,57 @@ Future<void> initHive() async {
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  static void setLocale(BuildContext context, Locale newLocale) async {
-    _MyAppState? state = context.findAncestorStateOfType<_MyAppState>();
-    state?.changeLanguage(newLocale);
-  }
-
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  // Get.changeTheme(Get.isDarkMode? ThemeData.light(): ThemeData.dark());
-  // Locale? _currentLocale;
-
-  changeLanguage(Locale locale) {
-    // print("newLocale : $locale");
-    //
-    // setState(() {
-    //   _currentLocale = locale;
-    // });
-  }
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder(
-        valueListenable: Hive.box(LocalStorage.preferencesBox).listenable(
-            keys: [LocalStorage.themeMode, LocalStorage.currentLanguage]),
-        builder: (BuildContext context, Box<dynamic> box, Widget? child) {
-          final isLight = box.get(LocalStorage.themeMode, defaultValue: true);
-          debugPrint("isLight: $isLight");
+    return StreamBuilder<BoxEvent>(
+        stream: Hive.box(LocalStorage.preferencesBox).watch(key: LocalStorage.themeMode),
+        builder: (context, snapshot) {
+          bool isLight = snapshot.data?.value ?? getIt<LocalStorage>().getThemeMode ?? true;
 
-          final String defaultSystemLocale = Platform.localeName;
-          var locale = Locale(box.get(LocalStorage.currentLanguage, defaultValue: defaultSystemLocale));
-          debugPrint("defaultSystemLocale: $defaultSystemLocale, currentLanguage: $locale");
+          return StreamBuilder<BoxEvent>(
+              stream: Hive.box(LocalStorage.preferencesBox).watch(key: LocalStorage.currentLanguage),
+              builder: (context, snapshot) {
+                final String defaultSystemLocale = Platform.localeName;
+                Locale locale = Locale(
+                  snapshot.data?.value ?? getIt<LocalStorage>().getLanguage() ?? defaultSystemLocale,
+                );
+                debugPrint("defaultSystemLocale: $defaultSystemLocale, currentLanguage: $locale");
 
-          if(Get.locale != locale) {
-            Get.locale = locale;
-            ErrorParser().updateLocale(locale);
-          }
+                if (Get.locale != locale) {
+                  Get.locale = locale;
+                  ErrorParser().updateLocale(locale);
+                }
 
-
-          return GetMaterialApp.router(
-            debugShowCheckedModeBanner: false,
-            defaultTransition: Transition.noTransition,
-            getPages: AppPages.pages,
-            routerDelegate: Get.rootDelegate,
-            theme: AppTheme.light,
-            darkTheme: AppTheme.dark,
-            // locale: _locale,
-            themeMode: isLight ? ThemeMode.light : ThemeMode.dark,
-            title: 'B&F Admin Panel',
-            builder: (context, child) =>
-                MediaQuery(
-                  data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
-                  child: child!,
-                ),
-            localizationsDelegates: const [
-              AppLocalizations.delegate,
-              LocaleNamesLocalizationsDelegate(),
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: L10n.supportedLocales,
-          );
+                return GetMaterialApp.router(
+                  debugShowCheckedModeBanner: false,
+                  defaultTransition: Transition.noTransition,
+                  getPages: AppPages.pages,
+                  routerDelegate: Get.rootDelegate,
+                  theme: AppTheme.light,
+                  darkTheme: AppTheme.dark,
+                  // locale: _locale,
+                  themeMode: isLight ? ThemeMode.light : ThemeMode.dark,
+                  title: 'B&F Admin Panel',
+                  builder: (context, child) => MediaQuery(
+                    data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+                    child: child!,
+                  ),
+                  localizationsDelegates: const [
+                    AppLocalizations.delegate,
+                    LocaleNamesLocalizationsDelegate(),
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                  ],
+                  supportedLocales: L10n.supportedLocales,
+                );
+              });
         });
   }
 }
@@ -164,17 +148,17 @@ class _InitialPageState extends State<InitialPage> {
       });
     });
     eventBus.on<UserLoggedOutEvent>().listen((event) {
-      setState(() {
-        _initialPage = const AuthPage();
-      });
+      // setState(() {
+      //   _initialPage = const AuthPage();
+      // });
     });
 
-    _initialPage =
-    token != null ? const HomeContainer(selectedMenuIndex: homeIndex, child: HomePage()) : const AuthPage();
+    _initialPage = const HomeContainer(selectedMenuIndex: homeIndex, child: HomePage());
+    // token != null ? const HomeContainer(selectedMenuIndex: homeIndex, child: HomePage()) : const AuthPage();
 
     if (token != null && salonId == null) {
       token = null;
-      getIt<AuthBloc>().logout();
+      // getIt<AuthBloc>().logout();
     }
   }
 

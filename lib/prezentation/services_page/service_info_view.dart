@@ -54,9 +54,9 @@ class _ServiceInfoViewState extends State<ServiceInfoView> {
     _serviceForUpdate = widget.service;
 
     if (_serviceForUpdate != null) {
-      if (_serviceForUpdate!.categoryId != null && widget.categories.isNotEmpty) {
-        _selectedCategory = widget.categories.firstWhere((element) => element.id == _serviceForUpdate!.categoryId);
-      }
+      // if (_serviceForUpdate!.categoryId != null && widget.categories.isNotEmpty) {
+      //   _selectedCategory = widget.categories.firstWhere((element) => element.id == _serviceForUpdate!.categoryId);
+      // }
       _nameController.text = _serviceForUpdate!.name;
       _priceController.text = _serviceForUpdate!.price?.toString() ?? "";
       _durationController.text = _serviceForUpdate!.duration?.toString() ?? "";
@@ -184,22 +184,18 @@ class _ServiceInfoViewState extends State<ServiceInfoView> {
                     Service serviceToUpdate;
                     if (_infoAction == InfoAction.add) {
                       serviceToUpdate = Service(
-                          "id",
-                          _nameController.text,
-                          "",
-                          double.tryParse(_priceController.text),
-                          widget.salonId,
-                          _selectedCategory?.id,
-                          _selectedCategory?.name,
-                          _selectedCategory?.color,
-                          int.tryParse(_durationController.text));
+                        name: _nameController.text,
+                        price: double.tryParse(_priceController.text) ?? 0.0,
+                        duration: int.tryParse(_durationController.text) ?? 0,
+                        categoryColor: _selectedCategory?.color,
+                        categoryName: _selectedCategory?.name,
+                      );
 
                       widget.onClickAction(serviceToUpdate, _infoAction);
                     } else {
                       if (_serviceForUpdate != null) {
                         serviceToUpdate = _serviceForUpdate!.copy(
                             name: _nameController.text,
-                            categoryId: _selectedCategory?.id,
                             categoryColor: _selectedCategory?.color,
                             categoryName: _selectedCategory?.name,
                             price: double.tryParse(_priceController.text),

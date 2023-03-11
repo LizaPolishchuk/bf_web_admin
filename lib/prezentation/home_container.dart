@@ -4,10 +4,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:salons_adminka/navigation/routes.dart';
-import 'package:salons_adminka/prezentation/auth_page/auth_bloc.dart';
 import 'package:salons_adminka/utils/app_theme.dart';
 import 'package:salons_adminka/utils/constants.dart';
-import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 import '../utils/app_colors.dart';
 import '../utils/app_images.dart';
@@ -109,8 +107,8 @@ class HomeContainer extends StatelessWidget {
                 //     routeToGo: Routes.support, isDesktop: isDesktop),
                 _buildDrawerItem(context, 8, AppLocalizations.of(context)!.settings, AppIcons.icSettings,
                     routeToGo: Routes.settings, isDesktop: isDesktop),
-                _buildDrawerItem(context, 9, AppLocalizations.of(context)!.logout, AppIcons.icLogout,
-                    onClick: getIt<AuthBloc>().logout, isDesktop: isDesktop),
+                // _buildDrawerItem(context, 9, AppLocalizations.of(context)!.logout, AppIcons.icLogout,
+                //     onClick: getIt<AuthBloc>().logout, isDesktop: isDesktop),
               ],
             ),
           ),

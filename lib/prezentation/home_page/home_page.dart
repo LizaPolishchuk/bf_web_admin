@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 import 'package:salons_adminka/injection_container_web.dart';
 import 'package:salons_adminka/navigation/routes.dart';
@@ -45,63 +46,72 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveBuilder(
-      builder: (context, SizingInformation size) {
-        return Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Flexible(
-              flex: size.isDesktop ? 2 : 1,
-              fit: FlexFit.tight,
-              child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 30),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CustomAppBar(title: _currentSalonName),
-                      if (size.isDesktop) _buildWelcomeWidget(),
-                      const SizedBox(height: 15),
-                      Expanded(
-                        child: _buildStatsItems(size.isDesktop),
-                      ),
-                    ],
-                  )),
-            ),
-            if (!size.isMobile)
-              Flexible(
-                flex: 1,
-                child: Container(
-                  margin: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: AppTheme.isDark ? AppColors.darkBlue : Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: StreamBuilder<List<AppointmentEntity>>(
-                      stream: _ordersBloc.appointmentsLoaded,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
 
-                        var orders = snapshot.data ?? [];
+    return StreamBuilder<BoxEvent>(
+        stream: Hive.box(LocalStorage.preferencesBox).watch(key: LocalStorage.themeMode),
+        // .listenable(keys: [LocalStorage.themeMode, LocalStorage.currentLanguage]),
+        builder: (context, snapshot) {
+          print("Home page rebuild isLight: ${!AppTheme.isDark}");
 
-                        return CustomCalendar(
-                          appointments: orders,
-                          isEnabled: false,
-                          calendarView: CalendarView.day,
-                          onClickAppointment: (order) {
-                            // _showInfoView(InfoAction.view, order, null);
-                          },
-                        );
-                      }),
+          return ResponsiveBuilder(
+          builder: (context, SizingInformation size) {
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Flexible(
+                  flex: size.isDesktop ? 2 : 1,
+                  fit: FlexFit.tight,
+                  child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 30),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CustomAppBar(title: _currentSalonName),
+                          if (size.isDesktop) _buildWelcomeWidget(),
+                          const SizedBox(height: 15),
+                          Expanded(
+                            child: _buildStatsItems(size.isDesktop),
+                          ),
+                        ],
+                      )),
                 ),
-              ),
-          ],
+                if (!size.isMobile)
+                  Flexible(
+                    flex: 1,
+                    child: Container(
+                      margin: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: AppTheme.isDark ? AppColors.darkBlue : Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: StreamBuilder<List<AppointmentEntity>>(
+                          stream: _ordersBloc.appointmentsLoaded,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+
+                            var orders = snapshot.data ?? [];
+
+                            return CustomCalendar(
+                              appointments: orders,
+                              isEnabled: false,
+                              calendarView: CalendarView.day,
+                              onClickAppointment: (order) {
+                                // _showInfoView(InfoAction.view, order, null);
+                              },
+                            );
+                          }),
+                    ),
+                  ),
+              ],
+            );
+          },
         );
-      },
+      }
     );
   }
 

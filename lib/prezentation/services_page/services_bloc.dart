@@ -6,9 +6,8 @@ import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class ServicesBloc {
   final ServiceRepository _serviceRepository;
-  final SalonRepository _salonRepository;
 
-  ServicesBloc(this._serviceRepository, this._salonRepository);
+  ServicesBloc(this._serviceRepository);
 
   List<Service> _servicesList = [];
 
@@ -34,7 +33,7 @@ class ServicesBloc {
 
   getServices(String salonId, String? categoryId) async {
     try {
-      var response = await _salonRepository.getSalonServices(salonId);
+      var response = await _serviceRepository.getSalonServices(salonId);
       _servicesList = response;
       _servicesLoadedSubject.add(_servicesList);
     } catch (error) {

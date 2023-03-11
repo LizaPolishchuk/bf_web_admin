@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:responsive_builder/responsive_builder.dart';
-import 'package:salons_adminka/prezentation/clients_page/clients_page.dart';
 import 'package:salons_adminka/prezentation/widgets/colored_circle.dart';
 import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_adminka/utils/app_images.dart';
@@ -121,7 +119,7 @@ class _TableWidgetState extends State<TableWidget> {
                       photoUrl: master.avatar,
                       isFirstColumn: true),
                   _buildRowText(master.phoneNumber ?? ""),
-                  _buildRowText(master.providedServices?.values.join(", ") ?? ""),
+                  _buildRowText(master.services?.map((e) => e.name).toList().join(", ") ?? ""),
                   _buildRowText(master.status ?? ""),
                   _buildActions(item, index),
                 ]),
@@ -135,9 +133,9 @@ class _TableWidgetState extends State<TableWidget> {
             .map((index, item) {
               var client = item as Client;
 
-              ClientStatus? clientStatus = client.status?.isNotEmpty == true
-                  ? ClientStatus.values.firstWhereOrNull((e) => e.name == client.status)
-                  : null;
+              // ClientStatus? clientStatus = client.status?.isNotEmpty == true
+              //     ? ClientStatus.values.firstWhereOrNull((e) => e.name == client.status)
+              //     : null;
 
               return MapEntry(
                 index,
@@ -148,7 +146,7 @@ class _TableWidgetState extends State<TableWidget> {
                       photoUrl: client.photoUrl,
                       isFirstColumn: true),
                   _buildRowText(client.city ?? ""),
-                  _buildRowText(clientStatus?.localizedName(context) ?? "", iconPath: clientStatus?.iconPath()),
+                  // _buildRowText(clientStatus?.localizedName(context) ?? "", iconPath: clientStatus?.iconPath()),
                   _buildRowText(client.services?.values.join(", ") ?? ""),
                   _buildActions(item, index),
                 ]),
@@ -218,7 +216,7 @@ class _TableWidgetState extends State<TableWidget> {
     return SizedBox(
       height: _rowHeight,
       child: Row(
-        mainAxisAlignment:  isFirstColumn ? MainAxisAlignment.start : MainAxisAlignment.center,
+        mainAxisAlignment: isFirstColumn ? MainAxisAlignment.start : MainAxisAlignment.center,
         children: [
           if (iconPath?.isNotEmpty == true)
             Padding(
@@ -264,7 +262,7 @@ class _TableWidgetState extends State<TableWidget> {
     return SizedBox(
       height: _rowHeight,
       child: Row(
-        mainAxisAlignment:  MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           InkWell(
@@ -314,17 +312,19 @@ class _TableWidgetState extends State<TableWidget> {
   }
 
   Widget _buildPointStars(int points) {
-    return  SizedBox(
-          height: _rowHeight,
-          child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child:Flex(
+    return SizedBox(
+      height: _rowHeight,
+      child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Flex(
             direction: Axis.horizontal,
             mainAxisAlignment: MainAxisAlignment.center,
-            children: List.filled(5, Padding(
-              padding: const EdgeInsets.only(right: 4),
-              child: SvgPicture.asset(AppIcons.icStar),
-            )),
+            children: List.filled(
+                5,
+                Padding(
+                  padding: const EdgeInsets.only(right: 4),
+                  child: SvgPicture.asset(AppIcons.icStar),
+                )),
             // itemBuilder: (context, index) {
             //   return SvgPicture.asset(AppIcons.icStar);
             // },

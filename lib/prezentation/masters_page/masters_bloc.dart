@@ -6,9 +6,8 @@ import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class MastersBloc {
   final MasterRepository _masterRepository;
-  final SalonRepository _salonRepository;
 
-  MastersBloc(this._masterRepository, this._salonRepository);
+  MastersBloc(this._masterRepository);
 
   List<Master> _mastersList = [];
 
@@ -34,7 +33,7 @@ class MastersBloc {
 
   getMasters(String salonId, String? categoryId) async {
     try {
-      var response = await _salonRepository.getSalonMasters(salonId);
+      var response = await _masterRepository.getSalonMasters(salonId);
       _mastersList = response;
       _mastersLoadedSubject.add(_mastersList);
     } catch (error) {

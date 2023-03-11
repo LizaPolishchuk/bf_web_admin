@@ -19,7 +19,7 @@ class FeedbacksBloc {
     FeedbackEntity(
         authorName: "Liza Polishchuk",
         feedbackText: "Nice salon!",
-        date: DateTime(2023, 3, 23).millisecondsSinceEpoch,
+        timeStamp: DateTime(2023, 3, 23).millisecondsSinceEpoch,
         points: 5)
   ];
 

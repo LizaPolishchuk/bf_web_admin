@@ -1,7 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:get/get.dart';
-import 'package:salons_adminka/l10n/l10n.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class ErrorParser {
@@ -10,18 +8,20 @@ class ErrorParser {
   static late AppLocalizations _appLocalizations;
 
   factory ErrorParser() {
-    _createAppLocalizations();
     return _singleton;
   }
 
   ErrorParser._internal();
 
-  static void _createAppLocalizations() async {
-    _appLocalizations = await AppLocalizations.delegate.load(Get.locale ?? L10n.defaultLocale);
-  }
-
   void updateLocale(Locale locale) async {
-    _appLocalizations = await AppLocalizations.delegate.load(locale);
+    var languageCode = locale.languageCode;
+    if (languageCode.contains("-")) {
+      languageCode = languageCode.split("-").first;
+    } else if (languageCode.contains("_")) {
+      languageCode = languageCode.split("_").first;
+    }
+
+    _appLocalizations = await AppLocalizations.delegate.load(Locale(languageCode));
   }
 
   static String parseError(error) {
@@ -39,7 +39,7 @@ class ErrorParser {
       }
     } else {
       debugPrint("Error: $error");
-      return _appLocalizations.somethingWentWrong;
+      return _appLocalizations.somethingWrong;
     }
   }
 }
