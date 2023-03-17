@@ -93,10 +93,10 @@ class _ServicesPageState extends State<ServicesPage> {
               ),
             ]),
             const SizedBox(height: 20),
-            // Flexible(
-            //   fit: FlexFit.tight,
-            //   child: _buildServicesTable(size),
-            // ),
+            Flexible(
+              fit: FlexFit.tight,
+              child: _buildServicesTable(size),
+            ),
             const SizedBox(height: 20),
             // PaginationCounter(),
           ],
