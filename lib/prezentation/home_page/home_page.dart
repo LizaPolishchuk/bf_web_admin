@@ -1,18 +1,18 @@
+import 'package:bf_web_admin/injection_container_web.dart';
+import 'package:bf_web_admin/navigation/routes.dart';
+import 'package:bf_web_admin/prezentation/calendar_page/appointments_bloc.dart';
+import 'package:bf_web_admin/prezentation/calendar_page/calendar_widget.dart';
+import 'package:bf_web_admin/prezentation/widgets/custom_app_bar.dart';
+import 'package:bf_web_admin/utils/app_colors.dart';
+import 'package:bf_web_admin/utils/app_images.dart';
+import 'package:bf_web_admin/utils/app_text_style.dart';
+import 'package:bf_web_admin/utils/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:responsive_builder/responsive_builder.dart';
-import 'package:salons_adminka/injection_container_web.dart';
-import 'package:salons_adminka/navigation/routes.dart';
-import 'package:salons_adminka/prezentation/calendar_page/appointments_bloc.dart';
-import 'package:salons_adminka/prezentation/calendar_page/calendar_widget.dart';
-import 'package:salons_adminka/prezentation/widgets/custom_app_bar.dart';
-import 'package:salons_adminka/utils/app_colors.dart';
-import 'package:salons_adminka/utils/app_images.dart';
-import 'package:salons_adminka/utils/app_text_style.dart';
-import 'package:salons_adminka/utils/app_theme.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 

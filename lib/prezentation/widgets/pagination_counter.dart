@@ -1,6 +1,6 @@
+import 'package:bf_web_admin/utils/app_images.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:salons_adminka/utils/app_images.dart';
 
 class PaginationCounter extends StatelessWidget {
   const PaginationCounter({Key? key}) : super(key: key);

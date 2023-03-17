@@ -1,9 +1,9 @@
 // import 'dart:async';
 //
 // import 'package:rxdart/rxdart.dart';
-// import 'package:salons_adminka/event_bus_events/event_bus.dart';
-// import 'package:salons_adminka/event_bus_events/user_logout_event.dart';
-// import 'package:salons_adminka/event_bus_events/user_success_logged_in_event.dart';
+// import 'package:bf_web_admin/event_bus_events/event_bus.dart';
+// import 'package:bf_web_admin/event_bus_events/user_logout_event.dart';
+// import 'package:bf_web_admin/event_bus_events/user_success_logged_in_event.dart';
 // import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 //
 // class AuthBloc {

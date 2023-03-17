@@ -1,6 +1,6 @@
+import 'package:bf_web_admin/utils/app_colors.dart';
+import 'package:bf_web_admin/utils/app_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:salons_adminka/utils/app_colors.dart';
-import 'package:salons_adminka/utils/app_theme.dart';
 
 class RoundedButton extends StatelessWidget {
   final String? text;

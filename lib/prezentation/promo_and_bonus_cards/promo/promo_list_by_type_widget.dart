@@ -1,19 +1,19 @@
 import 'dart:async';
 
+import 'package:bf_web_admin/event_bus_events/event_bus.dart';
+import 'package:bf_web_admin/event_bus_events/show_promo_info_event.dart';
+import 'package:bf_web_admin/injection_container_web.dart';
+import 'package:bf_web_admin/prezentation/promo_and_bonus_cards/promo/bonus_card_info_view.dart';
+import 'package:bf_web_admin/prezentation/promo_and_bonus_cards/promo/bonus_cards_list.dart';
+import 'package:bf_web_admin/prezentation/promo_and_bonus_cards/promo/promo_info_view.dart';
+import 'package:bf_web_admin/prezentation/promo_and_bonus_cards/promo/promos_bloc.dart';
+import 'package:bf_web_admin/prezentation/promo_and_bonus_cards/promo/temporary_promo_list.dart';
+import 'package:bf_web_admin/prezentation/promo_and_bonus_cards/promo_and_cards_page.dart';
+import 'package:bf_web_admin/prezentation/widgets/info_container.dart';
+import 'package:bf_web_admin/utils/alert_builder.dart';
+import 'package:bf_web_admin/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:salons_adminka/event_bus_events/event_bus.dart';
-import 'package:salons_adminka/event_bus_events/show_promo_info_event.dart';
-import 'package:salons_adminka/injection_container_web.dart';
-import 'package:salons_adminka/prezentation/promo_and_bonus_cards/promo/bonus_card_info_view.dart';
-import 'package:salons_adminka/prezentation/promo_and_bonus_cards/promo/bonus_cards_list.dart';
-import 'package:salons_adminka/prezentation/promo_and_bonus_cards/promo/promo_info_view.dart';
-import 'package:salons_adminka/prezentation/promo_and_bonus_cards/promo/promos_bloc.dart';
-import 'package:salons_adminka/prezentation/promo_and_bonus_cards/promo/temporary_promo_list.dart';
-import 'package:salons_adminka/prezentation/promo_and_bonus_cards/promo_and_cards_page.dart';
-import 'package:salons_adminka/prezentation/widgets/info_container.dart';
-import 'package:salons_adminka/utils/alert_builder.dart';
-import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class PromoListByTypeWidget extends StatefulWidget {

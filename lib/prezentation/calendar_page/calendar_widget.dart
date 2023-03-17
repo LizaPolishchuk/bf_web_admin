@@ -1,9 +1,9 @@
+import 'package:bf_web_admin/utils/app_colors.dart';
+import 'package:bf_web_admin/utils/app_theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
-import 'package:salons_adminka/utils/app_colors.dart';
-import 'package:salons_adminka/utils/app_theme.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 

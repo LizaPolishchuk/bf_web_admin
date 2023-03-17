@@ -1,11 +1,11 @@
+import 'package:bf_web_admin/prezentation/calendar_page/appointments_bloc.dart';
+import 'package:bf_web_admin/prezentation/feedbacks_page/feedbacks_bloc.dart';
+import 'package:bf_web_admin/prezentation/masters_page/masters_bloc.dart';
+import 'package:bf_web_admin/prezentation/profile_page/profile_bloc.dart';
+import 'package:bf_web_admin/prezentation/profile_page/search_places/places_bloc.dart';
+import 'package:bf_web_admin/prezentation/promo_and_bonus_cards/promo/promos_bloc.dart';
+import 'package:bf_web_admin/prezentation/services_page/services_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:salons_adminka/prezentation/calendar_page/appointments_bloc.dart';
-import 'package:salons_adminka/prezentation/feedbacks_page/feedbacks_bloc.dart';
-import 'package:salons_adminka/prezentation/masters_page/masters_bloc.dart';
-import 'package:salons_adminka/prezentation/profile_page/profile_bloc.dart';
-import 'package:salons_adminka/prezentation/profile_page/search_places/places_bloc.dart';
-import 'package:salons_adminka/prezentation/promo_and_bonus_cards/promo/promos_bloc.dart';
-import 'package:salons_adminka/prezentation/services_page/services_bloc.dart';
 
 final getItWeb = GetIt.instance;
 

@@ -1,20 +1,20 @@
 import 'dart:async';
 
+import 'package:bf_web_admin/address_search.dart';
+import 'package:bf_web_admin/injection_container_web.dart';
+import 'package:bf_web_admin/prezentation/profile_page/profile_bloc.dart';
+import 'package:bf_web_admin/prezentation/profile_page/search_places/places_bloc.dart';
+import 'package:bf_web_admin/prezentation/widgets/custom_app_bar.dart';
+import 'package:bf_web_admin/prezentation/widgets/rounded_button.dart';
+import 'package:bf_web_admin/utils/app_colors.dart';
+import 'package:bf_web_admin/utils/app_images.dart';
+import 'package:bf_web_admin/utils/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_picker_for_web/image_picker_for_web.dart';
 import 'package:responsive_builder/responsive_builder.dart';
-import 'package:salons_adminka/address_search.dart';
-import 'package:salons_adminka/injection_container_web.dart';
-import 'package:salons_adminka/prezentation/profile_page/profile_bloc.dart';
-import 'package:salons_adminka/prezentation/profile_page/search_places/places_bloc.dart';
-import 'package:salons_adminka/prezentation/widgets/custom_app_bar.dart';
-import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
-import 'package:salons_adminka/utils/app_colors.dart';
-import 'package:salons_adminka/utils/app_images.dart';
-import 'package:salons_adminka/utils/app_theme.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class ProfilePage extends StatefulWidget {

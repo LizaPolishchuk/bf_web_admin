@@ -1,17 +1,17 @@
 import 'dart:async';
 
+import 'package:bf_web_admin/injection_container_web.dart';
+import 'package:bf_web_admin/prezentation/services_page/service_info_view.dart';
+import 'package:bf_web_admin/prezentation/services_page/services_bloc.dart';
+import 'package:bf_web_admin/prezentation/widgets/custom_app_bar.dart';
+import 'package:bf_web_admin/prezentation/widgets/flex_list_widget.dart';
+import 'package:bf_web_admin/prezentation/widgets/info_container.dart';
+import 'package:bf_web_admin/prezentation/widgets/search_pannel.dart';
+import 'package:bf_web_admin/prezentation/widgets/table_widget.dart';
+import 'package:bf_web_admin/utils/alert_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:responsive_builder/responsive_builder.dart';
-import 'package:salons_adminka/injection_container_web.dart';
-import 'package:salons_adminka/prezentation/services_page/service_info_view.dart';
-import 'package:salons_adminka/prezentation/services_page/services_bloc.dart';
-import 'package:salons_adminka/prezentation/widgets/custom_app_bar.dart';
-import 'package:salons_adminka/prezentation/widgets/flex_list_widget.dart';
-import 'package:salons_adminka/prezentation/widgets/info_container.dart';
-import 'package:salons_adminka/prezentation/widgets/search_pannel.dart';
-import 'package:salons_adminka/prezentation/widgets/table_widget.dart';
-import 'package:salons_adminka/utils/alert_builder.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class ServicesPage extends StatefulWidget {

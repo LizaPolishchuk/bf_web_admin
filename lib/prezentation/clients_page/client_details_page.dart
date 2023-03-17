@@ -7,18 +7,18 @@
 // import 'package:image_picker/image_picker.dart';
 // import 'package:image_picker_for_web/image_picker_for_web.dart';
 // import 'package:responsive_builder/responsive_builder.dart';
-// import 'package:salons_adminka/injection_container_web.dart';
-// import 'package:salons_adminka/prezentation/clients_page/additional_client_details_widget.dart';
-// import 'package:salons_adminka/prezentation/clients_page/clients_bloc.dart';
-// import 'package:salons_adminka/prezentation/clients_page/clients_page.dart';
-// import 'package:salons_adminka/prezentation/widgets/custom_app_bar.dart';
-// import 'package:salons_adminka/prezentation/widgets/info_container.dart';
-// import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
-// import 'package:salons_adminka/utils/alert_builder.dart';
-// import 'package:salons_adminka/utils/app_colors.dart';
-// import 'package:salons_adminka/utils/app_images.dart';
-// import 'package:salons_adminka/utils/app_theme.dart';
-// import 'package:salons_adminka/utils/constants.dart';
+// import 'package:bf_web_admin/injection_container_web.dart';
+// import 'package:bf_web_admin/prezentation/clients_page/additional_client_details_widget.dart';
+// import 'package:bf_web_admin/prezentation/clients_page/clients_bloc.dart';
+// import 'package:bf_web_admin/prezentation/clients_page/clients_page.dart';
+// import 'package:bf_web_admin/prezentation/widgets/custom_app_bar.dart';
+// import 'package:bf_web_admin/prezentation/widgets/info_container.dart';
+// import 'package:bf_web_admin/prezentation/widgets/rounded_button.dart';
+// import 'package:bf_web_admin/utils/alert_builder.dart';
+// import 'package:bf_web_admin/utils/app_colors.dart';
+// import 'package:bf_web_admin/utils/app_images.dart';
+// import 'package:bf_web_admin/utils/app_theme.dart';
+// import 'package:bf_web_admin/utils/constants.dart';
 // import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 //
 // enum InfoType { main, additional }

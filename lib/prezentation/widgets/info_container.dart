@@ -1,10 +1,10 @@
 import 'dart:ui';
 
+import 'package:bf_web_admin/utils/app_colors.dart';
+import 'package:bf_web_admin/utils/app_theme.dart';
+import 'package:bf_web_admin/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_builder/responsive_builder.dart';
-import 'package:salons_adminka/utils/app_colors.dart';
-import 'package:salons_adminka/utils/app_theme.dart';
-import 'package:salons_adminka/utils/constants.dart';
 
 enum InfoAction { view, edit, add, delete }
 

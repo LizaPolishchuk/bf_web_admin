@@ -1,15 +1,15 @@
 import 'dart:async';
 
+import 'package:bf_web_admin/injection_container_web.dart';
+import 'package:bf_web_admin/prezentation/feedbacks_page/feedback_info_view.dart';
+import 'package:bf_web_admin/prezentation/feedbacks_page/feedbacks_bloc.dart';
+import 'package:bf_web_admin/prezentation/widgets/custom_app_bar.dart';
+import 'package:bf_web_admin/prezentation/widgets/info_container.dart';
+import 'package:bf_web_admin/prezentation/widgets/search_pannel.dart';
+import 'package:bf_web_admin/prezentation/widgets/table_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:responsive_builder/responsive_builder.dart';
-import 'package:salons_adminka/injection_container_web.dart';
-import 'package:salons_adminka/prezentation/feedbacks_page/feedback_info_view.dart';
-import 'package:salons_adminka/prezentation/feedbacks_page/feedbacks_bloc.dart';
-import 'package:salons_adminka/prezentation/widgets/custom_app_bar.dart';
-import 'package:salons_adminka/prezentation/widgets/info_container.dart';
-import 'package:salons_adminka/prezentation/widgets/search_pannel.dart';
-import 'package:salons_adminka/prezentation/widgets/table_widget.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 import '../widgets/flex_list_widget.dart';

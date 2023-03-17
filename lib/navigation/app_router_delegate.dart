@@ -1,6 +1,6 @@
+import 'package:bf_web_admin/navigation/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:salons_adminka/navigation/routes.dart';
 
 class AppRouterDelegate extends GetDelegate {
   @override

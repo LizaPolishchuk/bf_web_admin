@@ -5,12 +5,12 @@
 // import 'package:flutter_svg/flutter_svg.dart';
 // import 'package:get/get.dart';
 // import 'package:responsive_builder/responsive_builder.dart';
-// import 'package:salons_adminka/injection_container_web.dart';
-// import 'package:salons_adminka/navigation/routes.dart';
-// import 'package:salons_adminka/prezentation/auth_page/auth_bloc.dart';
-// import 'package:salons_adminka/utils/app_images.dart';
-// import 'package:salons_adminka/utils/app_text_style.dart';
-// import 'package:salons_adminka/utils/app_theme.dart';
+// import 'package:bf_web_admin/injection_container_web.dart';
+// import 'package:bf_web_admin/navigation/routes.dart';
+// import 'package:bf_web_admin/prezentation/auth_page/auth_bloc.dart';
+// import 'package:bf_web_admin/utils/app_images.dart';
+// import 'package:bf_web_admin/utils/app_text_style.dart';
+// import 'package:bf_web_admin/utils/app_theme.dart';
 //
 // import '../../utils/app_colors.dart';
 // import '../widgets/rounded_button.dart';

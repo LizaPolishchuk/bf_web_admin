@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.salons_adminka">
+    package="com.bfclients.web">
    <application
-        android:label="salons_adminka"
+        android:label="B&F: Be Beautiful & Be Free"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

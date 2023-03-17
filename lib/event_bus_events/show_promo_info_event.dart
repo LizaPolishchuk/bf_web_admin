@@ -1,4 +1,4 @@
-import 'package:salons_adminka/prezentation/widgets/info_container.dart';
+import 'package:bf_web_admin/prezentation/widgets/info_container.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class ShowPromoInfoEvent {

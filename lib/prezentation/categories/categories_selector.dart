@@ -1,12 +1,12 @@
 // import 'package:flutter/material.dart';
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 // import 'package:get/get.dart';
-// import 'package:salons_adminka/injection_container_web.dart';
-// import 'package:salons_adminka/prezentation/categories/categories_bloc.dart';
-// import 'package:salons_adminka/prezentation/widgets/base_items_selector.dart';
-// import 'package:salons_adminka/prezentation/widgets/colored_circle.dart';
-// import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
-// import 'package:salons_adminka/utils/app_colors.dart';
+// import 'package:bf_web_admin/injection_container_web.dart';
+// import 'package:bf_web_admin/prezentation/categories/categories_bloc.dart';
+// import 'package:bf_web_admin/prezentation/widgets/base_items_selector.dart';
+// import 'package:bf_web_admin/prezentation/widgets/colored_circle.dart';
+// import 'package:bf_web_admin/prezentation/widgets/rounded_button.dart';
+// import 'package:bf_web_admin/utils/app_colors.dart';
 // import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 //
 // class CategoriesSelector extends StatefulWidget {

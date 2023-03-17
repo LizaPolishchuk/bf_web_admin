@@ -1,8 +1,8 @@
+import 'package:bf_web_admin/utils/app_colors.dart';
+import 'package:bf_web_admin/utils/app_images.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:salons_adminka/utils/app_colors.dart';
-import 'package:salons_adminka/utils/app_images.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class FeedbackInfoView extends StatefulWidget {

@@ -1,5 +1,5 @@
+import 'package:bf_web_admin/utils/app_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:salons_adminka/utils/app_colors.dart';
 
 class MobileTableWidget extends StatefulWidget {
   final List<TableRow> rows;

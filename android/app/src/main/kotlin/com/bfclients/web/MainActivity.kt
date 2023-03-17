@@ -1,4 +1,4 @@
-package com.example.salons_adminka
+package com.bfclients.web
 
 import io.flutter.embedding.android.FlutterActivity
 

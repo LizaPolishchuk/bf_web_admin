@@ -1,11 +1,11 @@
+import 'package:bf_web_admin/navigation/routes.dart';
+import 'package:bf_web_admin/utils/app_theme.dart';
+import 'package:bf_web_admin/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:responsive_builder/responsive_builder.dart';
-import 'package:salons_adminka/navigation/routes.dart';
-import 'package:salons_adminka/utils/app_theme.dart';
-import 'package:salons_adminka/utils/constants.dart';
 
 import '../utils/app_colors.dart';
 import '../utils/app_images.dart';

@@ -1,10 +1,10 @@
+import 'package:bf_web_admin/injection_container_web.dart';
+import 'package:bf_web_admin/prezentation/widgets/info_container.dart';
+import 'package:bf_web_admin/prezentation/widgets/rounded_button.dart';
+import 'package:bf_web_admin/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:salons_adminka/injection_container_web.dart';
-import 'package:salons_adminka/prezentation/widgets/info_container.dart';
-import 'package:salons_adminka/prezentation/widgets/rounded_button.dart';
-import 'package:salons_adminka/utils/app_colors.dart';
 import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class BonusCardInfoView extends StatefulWidget {

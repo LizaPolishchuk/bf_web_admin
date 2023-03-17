@@ -1,14 +1,14 @@
+import 'package:bf_web_admin/main.dart';
+import 'package:bf_web_admin/prezentation/calendar_page/calendar_page.dart';
+import 'package:bf_web_admin/prezentation/feedbacks_page/feedbacks_page.dart';
+import 'package:bf_web_admin/prezentation/home_container.dart';
+import 'package:bf_web_admin/prezentation/masters_page/masters_page.dart';
+import 'package:bf_web_admin/prezentation/profile_page/profile_page.dart';
+import 'package:bf_web_admin/prezentation/promo_and_bonus_cards/promo_and_cards_page.dart';
+import 'package:bf_web_admin/prezentation/settings_page/settings_page.dart';
+import 'package:bf_web_admin/prezentation/support_page/support_page.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
-import 'package:salons_adminka/main.dart';
-import 'package:salons_adminka/prezentation/calendar_page/calendar_page.dart';
-import 'package:salons_adminka/prezentation/feedbacks_page/feedbacks_page.dart';
-import 'package:salons_adminka/prezentation/home_container.dart';
-import 'package:salons_adminka/prezentation/masters_page/masters_page.dart';
-import 'package:salons_adminka/prezentation/profile_page/profile_page.dart';
-import 'package:salons_adminka/prezentation/promo_and_bonus_cards/promo_and_cards_page.dart';
-import 'package:salons_adminka/prezentation/settings_page/settings_page.dart';
-import 'package:salons_adminka/prezentation/support_page/support_page.dart';
 
 import '../prezentation/services_page/services_page.dart';
 

@@ -1,19 +1,19 @@
 // import 'package:flutter/material.dart';
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 // import 'package:responsive_builder/responsive_builder.dart';
-// import 'package:salons_adminka/injection_container_web.dart';
-// import 'package:salons_adminka/prezentation/clients_page/client_details_page.dart';
-// import 'package:salons_adminka/prezentation/clients_page/clients_bloc.dart';
-// import 'package:salons_adminka/prezentation/widgets/base_items_selector.dart';
-// import 'package:salons_adminka/prezentation/widgets/custom_app_bar.dart';
-// import 'package:salons_adminka/prezentation/widgets/flex_list_widget.dart';
-// import 'package:salons_adminka/prezentation/widgets/info_container.dart';
-// import 'package:salons_adminka/prezentation/widgets/search_pannel.dart';
-// import 'package:salons_adminka/prezentation/widgets/table_widget.dart';
-// import 'package:salons_adminka/utils/alert_builder.dart';
-// import 'package:salons_adminka/utils/app_colors.dart';
-// import 'package:salons_adminka/utils/app_images.dart';
-// import 'package:salons_adminka/utils/app_theme.dart';
+// import 'package:bf_web_admin/injection_container_web.dart';
+// import 'package:bf_web_admin/prezentation/clients_page/client_details_page.dart';
+// import 'package:bf_web_admin/prezentation/clients_page/clients_bloc.dart';
+// import 'package:bf_web_admin/prezentation/widgets/base_items_selector.dart';
+// import 'package:bf_web_admin/prezentation/widgets/custom_app_bar.dart';
+// import 'package:bf_web_admin/prezentation/widgets/flex_list_widget.dart';
+// import 'package:bf_web_admin/prezentation/widgets/info_container.dart';
+// import 'package:bf_web_admin/prezentation/widgets/search_pannel.dart';
+// import 'package:bf_web_admin/prezentation/widgets/table_widget.dart';
+// import 'package:bf_web_admin/utils/alert_builder.dart';
+// import 'package:bf_web_admin/utils/app_colors.dart';
+// import 'package:bf_web_admin/utils/app_images.dart';
+// import 'package:bf_web_admin/utils/app_theme.dart';
 // import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 //
 // class ClientsPage extends StatefulWidget {
