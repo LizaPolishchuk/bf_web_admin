@@ -1,3 +1,4 @@
+import 'package:bf_network_module/bf_network_module.dart';
 import 'package:bf_web_admin/injection_container_web.dart';
 import 'package:bf_web_admin/prezentation/calendar_page/appointment_info_view.dart';
 import 'package:bf_web_admin/prezentation/calendar_page/appointments_bloc.dart';
@@ -9,7 +10,6 @@ import 'package:bf_web_admin/utils/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
-import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class CalendarPage extends StatefulWidget {
   final Salon? salon;

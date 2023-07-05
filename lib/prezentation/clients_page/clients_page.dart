@@ -14,7 +14,7 @@
 // import 'package:bf_web_admin/utils/app_colors.dart';
 // import 'package:bf_web_admin/utils/app_images.dart';
 // import 'package:bf_web_admin/utils/app_theme.dart';
-// import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
+// import 'package:bf_network_module/bf_network_module.dart';
 //
 // class ClientsPage extends StatefulWidget {
 //   final Salon? salon;

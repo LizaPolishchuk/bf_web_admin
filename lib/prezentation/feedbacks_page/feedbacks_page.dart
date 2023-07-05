@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bf_network_module/bf_network_module.dart';
 import 'package:bf_web_admin/injection_container_web.dart';
 import 'package:bf_web_admin/prezentation/feedbacks_page/feedback_info_view.dart';
 import 'package:bf_web_admin/prezentation/feedbacks_page/feedbacks_bloc.dart';
@@ -10,7 +11,6 @@ import 'package:bf_web_admin/prezentation/widgets/table_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:responsive_builder/responsive_builder.dart';
-import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 import '../widgets/flex_list_widget.dart';
 

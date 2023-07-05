@@ -1,3 +1,4 @@
+import 'package:bf_network_module/bf_network_module.dart';
 import 'package:bf_web_admin/injection_container_web.dart';
 import 'package:bf_web_admin/navigation/routes.dart';
 import 'package:bf_web_admin/prezentation/calendar_page/appointments_bloc.dart';
@@ -13,7 +14,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:responsive_builder/responsive_builder.dart';
-import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 class HomePage extends StatefulWidget {

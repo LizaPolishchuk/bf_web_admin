@@ -1,3 +1,4 @@
+import 'package:bf_network_module/bf_network_module.dart';
 import 'package:bf_web_admin/prezentation/widgets/colored_circle.dart';
 import 'package:bf_web_admin/utils/app_colors.dart';
 import 'package:bf_web_admin/utils/app_images.dart';
@@ -7,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:responsive_builder/responsive_builder.dart';
-import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class TableWidget extends StatefulWidget {
   final List<BaseEntity> items;

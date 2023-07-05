@@ -1,3 +1,4 @@
+import 'package:bf_network_module/bf_network_module.dart';
 import 'package:bf_web_admin/prezentation/widgets/info_container.dart';
 import 'package:bf_web_admin/prezentation/widgets/rounded_button.dart';
 import 'package:bf_web_admin/utils/app_colors.dart';
@@ -5,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:intl/intl.dart';
-import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 enum AppointmentStatus { active, reserved, cancelled }
 
@@ -48,7 +48,7 @@ class _AppointmentInfoViewState extends State<AppointmentInfoView> {
     _infoAction = widget.infoAction;
     _appointmentForUpdate = widget.appointment;
 
-    _currentUserId = getIt<LocalStorage>().getCurrentUserId();
+    _currentUserId = getIt<LocalStorage>().getUserId();
 
     if (_appointmentForUpdate != null) {
       // _selectedService = widget.services.isNotEmpty && _appointmentForUpdate!.serviceId.isNotEmpty

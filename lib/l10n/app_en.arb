@@ -1,6 +1,5 @@
 {
   "userNotFound": "This user does not exist, please check the data you entered",
-  "wrongPassword": "Wrong password",
   "login": "Login",
   "loginViaGoogle": "Login with Google",
   "enterEmail": "Enter your E-mail",
@@ -116,5 +115,11 @@
   "additionalInfo": "Additional Info",
   "mainInfo": "Main Info",
   "noInternetConnection": "No Internet Connection",
-  "somethingWrong": "Oops.. Something went wrong"
+  "somethingWrong": "Oops.. Something went wrong",
+  "noUserFound": "No user found for that email",
+  "wrongPassword": "Wrong password provided for that user",
+  "weakPassword": "The password provided is too weak",
+  "emailAlreadyInUse": "The account already exists for that email",
+  "invalidEmail": "The email address is badly formatted",
+  "createSalon": "Create Salon"
 }

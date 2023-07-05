@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bf_network_module/bf_network_module.dart';
 import 'package:bf_web_admin/event_bus_events/event_bus.dart';
 import 'package:bf_web_admin/event_bus_events/show_promo_info_event.dart';
 import 'package:bf_web_admin/injection_container_web.dart';
@@ -14,7 +15,6 @@ import 'package:bf_web_admin/utils/alert_builder.dart';
 import 'package:bf_web_admin/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class PromoListByTypeWidget extends StatefulWidget {
   final String currentSalonId;

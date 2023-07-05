@@ -1,8 +1,7 @@
-import 'package:bf_web_admin/navigation/routes.dart';
 import 'package:bf_web_admin/utils/app_theme.dart';
 import 'package:bf_web_admin/utils/constants.dart';
+import 'package:bf_web_admin/utils/page_content_type.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:responsive_builder/responsive_builder.dart';
@@ -10,19 +9,23 @@ import 'package:responsive_builder/responsive_builder.dart';
 import '../utils/app_colors.dart';
 import '../utils/app_images.dart';
 
-class HomeContainer extends StatelessWidget {
-  final Widget child;
-  final int selectedMenuIndex;
+class HomeContainer extends StatefulWidget {
+  final PageContentType currentPageType;
 
-  const HomeContainer({Key? key, required this.child, this.selectedMenuIndex = -1}) : super(key: key);
+  const HomeContainer({Key? key, required this.currentPageType}) : super(key: key);
 
+  @override
+  State<HomeContainer> createState() => _HomeContainerState();
+}
+
+class _HomeContainerState extends State<HomeContainer> {
   @override
   Widget build(BuildContext context) {
     return ResponsiveBuilder(
       builder: (BuildContext context, SizingInformation size) => Scaffold(
         body: Stack(
           children: [
-            Positioned(left: _getDrawerWidth(size) - 4, top: 0, right: 0, bottom: 0, child: child),
+            Positioned(left: _getDrawerWidth(size) - 4, top: 0, right: 0, bottom: 0, child: widget.currentPageType.getPage()),
             Positioned(left: 0, top: 0, bottom: 0, child: _buildDrawer(context, size)),
           ],
         ),
@@ -83,31 +86,33 @@ class HomeContainer extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 54),
-                _buildDrawerItem(context, 0, AppLocalizations.of(context)!.main, AppIcons.icHome,
-                    routeToGo: Routes.initial, isDesktop: isDesktop),
-                _buildDrawerItem(context, 1, AppLocalizations.of(context)!.services, AppIcons.icServices,
-                    routeToGo: Routes.services, isDesktop: isDesktop),
-                _buildDrawerItem(context, 2, AppLocalizations.of(context)!.masters, AppIcons.icMasters,
-                    routeToGo: Routes.masters, isDesktop: isDesktop),
-                _buildDrawerItem(context, 3, AppLocalizations.of(context)!.clients, AppIcons.icClients,
-                    routeToGo: Routes.clients, isDesktop: isDesktop),
-                _buildDrawerItem(
-                    context,
-                    4,
-                    "${AppLocalizations.of(context)!.promos}/${AppLocalizations.of(context)!.bonusCards}",
-                    AppIcons.icPromos,
-                    routeToGo: Routes.promos,
-                    isDesktop: isDesktop),
-                _buildDrawerItem(context, 5, AppLocalizations.of(context)!.feedbacks, AppIcons.icFeedbacks,
-                    routeToGo: Routes.feedbacks, isDesktop: isDesktop),
-                const Spacer(),
-                _buildDrawerItem(context, 6, AppLocalizations.of(context)!.profile, AppIcons.icProfile,
-                    routeToGo: Routes.profile, isDesktop: isDesktop),
-                // _buildDrawerItem(context, 7, AppLocalizations.of(context)!.support, AppIcons.icSupport,
-                //     routeToGo: Routes.support, isDesktop: isDesktop),
-                _buildDrawerItem(context, 8, AppLocalizations.of(context)!.settings, AppIcons.icSettings,
-                    routeToGo: Routes.settings, isDesktop: isDesktop),
-                // _buildDrawerItem(context, 9, AppLocalizations.of(context)!.logout, AppIcons.icLogout,
+                Expanded(child: _buildDrawerButtons(context, isDesktop)),
+
+                // _buildDrawerItem(context, 0, AppLocalizations.of(context)!.main, AppIcons.icHome,
+                //     routeToGo: Routes.initial, isDesktop: isDesktop),
+                // _buildDrawerItem(context, 1, AppLocalizations.of(context)!.services, AppIcons.icServices,
+                //     routeToGo: Routes.services, isDesktop: isDesktop),
+                // _buildDrawerItem(context, 2, AppLocalizations.of(context)!.masters, AppIcons.icMasters,
+                //     routeToGo: Routes.masters, isDesktop: isDesktop),
+                // _buildDrawerItem(context, 3, AppLocalizations.of(context)!.clients, AppIcons.icClients,
+                //     routeToGo: Routes.clients, isDesktop: isDesktop),
+                // _buildDrawerItem(
+                //     context,
+                //     4,
+                //     "${AppLocalizations.of(context)!.promos}/${AppLocalizations.of(context)!.bonusCards}",
+                //     AppIcons.icPromos,
+                //     routeToGo: Routes.promos,
+                //     isDesktop: isDesktop),
+                // _buildDrawerItem(context, 5, AppLocalizations.of(context)!.feedbacks, AppIcons.icFeedbacks,
+                //     routeToGo: Routes.feedbacks, isDesktop: isDesktop),
+                // const Spacer(),
+                // _buildDrawerItem(context, 6, AppLocalizations.of(context)!.profile, AppIcons.icProfile,
+                //     routeToGo: Routes.profile, isDesktop: isDesktop),
+                // // _buildDrawerItem(context, 7, AppLocalizations.of(context)!.support, AppIcons.icSupport,
+                // //     routeToGo: Routes.support, isDesktop: isDesktop),
+                // _buildDrawerItem(context, 7, AppLocalizations.of(context)!.settings, AppIcons.icSettings,
+                //     routeToGo: Routes.settings, isDesktop: isDesktop),
+                // _buildDrawerItem(context, 8, AppLocalizations.of(context)!.logout, AppIcons.icLogout,
                 //     onClick: getIt<AuthBloc>().logout, isDesktop: isDesktop),
               ],
             ),
@@ -117,14 +122,21 @@ class HomeContainer extends StatelessWidget {
     );
   }
 
-  Widget _buildDrawerItem(BuildContext context, int index, String title, String icon,
-      {VoidCallback? onClick, String? routeToGo, required bool isDesktop}) {
+  Widget _buildDrawerButtons(BuildContext context, bool isDesktop) {
+    return Column(
+      children: PageContentType.values.map((e) => _buildDrawerItem(context, e, isDesktop: isDesktop)).toList()
+        ..insert(6, const Spacer()),
+    );
+  }
+
+  Widget _buildDrawerItem(BuildContext context, PageContentType pageType,
+      {VoidCallback? onClick, required bool isDesktop}) {
     return InkWell(
       onTap: () {
         if (onClick != null) {
           onClick();
-        } else if (routeToGo != null) {
-          Get.rootDelegate.toNamed(routeToGo);
+        } else {
+          Get.rootDelegate.toNamed("/${pageType.name}");
         }
       },
       //todo add hover effect
@@ -132,7 +144,7 @@ class HomeContainer extends StatelessWidget {
         // value ? state?.onHover(menuItem.route) : state?.onHover('not hovering');
       },
       child: ColoredBox(
-        color: index == selectedMenuIndex
+        color: pageType == widget.currentPageType
             ? Theme.of(context).brightness == Brightness.light
                 ? AppColors.lightRose
                 : AppColors.darkBackground
@@ -143,8 +155,8 @@ class HomeContainer extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SvgPicture.asset(
-                icon,
-                color: selectedMenuIndex == index && Theme.of(context).brightness == Brightness.light
+                AppIcons.getIconForPage(pageType),
+                color: pageType == widget.currentPageType && Theme.of(context).brightness == Brightness.light
                     ? AppColors.darkRose
                     : AppColors.lightRose,
               ),
@@ -152,9 +164,9 @@ class HomeContainer extends StatelessWidget {
               if (isDesktop)
                 Flexible(
                   child: Text(
-                    title,
+                    pageType.getPageTitle(context),
                     style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                        color: selectedMenuIndex == index && Theme.of(context).brightness == Brightness.light
+                        color: pageType == widget.currentPageType && Theme.of(context).brightness == Brightness.light
                             ? AppColors.darkRose
                             : Colors.white),
                   ),

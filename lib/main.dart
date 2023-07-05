@@ -1,22 +1,24 @@
-import 'package:bf_web_admin/event_bus_events/user_success_logged_in_event.dart';
+import 'package:bf_network_module/bf_network_module.dart' as di;
+import 'package:bf_network_module/bf_network_module.dart';
+import 'package:bf_web_admin/event_bus_events/event_bus.dart';
+import 'package:bf_web_admin/event_bus_events/salon_created_event.dart';
 import 'package:bf_web_admin/l10n/l10n.dart';
+import 'package:bf_web_admin/prezentation/auth_page/auth_page.dart';
+import 'package:bf_web_admin/prezentation/create_salon/create_salon_page.dart';
 import 'package:bf_web_admin/prezentation/home_container.dart';
-import 'package:bf_web_admin/prezentation/home_page/home_page.dart';
+import 'package:bf_web_admin/prezentation/home_page/initial_bloc.dart';
 import 'package:bf_web_admin/utils/app_theme.dart';
 import 'package:bf_web_admin/utils/error_parser.dart';
-import 'package:flutter/foundation.dart';
+import 'package:bf_web_admin/utils/page_content_type.dart';
+import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:salons_app_flutter_module/salons_app_flutter_module.dart' as di;
-import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 import 'package:universal_io/io.dart';
 
-import 'event_bus_events/event_bus.dart';
-import 'event_bus_events/user_logout_event.dart';
 import 'injection_container_web.dart' as webdi;
 import 'navigation/routes.dart';
 
@@ -27,13 +29,13 @@ void main() async {
 
   await Firebase.initializeApp(
     options: const FirebaseOptions(
-        apiKey: "AIzaSyD1iuXsP1pCry9jNdG0l-5Meyu7dJUp3CI",
-        appId: "1:883762712602:web:5629380a6e16d74d8641a3",
-        messagingSenderId: "883762712602",
-        projectId: "salons-5012c",
-        authDomain: "salons-5012c.firebaseapp.com",
-        storageBucket: "salons-5012c.appspot.com",
-        measurementId: "G-HQ1FC3TVZX"),
+        apiKey: "AIzaSyDxsQ7ofwJ7f4pRqlzAkui2ErcJR6t-GPY",
+        appId: "1:269566824654:web:860f009f6d3acb8d1f409f",
+        messagingSenderId: "269566824654",
+        projectId: "bfree-web",
+        authDomain: "bfree-web.firebaseapp.com",
+        storageBucket: "bfree-web.appspot.com",
+        measurementId: "G-8JXG8CJK8K"),
   );
 
   await di.init();
@@ -65,7 +67,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<BoxEvent>(
@@ -123,47 +124,131 @@ class InitialPage extends StatefulWidget {
 }
 
 class _InitialPageState extends State<InitialPage> {
-  String? token;
-  String? salonId;
-  late Widget _initialPage;
+  final ValueNotifier<Widget?> _initialPageValue = ValueNotifier(null);
+
+  FirebaseDynamicLinks dynamicLinks = FirebaseDynamicLinks.instance;
+
+  FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
   void initState() {
     super.initState();
 
-    LocalStorage localStorage = getIt<LocalStorage>();
-    salonId = localStorage.getSalonId();
-    token = localStorage.getAccessToken();
+    _initDynamicLinks();
 
-    if (kDebugMode) {
-      print("Main: salonId: $salonId, token: $token");
-    }
+    FirebaseAuth.instance.authStateChanges().listen((event) {
+      print("authStateChanges: $event");
 
-    eventBus.on<UserSuccessLoggedInEvent>().listen((event) {
-      setState(() {
-        _initialPage = const HomeContainer(
-          selectedMenuIndex: homeIndex,
-          child: HomePage(),
-        );
-      });
-    });
-    eventBus.on<UserLoggedOutEvent>().listen((event) {
-      // setState(() {
-      //   _initialPage = const AuthPage();
-      // });
+      if (event == null) {
+        _initialPageValue.value = const AuthPage();
+      }
+      // else if (!event.emailVerified) {
+      //   _initialPageValue.value = const VerifyEmailPage();
+      // }
+      else {
+        _initialPageValue.value = _initialWidget();
+      }
     });
 
-    _initialPage = const HomeContainer(selectedMenuIndex: homeIndex, child: HomePage());
-    // token != null ? const HomeContainer(selectedMenuIndex: homeIndex, child: HomePage()) : const AuthPage();
+    eventBus.on<SalonCreatedEvent>().listen((event) {
+      _initialPageValue.value = const HomeContainer(currentPageType: PageContentType.home);
+    });
+  }
 
-    if (token != null && salonId == null) {
-      token = null;
-      // getIt<AuthBloc>().logout();
-    }
+  void _initDynamicLinks() {
+    dynamicLinks.onLink.listen((dynamicLinkData) async {
+      //Get actionCode from the dynamicLink
+      final Uri deepLink = dynamicLinkData.link;
+      var actionCode = deepLink.queryParameters['oobCode'];
+
+      print("actionCode from dynamic link is $actionCode");
+
+      if (actionCode != null) {
+        try {
+          await auth.checkActionCode(actionCode);
+          await auth.applyActionCode(actionCode);
+
+          // If successful, reload the user:
+          auth.currentUser?.reload();
+        } on FirebaseAuthException catch (e) {
+          if (e.code == 'invalid-action-code') {
+            print('The code is invalid.');
+          }
+        }
+      }
+    }).onError((error) {
+      print('onLink error');
+      print(error.message);
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return _initialPage;
+    return ValueListenableBuilder<Widget?>(
+      valueListenable: _initialPageValue,
+      builder: (context, page, child) {
+        return page ??
+            Center(
+              child: CircularProgressIndicator(
+                color: Theme.of(context).primaryColor,
+              ),
+            );
+      },
+    );
+
+    // StreamBuilder<User?>(
+    //   stream: FirebaseAuth.instance.authStateChanges(),
+    //   builder: (context, snapshot) {
+    //     print("authStateChanges: ${snapshot.data}");
+    //     if (snapshot.connectionState == ConnectionState.waiting) {
+    //       return Center(
+    //         child: CircularProgressIndicator(
+    //           color: Theme.of(context).primaryColor,
+    //         ),
+    //       );
+    //     } else if (snapshot.data != null) {
+    //       print("User: ${snapshot.data}");
+    //
+    //       bool isEmailVerified = snapshot.data!.emailVerified;
+    //       print("isEmailVerified: $isEmailVerified");
+    //
+    //       // if (!isEmailVerified) {
+    //       //   return const VerifyEmailPage();
+    //       // }
+    //
+    //       return _initialWidget();
+    //
+    //       if (getIt<LocalStorage>().getSalonId() == null) {
+    //         return const CreateSalonPage();
+    //       }
+    //
+    //       return const HomeContainer(selectedMenuIndex: homeIndex, child: HomePage());
+    //     } else {
+    //       return const AuthPage();
+    //     }
+    //   },
+    // );
+  }
+
+  Widget _initialWidget() {
+    InitialBloc initialBloc = getIt<InitialBloc>();
+
+    return FutureBuilder(
+        future: initialBloc.checkIfSalonExists(),
+        builder: (context, snapshot) {
+          print("is salon exists: ${snapshot.data}");
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(
+                color: Theme.of(context).primaryColor,
+              ),
+            );
+          }
+          if (snapshot.data == true) {
+            return const HomeContainer(currentPageType: PageContentType.home);
+          } else {
+            return const CreateSalonPage();
+          }
+        });
   }
 }

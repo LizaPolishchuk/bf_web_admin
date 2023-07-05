@@ -1,8 +1,8 @@
+import 'package:bf_network_module/bf_network_module.dart';
 import 'package:bf_web_admin/prezentation/widgets/colored_circle.dart';
 import 'package:bf_web_admin/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class BaseItemsSelector extends StatefulWidget {
   final List<BaseEntity> items;

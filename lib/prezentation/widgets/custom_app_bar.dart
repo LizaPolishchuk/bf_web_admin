@@ -1,9 +1,9 @@
+import 'package:bf_network_module/bf_network_module.dart';
 import 'package:bf_web_admin/injection_container_web.dart';
 import 'package:bf_web_admin/utils/app_images.dart';
 import 'package:bf_web_admin/utils/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class CustomAppBar extends StatelessWidget {
   final String title;
@@ -24,7 +24,7 @@ class CustomAppBar extends StatelessWidget {
             ),
           ),
           IconButton(
-              onPressed: () async => getItWeb<UserRepository>().switchThemeMode(),
+              onPressed: () async => getItWeb<AdminRepository>().switchThemeMode(),
               icon: SvgPicture.asset(AppTheme.isDark ? AppIcons.icSun : AppIcons.icMoon))
         ],
       ),

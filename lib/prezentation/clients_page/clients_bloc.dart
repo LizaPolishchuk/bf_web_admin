@@ -2,7 +2,7 @@
 //
 // import 'package:image_picker/image_picker.dart';
 // import 'package:rxdart/rxdart.dart';
-// import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
+// import 'package:bf_network_module/bf_network_module.dart';
 //
 // class ClientsBloc {
 //   final GetClientListUseCase _getClientsListUseCase;

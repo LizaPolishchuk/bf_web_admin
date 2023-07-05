@@ -1,6 +1,6 @@
+import 'package:bf_network_module/bf_network_module.dart';
 import 'package:bf_web_admin/prezentation/profile_page/search_places/places_bloc.dart';
 import 'package:flutter/material.dart';
-import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class AddressSearch extends SearchDelegate<SuggestionPlace?> {
   final PlacesBloc placesBloc;

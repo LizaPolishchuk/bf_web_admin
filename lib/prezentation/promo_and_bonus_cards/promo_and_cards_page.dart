@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bf_network_module/bf_network_module.dart';
 import 'package:bf_web_admin/event_bus_events/event_bus.dart';
 import 'package:bf_web_admin/event_bus_events/show_bonus_card_info_event.dart';
 import 'package:bf_web_admin/event_bus_events/show_promo_info_event.dart';
@@ -16,7 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:get/get.dart';
 import 'package:responsive_builder/responsive_builder.dart';
-import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 extension ParomoTypeExtension on PromoType {
   String localizedName(BuildContext context) {

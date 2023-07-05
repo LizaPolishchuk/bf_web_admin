@@ -1,8 +1,8 @@
 import 'dart:async';
 
+import 'package:bf_network_module/bf_network_module.dart';
 import 'package:bf_web_admin/utils/error_parser.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 enum AppointmentsType { salon, master }
 

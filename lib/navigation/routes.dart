@@ -1,26 +1,8 @@
 import 'package:bf_web_admin/main.dart';
-import 'package:bf_web_admin/prezentation/calendar_page/calendar_page.dart';
-import 'package:bf_web_admin/prezentation/feedbacks_page/feedbacks_page.dart';
 import 'package:bf_web_admin/prezentation/home_container.dart';
-import 'package:bf_web_admin/prezentation/masters_page/masters_page.dart';
-import 'package:bf_web_admin/prezentation/profile_page/profile_page.dart';
-import 'package:bf_web_admin/prezentation/promo_and_bonus_cards/promo_and_cards_page.dart';
-import 'package:bf_web_admin/prezentation/settings_page/settings_page.dart';
-import 'package:bf_web_admin/prezentation/support_page/support_page.dart';
+import 'package:bf_web_admin/utils/page_content_type.dart';
 import 'package:get/get.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
-
-import '../prezentation/services_page/services_page.dart';
-
-const int homeIndex = 0;
-const int servicesIndex = 1;
-const int mastersIndex = 2;
-const int clientsIndex = 3;
-const int promosIndex = 4;
-const int feedbacksIndex = 5;
-const int profileIndex = 6;
-const int supportIndex = 7;
-const int settingsIndex = 8;
 
 class Routes {
   static const initial = '/';
@@ -42,21 +24,8 @@ abstract class AppPages {
     GetPage(
       name: Routes.initial,
       page: () => const InitialPage(),
-    ),
-    GetPage(
-      name: Routes.services,
-      page: () => const HomeContainer(
-        selectedMenuIndex: servicesIndex,
-        child: ServicesPage(),
-      ),
-    ),
-    GetPage(
-      name: Routes.masters,
-      page: () => const HomeContainer(
-        selectedMenuIndex: mastersIndex,
-        child: MastersPage(),
-      ),
-    ),
+    ), ..._createPagesForTabs(),
+
     // GetPage(
     //   name: Routes.clients,
     //   page: () => const HomeContainer(
@@ -71,52 +40,28 @@ abstract class AppPages {
     //     child: ClientDetailsPage(),
     //   ),
     // ),
-    GetPage(
-      name: Routes.promos,
-      page: () => const HomeContainer(
-        selectedMenuIndex: promosIndex,
-        child: PromosPage(),
-      ),
-    ),
-    GetPage(
-      name: Routes.feedbacks,
-      page: () => const HomeContainer(
-        selectedMenuIndex: feedbacksIndex,
-        child: FeedbacksPage(),
-      ),
-    ),
-    GetPage(
-      name: Routes.profile,
-      page: () => const HomeContainer(
-        selectedMenuIndex: profileIndex,
-        child: ProfilePage(),
-      ),
-    ),
-    GetPage(
-      name: Routes.support,
-      page: () => const HomeContainer(
-        selectedMenuIndex: supportIndex,
-        child: SupportPage(),
-      ),
-    ),
-    GetPage(
-      name: Routes.settings,
-      page: () => const HomeContainer(
-        selectedMenuIndex: settingsIndex,
-        child: SettingsPage(),
-      ),
-    ),
-    GetPage(
-      name: Routes.calendar,
-      page: () => const HomeContainer(
-        selectedMenuIndex: homeIndex,
-        child: CalendarPage(),
-      ),
-    ),
+    // GetPage(
+    //   name: Routes.support,
+    //   page: () => const HomeContainer(
+    //     selectedMenuIndex: supportIndex,
+    //     child: SupportPage(),
+    //   ),
+    // ),
     // GetPage(
     //   name: Routes.loader,
     //   opaque: false,
     //   page: () => const Loader(),
     // ),
   ];
+
+  static List<GetPage> _createPagesForTabs() {
+    return PageContentType.values
+        .map(
+          (pageType) => GetPage(
+            name: "/${pageType.name}",
+            page: () => HomeContainer(currentPageType: pageType),
+          ),
+        )
+        .toList();
+  }
 }

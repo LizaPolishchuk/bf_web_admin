@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:bf_network_module/bf_network_module.dart';
 import 'package:bf_web_admin/address_search.dart';
 import 'package:bf_web_admin/injection_container_web.dart';
-import 'package:bf_web_admin/prezentation/profile_page/profile_bloc.dart';
+import 'package:bf_web_admin/prezentation/create_salon/create_salon_bloc.dart';
 import 'package:bf_web_admin/prezentation/profile_page/search_places/places_bloc.dart';
 import 'package:bf_web_admin/prezentation/widgets/custom_app_bar.dart';
 import 'package:bf_web_admin/prezentation/widgets/rounded_button.dart';
@@ -17,14 +17,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:image_picker_for_web/image_picker_for_web.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
-class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+class CreateSalonPage extends StatefulWidget {
+  const CreateSalonPage({Key? key}) : super(key: key);
 
   @override
-  State<ProfilePage> createState() => _ProfilePageState();
+  State<CreateSalonPage> createState() => _CreateSalonPageState();
 }
 
-class _ProfilePageState extends State<ProfilePage> {
+class _CreateSalonPageState extends State<CreateSalonPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
@@ -40,32 +40,36 @@ class _ProfilePageState extends State<ProfilePage> {
   String? _errorText;
   final List<TextEditingController> _controllersList = [];
 
-  late ProfileBloc _profileBloc;
+  late CreateSalonBloc _createSalonBloc;
   late PlacesBloc _placesBloc;
   final List<StreamSubscription> _subscriptions = [];
 
   final ImagePickerPlugin _picker = ImagePickerPlugin();
-  PickedFile? _pickedPhoto;
+
+  String? adminId;
+
+  final ValueNotifier<PickedFile?> _pickedPhotoNotifier = ValueNotifier(null);
 
   @override
   void initState() {
     super.initState();
 
     LocalStorage localStorage = getIt<LocalStorage>();
-    String? salonId = localStorage.getSalonId();
+    adminId = localStorage.getUserId();
 
-    debugPrint("salonId: $salonId");
+    // assert(adminId != null);
 
-    _profileBloc = getItWeb<ProfileBloc>();
-    _profileBloc.loadSalon();
+    debugPrint("adminId: $adminId");
+
+    _createSalonBloc = getItWeb<CreateSalonBloc>();
 
     _placesBloc = getItWeb<PlacesBloc>();
 
     _subscriptions.addAll([
-      _profileBloc.salonUpdated.listen((event) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Salon updated success")));
+      _createSalonBloc.salonCreated.listen((event) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Salon created success")));
       }),
-      _profileBloc.errorMessage.listen((error) {
+      _createSalonBloc.errorMessage.listen((error) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           backgroundColor: Colors.red,
           content: Text(error),
@@ -80,8 +84,6 @@ class _ProfilePageState extends State<ProfilePage> {
           content: Text(error),
         ));
       }),
-
-
     ]);
 
     _controllersList
@@ -98,61 +100,40 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder<Salon>(
-          stream: _profileBloc.salonLoaded,
-          builder: (context, snapshot) {
-            return ScreenTypeLayout.builder(
-              desktop: (context) => _buildDesktopContent(context, snapshot),
-              tablet: (context) => _buildMobileContent(context, snapshot),
-              mobile: (context) => _buildMobileContent(context, snapshot),
-            );
-          }),
+      body: ScreenTypeLayout.builder(
+        desktop: (context) => _buildDesktopContent(context),
+        tablet: (context) => _buildMobileContent(context),
+        mobile: (context) => _buildMobileContent(context),
+      ),
     );
   }
 
-  Widget _buildMobileContent(BuildContext context, AsyncSnapshot<Salon> snapshot) {
-    final salon = snapshot.data;
+  Widget _buildMobileContent(BuildContext context) {
     return Center(
       child: FractionallySizedBox(
         widthFactor: 0.8,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CustomAppBar(title: AppLocalizations.of(context)!.profileSettings),
+            CustomAppBar(title: AppLocalizations.of(context)!.createSalon),
             SizedBox(
               width: 640,
               height: 182,
-              child:
-                  _pickedPhoto != null ? _buildPhotoWidget(_pickedPhoto!.path) : _buildPhotoWidget(salon?.photo ?? ""),
+              child: _buildPhotoWidget(),
             ),
             const SizedBox(height: 16),
-            snapshot.data != null
-                ? Flexible(child: SingleChildScrollView(child: _mobileSalonDetails(context, snapshot.data!)))
-                : const Center(
-                    child: CircularProgressIndicator(),
-                  ),
+            Flexible(
+              child: SingleChildScrollView(
+                child: _mobileSalonDetails(context),
+              ),
+            ),
             Material(
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 child: RoundedButton(
                   width: double.infinity,
                   text: AppLocalizations.of(context)!.saveChanges,
-                  onPressed: () {
-                    final salon = snapshot.data!;
-                    _errorText = "";
-
-                    if (_nameFormKey.currentState?.validate() == true &&
-                        _descriptionFormKey.currentState?.validate() == true &&
-                        // _addressFormKey.currentState?.validate() == true &&
-                        _phoneFormKey.currentState?.validate() == true) {
-                      salon.name = _nameController.text;
-                      salon.description = _descriptionController.text;
-                      salon.address = _addressController.text;
-                      salon.phoneNumber = _phoneController.text;
-
-                      _profileBloc.updateSalon(salon, _pickedPhoto);
-                    }
-                  },
+                  onPressed: _onClickSave,
                 ),
               ),
             )
@@ -162,7 +143,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _mobileSalonDetails(BuildContext context, Salon salon) {
+  Widget _mobileSalonDetails(BuildContext context) {
     return Column(
       children: [
         Row(
@@ -173,9 +154,7 @@ class _ProfilePageState extends State<ProfilePage> {
               splashRadius: 18,
               onPressed: () async {
                 final PickedFile image = await _picker.pickImage(source: ImageSource.gallery);
-                setState(() {
-                  _pickedPhoto = image;
-                });
+                _pickedPhotoNotifier.value = image;
               },
               icon: SvgPicture.asset(
                 AppTheme.isDark ? AppIcons.icEditCircleBlue : AppIcons.icEditCircle,
@@ -186,10 +165,8 @@ class _ProfilePageState extends State<ProfilePage> {
               splashRadius: 18,
               onPressed: () {
                 setState(() {
-                  if (_pickedPhoto != null) {
-                    _pickedPhoto = null;
-                  } else if (salon.photo != null) {
-                    salon.photo = null;
+                  if (_pickedPhotoNotifier.value != null) {
+                    _pickedPhotoNotifier.value = null;
                   }
                 });
               },
@@ -201,22 +178,20 @@ class _ProfilePageState extends State<ProfilePage> {
           ],
         ),
         const SizedBox(height: 24),
-        _buildSettingsRow(AppLocalizations.of(context)!.salonName, salon.name, _nameController, _nameFormKey),
+        _buildSettingsRow(AppLocalizations.of(context)!.salonName, "", _nameController, _nameFormKey),
         const SizedBox(height: 15),
-        _buildSettingsRow(
-            AppLocalizations.of(context)!.description, salon.description, _descriptionController, _descriptionFormKey,
+        _buildSettingsRow(AppLocalizations.of(context)!.description, "", _descriptionController, _descriptionFormKey,
             hint: AppLocalizations.of(context)!.shortSalonDescription),
         const SizedBox(height: 15),
-        _buildSettingsRow(AppLocalizations.of(context)!.address, salon.address, _addressController, _addressFormKey),
+        _buildSettingsRow(AppLocalizations.of(context)!.address, "", _addressController, _addressFormKey),
         const SizedBox(height: 15),
-        _buildSettingsRow(
-            AppLocalizations.of(context)!.phoneNumber, salon.phoneNumber, _phoneController, _phoneFormKey),
+        _buildSettingsRow(AppLocalizations.of(context)!.phoneNumber, "", _phoneController, _phoneFormKey),
         // _buildSettingsRow("График работы", null, _scheduleController, _scheduleFormKey),
       ],
     );
   }
 
-  Widget _buildDesktopContent(BuildContext context, AsyncSnapshot<Salon> snapshot) {
+  Widget _buildDesktopContent(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(left: 42, right: 50, bottom: 35),
       child: CustomScrollView(
@@ -228,11 +203,8 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
                 CustomAppBar(title: AppLocalizations.of(context)!.profileSettings),
                 Expanded(
-                    child: snapshot.data != null
-                        ? _buildSalonDetails(snapshot.data!)
-                        : const Center(
-                            child: CircularProgressIndicator(),
-                          ))
+                  child: _buildSalonDetails(),
+                ),
               ],
             ),
           )
@@ -241,14 +213,14 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildSalonDetails(Salon salon) {
+  Widget _buildSalonDetails() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
           width: 640,
           height: 182,
-          child: _pickedPhoto != null ? _buildPhotoWidget(_pickedPhoto!.path) : _buildPhotoWidget(salon.photo ?? ""),
+          child: _buildPhotoWidget(),
         ),
         const SizedBox(height: 14),
         Row(
@@ -266,9 +238,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         splashRadius: 18,
                         onPressed: () async {
                           final PickedFile image = await _picker.pickImage(source: ImageSource.gallery);
-                          setState(() {
-                            _pickedPhoto = image;
-                          });
+                          _pickedPhotoNotifier.value = image;
                         },
                         icon: SvgPicture.asset(
                           AppTheme.isDark ? AppIcons.icEditCircleBlue : AppIcons.icEditCircle,
@@ -279,10 +249,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         splashRadius: 18,
                         onPressed: () {
                           setState(() {
-                            if (_pickedPhoto != null) {
-                              _pickedPhoto = null;
-                            } else if (salon.photo != null) {
-                              salon.photo = null;
+                            if (_pickedPhotoNotifier.value != null) {
+                              _pickedPhotoNotifier.value = null;
                             }
                           });
                         },
@@ -294,17 +262,15 @@ class _ProfilePageState extends State<ProfilePage> {
                     ],
                   ),
                   const SizedBox(height: 24),
-                  _buildSettingsRow(AppLocalizations.of(context)!.salonName, salon.name, _nameController, _nameFormKey),
+                  _buildSettingsRow(AppLocalizations.of(context)!.salonName, "", _nameController, _nameFormKey),
                   const SizedBox(height: 15),
-                  _buildSettingsRow(AppLocalizations.of(context)!.description, salon.description,
-                      _descriptionController, _descriptionFormKey,
+                  _buildSettingsRow(
+                      AppLocalizations.of(context)!.description, "", _descriptionController, _descriptionFormKey,
                       hint: AppLocalizations.of(context)!.shortSalonDescription),
                   const SizedBox(height: 15),
-                  _buildSettingsRow(
-                      AppLocalizations.of(context)!.address, salon.address, _addressController, _addressFormKey),
+                  _buildSettingsRow(AppLocalizations.of(context)!.address, "", _addressController, _addressFormKey),
                   const SizedBox(height: 15),
-                  _buildSettingsRow(
-                      AppLocalizations.of(context)!.phoneNumber, salon.phoneNumber, _phoneController, _phoneFormKey),
+                  _buildSettingsRow(AppLocalizations.of(context)!.phoneNumber, "", _phoneController, _phoneFormKey),
                 ],
               ),
             ),
@@ -321,57 +287,66 @@ class _ProfilePageState extends State<ProfilePage> {
         Center(
           child: RoundedButton(
             text: AppLocalizations.of(context)!.saveChanges,
-            onPressed: () {
-              _errorText = "";
-
-              if (_nameFormKey.currentState?.validate() == true &&
-                  _descriptionFormKey.currentState?.validate() == true &&
-                  // _addressFormKey.currentState?.validate() == true &&
-                  _phoneFormKey.currentState?.validate() == true) {
-                salon.name = _nameController.text;
-                salon.description = _descriptionController.text;
-                salon.address = _addressController.text;
-                salon.phoneNumber = _phoneController.text;
-
-                _profileBloc.updateSalon(salon, _pickedPhoto);
-              }
-            },
+            onPressed: _onClickSave,
           ),
         ),
       ],
     );
   }
 
-  Widget _buildPhotoWidget(String source) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
-      child: Image.network(
-        source,
-        errorBuilder: (context, obj, stackTrace) {
-          return Container(
-            color: AppTheme.isDark ? AppColors.blue : AppColors.lightRose,
-          );
-        },
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) {
-            return child;
-          }
-          return Container(
-            color: AppTheme.isDark ? AppColors.blue : AppColors.lightRose,
-          );
-        },
-        fit: BoxFit.cover,
-      ),
-    );
+  void _onClickSave() {
+    _errorText = "";
+
+    if (_nameFormKey.currentState?.validate() == true &&
+        _descriptionFormKey.currentState?.validate() == true &&
+        // _addressFormKey.currentState?.validate() == true &&
+        _phoneFormKey.currentState?.validate() == true) {
+      print("validated");
+
+      Salon salon = Salon(
+        id: "",
+        name: _nameController.text,
+        description: _descriptionController.text,
+        address: "test",
+        city: "Kyiv",
+        country: "Ukraine",
+        timezone: "ua",//DateTime.now().timeZoneName,
+        phoneNumber: _phoneController.text,
+      );
+
+      _createSalonBloc.createSalon(salon, _pickedPhotoNotifier.value);
+    }
   }
 
-  Widget _buildSettingsRow(
-    String title,
-    String? text,
-    TextEditingController controller,
-    GlobalKey<FormState> formKey, {
-    String? hint
-  }) {
+  Widget _buildPhotoWidget() {
+    return ValueListenableBuilder<PickedFile?>(
+        valueListenable: _pickedPhotoNotifier,
+        builder: (context, pickedFile, child) {
+          return ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Image.network(
+              pickedFile?.path ?? "",
+              errorBuilder: (context, obj, stackTrace) {
+                return Container(
+                  color: AppTheme.isDark ? AppColors.blue : AppColors.lightRose,
+                );
+              },
+              loadingBuilder: (context, child, loadingProgress) {
+                if (loadingProgress == null) {
+                  return child;
+                }
+                return Container(
+                  color: AppTheme.isDark ? AppColors.blue : AppColors.lightRose,
+                );
+              },
+              fit: BoxFit.cover,
+            ),
+          );
+        });
+  }
+
+  Widget _buildSettingsRow(String title, String? text, TextEditingController controller, GlobalKey<FormState> formKey,
+      {String? hint}) {
     controller.text = text ?? "";
 
     // print("isSearchAddressField: $isSearchAddressField");
@@ -389,10 +364,10 @@ class _ProfilePageState extends State<ProfilePage> {
               minLines: formKey == _descriptionFormKey ? 3 : 1,
               controller: controller,
               style: Theme.of(context).textTheme.bodyMedium,
-              textAlignVertical: TextAlignVertical.center,
+              // textAlignVertical: TextAlignVertical.center,
               readOnly: controller == _addressController || formKey == _scheduleFormKey,
               onTap: () async {
-                if (controller ==_addressController) {
+                if (controller == _addressController) {
                   final SuggestionPlace? clickedPlace = await showSearch<SuggestionPlace?>(
                     context: context,
                     delegate: AddressSearch(_placesBloc),

@@ -1,6 +1,6 @@
+import 'package:bf_network_module/bf_network_module.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 class ErrorParser {
   static final ErrorParser _singleton = ErrorParser._internal();
@@ -37,9 +37,34 @@ class ErrorParser {
         debugPrint("DioError message: $detailMessage");
         return error.message;
       }
+    } else if (error is FirebaseAuthException) {
+      return _parseFirebaseError(error);
     } else {
       debugPrint("Error: $error");
       return _appLocalizations.somethingWrong;
     }
+  }
+
+  static String _parseFirebaseError(FirebaseAuthException e) {
+    String errorMessage;
+
+    if (e.code == 'user-not-found') {
+      errorMessage = _appLocalizations.noUserFound;
+    } else if (e.code == 'wrong-password') {
+      errorMessage = _appLocalizations.wrongPassword;
+    } else if (e.code == 'weak-password') {
+      errorMessage = _appLocalizations.weakPassword;
+    } else if (e.code == 'email-already-in-use') {
+      errorMessage = _appLocalizations.emailAlreadyInUse;
+    } else if (e.code == 'invalid-email') {
+      errorMessage = _appLocalizations.invalidEmail;
+    } else if (e.message?.isNotEmpty == true) {
+      errorMessage = e.message!;
+    } else {
+      errorMessage = _appLocalizations.somethingWrong;
+    }
+
+    debugPrint("Firebase error: ${e.code}, ${e.message}");
+    return errorMessage;
   }
 }

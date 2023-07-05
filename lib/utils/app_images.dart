@@ -1,3 +1,5 @@
+import 'package:bf_web_admin/utils/page_content_type.dart';
+
 class AppIcons {
   ///Icons
   static const String icHome = 'assets/icons/ic_home.svg';
@@ -39,4 +41,9 @@ class AppIcons {
   static const String promoPlaceholder = 'assets/images/ic_promo_placeholder.png';
   static const String subscriptionPlaceholder = 'assets/images/ic_subscription_placeholder.png';
   static const String welcomePlaceholder = 'assets/images/welcome_placeholder.png';
+
+  static String getIconForPage(PageContentType pageContentType){
+    String fullString = "assets/icons/ic_%s.svg";
+    return fullString.replaceFirst("%s", pageContentType.name);
+  }
 }

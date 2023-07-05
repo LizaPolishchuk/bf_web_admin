@@ -1,5 +1,5 @@
+import 'package:bf_network_module/bf_network_module.dart';
 import 'package:flutter/material.dart';
-import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 
 import 'app_colors.dart';
 import 'app_text_style.dart';

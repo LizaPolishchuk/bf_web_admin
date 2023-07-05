@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:bf_network_module/bf_network_module.dart';
 import 'package:bf_web_admin/injection_container_web.dart';
 import 'package:bf_web_admin/l10n/l10n.dart';
 import 'package:bf_web_admin/prezentation/widgets/custom_app_bar.dart';
@@ -14,7 +15,6 @@ import 'package:flutter_localized_locales/flutter_localized_locales.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:responsive_builder/responsive_builder.dart';
-import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
 import 'package:universal_io/io.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -332,7 +332,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   setState(() {
                     _currentLocale = locale;
                   });
-                  getItWeb<UserRepository>().setCurrentLanguage(locale.languageCode);
+                  getItWeb<AdminRepository>().setCurrentLanguage(locale.languageCode);
                 }
               },
               itemHeight: 40,

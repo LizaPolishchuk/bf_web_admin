@@ -1,7 +1,7 @@
 // import 'dart:async';
 //
 // import 'package:rxdart/rxdart.dart';
-// import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
+// import 'package:bf_network_module/bf_network_module.dart';
 //
 // class CategoriesBloc {
 //   final GetCategoriesListUseCase _getCategoriesListUseCase;

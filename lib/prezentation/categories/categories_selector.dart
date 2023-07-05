@@ -7,7 +7,7 @@
 // import 'package:bf_web_admin/prezentation/widgets/colored_circle.dart';
 // import 'package:bf_web_admin/prezentation/widgets/rounded_button.dart';
 // import 'package:bf_web_admin/utils/app_colors.dart';
-// import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
+// import 'package:bf_network_module/bf_network_module.dart';
 //
 // class CategoriesSelector extends StatefulWidget {
 //   final Function(List<Category>) onCategoriesLoaded;

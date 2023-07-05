@@ -19,7 +19,7 @@
 // import 'package:bf_web_admin/utils/app_images.dart';
 // import 'package:bf_web_admin/utils/app_theme.dart';
 // import 'package:bf_web_admin/utils/constants.dart';
-// import 'package:salons_app_flutter_module/salons_app_flutter_module.dart';
+// import 'package:bf_network_module/bf_network_module.dart';
 //
 // enum InfoType { main, additional }
 //
